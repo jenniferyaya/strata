@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Strata — Literary Geography</title>
+  <link rel="stylesheet" href="https://use.typekit.net/kub5gzl.css">
+
+  <style>
+    /* ─────────────────────────────────────────
+       RESET & BASE
+    ───────────────────────────────────────── */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg:          #EDEDED;
+      --surface:     #FFFFFF;
+      --text:        #323232;
+      --text-sub:    #7C7E87;
+      --accent:      #D9DCEB;
+      --hover:       rgba(217, 220, 235, 0.2);
+      --divider:     rgba(217, 220, 235, 0.5);
+
+      --font:        "neue-haas-unica", sans-serif;
+
+      --gutter:      24px;
+      --margin:      48px;
+      --shelf-w:     500px;
+      --nav-h:       52px;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      font-weight: 300;
+      font-size: 14px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─────────────────────────────────────────
+       NAV
+    ───────────────────────────────────────── */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      height: var(--nav-h);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--margin);
+      background: var(--bg);
+      border-bottom: 1px solid var(--divider);
+    }
+
+    .nav-wordmark {
+      font-weight: 400;
+      font-size: 13px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+
+    .nav-center {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 32px;
+    }
+
+    .nav-city {
+      font-size: 12px;
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-sub);
+      cursor: pointer;
+      padding-bottom: 2px;
+      border-bottom: 1px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .nav-city:hover       { color: var(--text); }
+    .nav-city.active      { color: var(--text); border-bottom-color: var(--text); }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .nav-right a {
+      font-size: 12px;
+      font-weight: 300;
+      letter-spacing: 0.1em;
+      color: var(--text-sub);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-right a:hover { color: var(--text); }
+
+    /* ─────────────────────────────────────────
+       APP SHELL
+    ───────────────────────────────────────── */
+    .app {
+      display: grid;
+      grid-template-columns: 1fr var(--shelf-w);
+      height: 100vh;
+      padding-top: var(--nav-h);
+    }
+
+    /* ─────────────────────────────────────────
+       MAP PANEL (left)
+    ───────────────────────────────────────── */
+    .map-panel {
+      position: relative;
+      background: var(--bg);
+      overflow: hidden;
+    }
+
+    .map-placeholder {
+      width: 100%;
+      height: 100%;
+      background:
+        radial-gradient(ellipse 60% 55% at 48% 50%, rgba(217,220,235,0.45) 0%, transparent 70%),
+        var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* subtle grid lines evoking a map */
+    .map-placeholder::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--divider) 1px, transparent 1px),
+        linear-gradient(90deg, var(--divider) 1px, transparent 1px);
+      background-size: 72px 72px;
+      opacity: 0.5;
+    }
+
+    .map-placeholder-label {
+      position: relative;
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-sub);
+    }
+
+    /* Map UI overlays */
+    .map-ui-topleft {
+      position: absolute;
+      top: 32px;
+      left: var(--margin);
+      z-index: 10;
+    }
+
+    .map-project-name {
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .map-project-sub {
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 0.1em;
+      color: var(--text-sub);
+    }
+
+    .map-ui-bottomleft {
+      position: absolute;
+      bottom: 32px;
+      left: var(--margin);
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .map-scale-label {
+      font-size: 10px;
+      font-weight: 300;
+      letter-spacing: 0.16em;
+      color: var(--text-sub);
+      text-transform: uppercase;
+    }
+
+    .map-scale-bar {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+
+    .map-scale-bar-inner {
+      width: 60px;
+      height: 1px;
+      background: var(--text-sub);
+      position: relative;
+    }
+
+    .map-scale-bar-inner::before,
+    .map-scale-bar-inner::after {
+      content: '';
+      position: absolute;
+      top: -3px;
+      width: 1px;
+      height: 7px;
+      background: var(--text-sub);
+    }
+
+    .map-scale-bar-inner::before { left: 0; }
+    .map-scale-bar-inner::after  { right: 0; }
+
+    /* ─────────────────────────────────────────
+       SLIDER (inside map panel, bottom)
+    ───────────────────────────────────────── */
+    .era-slider-wrap {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      width: clamp(300px, 44%, 520px);
+    }
+
+    /* Top row: "ERA" label left, active era name right */
+    .era-slider-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 10px;
+    }
+
+    .era-slider-label .label-word {
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.22em;
+      color: var(--text-sub);
+      text-transform: uppercase;
+    }
+
+    .era-slider-label .label-active {
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.14em;
+      color: var(--text);
+      text-transform: uppercase;
+    }
+
+    /* Two-tone track */
+    .slider-track {
+      position: relative;
+      height: 20px;
+      cursor: pointer;
+      display: flex;
+    }
+
+    .slider-filled {
+      height: 100%;
+      background: var(--accent);   /* #D9DCEB — the blue-grey filled portion */
+      transition: width 0.25s ease;
+      flex-shrink: 0;
+    }
+
+    .slider-unfilled {
+      height: 100%;
+      background: #ffffff;          /* light off-white unfilled portion */
+      flex: 1;
+    }
+
+    /* Vertical tick thumb — sits at the boundary */
+    .slider-thumb {
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 6px;
+      height: 20px;                 /* taller than the track — the stark tick */
+      background: var(--text);
+      cursor: grab;
+      transition: left 0.25s ease;
+      pointer-events: none;
+    }
+
+    /* Date range labels below track */
+    .slider-era-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 9px;
+    }
+
+    .slider-era-labels span {
+      font-size: 10px;
+      font-weight: 300;
+      letter-spacing: 0.1em;
+      color: var(--text-sub);
+      cursor: pointer;
+      transition: color 0.2s, font-weight 0.2s;
+      text-transform: uppercase;
+    }
+
+    .slider-era-labels span:hover { color: var(--text); }
+    .slider-era-labels span.active {
+      color: var(--text);
+      font-weight: 400;
+    }
+
+    /* ─────────────────────────────────────────
+       SHELF PANEL (right)
+    ───────────────────────────────────────── */
+    .shelf {
+      background: var(--surface);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+      border-left: 1px solid var(--divider);
+    }
+
+    .shelf-inner {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 0 28px 48px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--divider) transparent;
+    }
+
+    .shelf-inner::-webkit-scrollbar       { width: 4px; }
+    .shelf-inner::-webkit-scrollbar-track { background: transparent; }
+    .shelf-inner::-webkit-scrollbar-thumb { background: var(--divider); border-radius: 2px; }
+
+    /* ── Shelf Header ── */
+    .shelf-header {
+      padding: 32px 28px 0;
+      padding-bottom: 0;
+      flex-shrink: 0;
+    }
+
+    .shelf-city-label {
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--text-sub);
+      margin-bottom: 8px;
+    }
+
+    .shelf-city-name {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
+    .shelf-era-range {
+      font-size: 13px;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--text-sub);
+      margin-bottom: 20px;
+    }
+
+    .shelf-meta {
+      display: flex;
+      gap: 20px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--divider);
+    }
+
+    .shelf-meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .shelf-meta-val {
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1;
+      color: var(--text);
+    }
+
+    .shelf-meta-key {
+      font-size: 10px;
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-sub);
+    }
+
+    /* ── Filters ── */
+    .shelf-filters {
+      padding: 20px 28px 0;
+      flex-shrink: 0;
+    }
+
+    .filter-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .filter-label {
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-sub);
+      margin-bottom: 8px;
+    }
+
+    .filter-chip {
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      color: var(--text-sub);
+      padding: 5px 12px;
+      border: 1px solid var(--divider);
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.18s;
+      white-space: nowrap;
+    }
+
+    .filter-chip:hover {
+      color: var(--text);
+      border-color: rgba(50,50,50,0.3);
+    }
+
+    .filter-chip.active {
+      color: var(--text);
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .filter-divider {
+      height: 1px;
+      background: var(--divider);
+      margin: 4px 0 16px;
+    }
+
+    /* Section label inside scroll area */
+    .shelf-section-label {
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-sub);
+      padding-top: 28px;
+      padding-bottom: 16px;
+    }
+
+    /* ── Book List ── */
+    .book-list {
+      list-style: none;
+    }
+
+    .book-item {
+      padding: 18px 0;
+      border-bottom: 1px solid var(--divider);
+      cursor: pointer;
+      transition: background 0.15s;
+      margin: 0 -28px;
+      padding-left: 28px;
+      padding-right: 28px;
+    }
+
+    .book-item:hover {
+      background: var(--hover);
+    }
+
+    .book-item:first-child {
+      border-top: 1px solid var(--divider);
+    }
+
+    .book-title {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 5px;
+      line-height: 1.3;
+    }
+
+    .book-meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+    }
+
+    .book-author-year {
+      font-size: 12px;
+      font-weight: 300;
+      color: var(--text-sub);
+    }
+
+    .book-neighborhood {
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      color: var(--text-sub);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    /* ── Quote Block ── */
+    .quote-block {
+      padding: 28px 0 24px;
+      border-bottom: 1px solid var(--divider);
+    }
+
+    .quote-text {
+      font-size: 15px;
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.75;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    .quote-attr {
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 0.1em;
+      color: var(--text-sub);
+      text-transform: uppercase;
+    }
+
+    /* ── Image Placeholder Slot ── */
+    .shelf-image-slot {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      background: var(--accent);
+      margin: 28px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .shelf-image-slot::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.08) 25%, transparent 25%),
+        linear-gradient(225deg, rgba(255,255,255,0.08) 25%, transparent 25%),
+        linear-gradient(315deg, rgba(255,255,255,0.08) 25%, transparent 25%),
+        linear-gradient(45deg,  rgba(255,255,255,0.08) 25%, transparent 25%);
+      background-size: 20px 20px;
+    }
+
+    .shelf-image-label {
+      font-size: 10px;
+      font-weight: 300;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(50,50,50,0.35);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ─────────────────────────────────────────
+       MOBILE
+    ───────────────────────────────────────── */
+    @media (max-width: 768px) {
+      html, body { overflow: auto; height: auto; }
+
+      .nav { padding: 0 20px; }
+      .nav-center { display: none; }
+
+      .app {
+        grid-template-columns: 1fr;
+        grid-template-rows: 55vh 1fr;
+        height: auto;
+        min-height: 100vh;
+      }
+
+      .map-panel { height: 55vh; }
+
+      .shelf {
+        height: auto;
+        border-left: none;
+        border-top: 1px solid var(--divider);
+      }
+
+      .shelf-inner { overflow-y: visible; }
+
+      .map-ui-topleft { left: 20px; top: 20px; }
+      .map-ui-bottomleft { left: 20px; }
+
+      .era-slider-wrap {
+        width: calc(100% - 160px);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAV ── -->
+  <nav class="nav">
+    <span class="nav-wordmark">Strata</span>
+
+    <div class="nav-right">
+      <a href="#">About</a>
+      <a href="#">Method</a>
+    </div>
+  </nav>
+
+  <!-- ── APP SHELL ── -->
+  <div class="app">
+
+    <!-- ════════════════════════
+         MAP PANEL
+    ════════════════════════ -->
+    <div class="map-panel">
+
+      <div class="map-placeholder">
+        <span class="map-placeholder-label">Map / Globe — Placeholder</span>
+      </div>
+
+      <!-- Top-left identity -->
+      <div class="map-ui-topleft">
+        <div class="map-project-name">Strata</div>
+        <div class="map-project-sub">Literary Geography</div>
+      </div>
+
+      <!-- Scale indicator -->
+      <div class="map-ui-bottomleft">
+        <span class="map-scale-label">Scale</span>
+        <div class="map-scale-bar">
+          <div class="map-scale-bar-inner"></div>
+        </div>
+        <span class="map-scale-label">2 km</span>
+      </div>
+
+      <!-- Era Slider -->
+      <div class="era-slider-wrap">
+
+        <div class="era-slider-label">
+          <span class="label-word">Era</span>
+          <span class="label-active" id="era-active-label">La Belle Époque</span>
+        </div>
+
+        <div class="slider-track" id="slider-track">
+          <div class="slider-filled" id="slider-filled" style="width: 16%;"></div>
+          <div class="slider-unfilled"></div>
+          <div class="slider-thumb" id="slider-thumb" style="left: 16%;"></div>
+        </div>
+
+        <div class="slider-era-labels">
+          <span class="active" onclick="setEra(0, this)">1880–1910</span>
+          <span onclick="setEra(1, this)">1920–1945</span>
+          <span onclick="setEra(2, this)">1950–1980</span>
+        </div>
+
+      </div>
+
+    </div><!-- /map-panel -->
+
+
+    <!-- ════════════════════════
+         SHELF PANEL
+    ════════════════════════ -->
+    <aside class="shelf">
+
+      <!-- Fixed header -->
+      <div class="shelf-header">
+        <div class="shelf-city-label">Current city</div>
+        <div class="shelf-city-name" id="shelf-city-name">Paris</div>
+        <div class="shelf-era-range" id="shelf-era-range">La Belle Époque — 1880 to 1910</div>
+        <div class="shelf-meta">
+          <div class="shelf-meta-item">
+            <span class="shelf-meta-val">9</span>
+            <span class="shelf-meta-key">Works</span>
+          </div>
+          <div class="shelf-meta-item">
+            <span class="shelf-meta-val">3</span>
+            <span class="shelf-meta-key">Eras</span>
+          </div>
+          <div class="shelf-meta-item">
+            <span class="shelf-meta-val">40+</span>
+            <span class="shelf-meta-key">Locations</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="shelf-filters">
+        <div class="filter-label">Filter by era</div>
+        <div class="filter-row">
+          <button class="filter-chip active" onclick="toggleFilter(this)">La Belle Époque</button>
+          <button class="filter-chip" onclick="toggleFilter(this)">Les Années Folles</button>
+          <button class="filter-chip" onclick="toggleFilter(this)">Nouveau Roman</button>
+        </div>
+        <div class="filter-label">Perspective</div>
+        <div class="filter-row">
+          <button class="filter-chip active" onclick="toggleFilter(this)">Expatriate</button>
+          <button class="filter-chip" onclick="toggleFilter(this)">Native</button>
+          <button class="filter-chip" onclick="toggleFilter(this)">Political exile</button>
+        </div>
+        <div class="filter-divider"></div>
+      </div>
+
+      <!-- Scrollable book list -->
+      <div class="shelf-inner">
+
+        <div class="shelf-section-label">Works in this era</div>
+
+        <ul class="book-list">
+
+          <li class="book-item">
+            <div class="book-title">A Moveable Feast</div>
+            <div class="book-meta-row">
+              <span class="book-author-year">Ernest Hemingway — 1920s</span>
+              <span class="book-neighborhood">Montparnasse</span>
+            </div>
+          </li>
+
+          <li class="book-item">
+            <div class="book-title">Down and Out in Paris and London</div>
+            <div class="book-meta-row">
+              <span class="book-author-year">George Orwell — 1933</span>
+              <span class="book-neighborhood">Rue du Coq d'Or</span>
+            </div>
+          </li>
+
+          <li class="book-item">
+            <div class="book-title">Tropic of Cancer</div>
+            <div class="book-meta-row">
+              <span class="book-author-year">Henry Miller — 1934</span>
+              <span class="book-neighborhood">Clichy / Montmartre</span>
+            </div>
+          </li>
+
+        </ul>
+
+        <!-- Quote block -->
+        <div class="quote-block">
+          <p class="quote-text">"Paris is a moveable feast."</p>
+          <span class="quote-attr">Hemingway — A Moveable Feast, 1964</span>
+        </div>
+
+        <ul class="book-list">
+
+          <li class="book-item">
+            <div class="book-title">Nausea</div>
+            <div class="book-meta-row">
+              <span class="book-author-year">Jean-Paul Sartre — 1938</span>
+              <span class="book-neighborhood">Saint-Germain-des-Prés</span>
+            </div>
+          </li>
+
+          <li class="book-item">
+            <div class="book-title">The Autobiography of Alice B. Toklas</div>
+            <div class="book-meta-row">
+              <span class="book-author-year">Gertrude Stein — 1933</span>
+              <span class="book-neighborhood">Rue de Fleurus</span>
+            </div>
+          </li>
+
+          <li class="book-item">
+            <div class="book-title">Paris France</div>
+            <div class="book-meta-row">
+              <span class="book-author-year">Gertrude Stein — 1940</span>
+              <span class="book-neighborhood">Left Bank</span>
+            </div>
+          </li>
+
+        </ul>
+
+        <!-- Image placeholder -->
+        <div class="shelf-image-slot">
+          <span class="shelf-image-label">Image — Placeholder</span>
+        </div>
+
+        <ul class="book-list">
+
+          <li class="book-item">
+            <div class="book-title">Quiet Days in Clichy</div>
+            <div class="book-meta-row">
+              <span class="book-author-year">Henry Miller — 1956</span>
+              <span class="book-neighborhood">Clichy</span>
+            </div>
+          </li>
+
+          <li class="book-item">
+            <div class="book-title">The Ambassadors</div>
+            <div class="book-meta-row">
+              <span class="book-author-year">Henry James — 1903</span>
+              <span class="book-neighborhood">Faubourg Saint-Germain</span>
+            </div>
+          </li>
+
+          <li class="book-item">
+            <div class="book-title">Tender is the Night</div>
+            <div class="book-meta-row">
+              <span class="book-author-year">F. Scott Fitzgerald — 1934</span>
+              <span class="book-neighborhood">Riviera / Montparnasse</span>
+            </div>
+          </li>
+
+        </ul>
+
+        <!-- Second quote -->
+        <div class="quote-block">
+          <p class="quote-text">"France was a land, England was a people, but America, since Louis and Clark, was a promise of an unfinished Sentence..."</p>
+          <span class="quote-attr">Fitzgerald — The Crack-Up, 1936</span>
+        </div>
+
+      </div><!-- /shelf-inner -->
+
+    </aside><!-- /shelf -->
+
+  </div><!-- /app -->
+
+
+  <script>
+    /* ── City switcher ── */
+    const cityData = {
+      Paris:     { era: 'La Belle Époque — 1880 to 1910', works: 9, eras: 3, locations: '40+' },
+      Lisbon:    { era: 'Modernismo — 1900 to 1930',       works: 7, eras: 3, locations: '28+' },
+      Stockholm: { era: 'Early 1900s — 1890 to 1920',     works: 8, eras: 3, locations: '32+' }
+    };
+
+    function setCity(el, city) {
+      document.querySelectorAll('.nav-city').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('shelf-city-name').textContent = city;
+      const d = cityData[city];
+      document.getElementById('shelf-era-range').textContent = d.era;
+    }
+
+    /* ── Era slider ── */
+    const eras = [
+      { label: 'La Belle Époque', pct: 16 },
+      { label: 'Les Années Folles', pct: 50 },
+      { label: 'Nouveau Roman',    pct: 84 }
+    ];
+
+    let currentEra = 0;
+
+    function setEra(idx, el) {
+      currentEra = idx;
+      const pct = eras[idx].pct;
+
+      document.getElementById('slider-filled').style.width = pct + '%';
+      document.getElementById('slider-thumb').style.left   = pct + '%';
+      document.getElementById('era-active-label').textContent = eras[idx].label;
+
+      document.querySelectorAll('.slider-era-labels span').forEach((s, i) => {
+        s.classList.toggle('active', i === idx);
+      });
+    }
+
+    /* Click anywhere on track to snap to nearest era */
+    document.getElementById('slider-track').addEventListener('click', function(e) {
+      const rect  = this.getBoundingClientRect();
+      const ratio = (e.clientX - rect.left) / rect.width;
+      const idx   = ratio < 0.33 ? 0 : ratio < 0.66 ? 1 : 2;
+      const labels = document.querySelectorAll('.slider-era-labels span');
+      setEra(idx, labels[idx]);
+    });
+
+    /* ── Filter chips ── */
+    function toggleFilter(el) {
+      el.classList.toggle('active');
+    }
+  </script>
+
+</body>
+</html>
