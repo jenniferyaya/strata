@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>STRATA Globe</title>
+  <style>
+    :root {
+      --bg: #0F0F0F;
+      --pin: #B08968;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    #globe-container {
+      width: 100%;
+      height: 100vh;
+      background: var(--bg);
+    }
+  </style>
+</head>
+<body>
+  <div id="globe-container"></div>
+
+  <script src="https://unpkg.com/three"></script>
+  <script src="https://unpkg.com/globe.gl"></script>
+  <script>
+    const cities = [
+      { name: "Paris", lat: 48.8566, lng: 2.3522 },
+      { name: "New York", lat: 40.7128, lng: -74.0060 },
+      { name: "Tokyo", lat: 35.6762, lng: 139.6503 }
+    ];
+
+    const container = document.getElementById("globe-container");
+
+    const globe = Globe()(container)
+      .backgroundColor("#0F0F0F")
+      .globeImageUrl("https://unpkg.com/three-globe/example/img/earth-night.jpg")
+      .showAtmosphere(true)
+      .atmosphereColor("rgba(176, 137, 104, 0.35)")
+      .atmosphereAltitude(0.12)
+      .pointsData(cities)
+      .pointLat("lat")
+      .pointLng("lng")
+      .pointColor(() => "#B08968")
+      .pointRadius(0.12)
+      .pointAltitude(0.02)
+      .pointLabel(() => null)
+      .onPointHover((point) => {
+        container.style.cursor = point ? "pointer" : "default";
+      })
+      .onPointClick((point) => {
+        if (!point) return;
+        globe.pointOfView(
+          { lat: point.lat, lng: point.lng, altitude: 1.8 },
+          1200
+        );
+      });
+
+    const controls = globe.controls();
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = 0.25;
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.06;
+    controls.rotateSpeed = 0.45;
+    controls.zoomSpeed = 0.45;
+    controls.minDistance = 170;
+    controls.maxDistance = 260;
+    controls.enablePan = false;
+  </script>
+</body>
+</html>
