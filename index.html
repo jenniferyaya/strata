@@ -10,33 +10,23 @@
     /* ─────────────────────────────────────────
        RESET & BASE
     ───────────────────────────────────────── */
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:          #EDEDED;
-      --surface:     #FFFFFF;
-      --text:        #323232;
-      --text-sub:    #7C7E87;
-      --accent:      #D9DCEB;
-      --hover:       rgba(217, 220, 235, 0.2);
-      --divider:     rgba(217, 220, 235, 0.5);
-
-      --font:        "neue-haas-unica", sans-serif;
-
-      --gutter:      24px;
-      --margin:      48px;
-      --shelf-w:     500px;
-      --nav-h:       52px;
+      --bg:        #EDEDED;
+      --surface:   #FFFFFF;
+      --text:      #323232;
+      --text-sub:  #7C7E87;
+      --accent:    #D9DCEB;
+      --ocean:     #EDEEF5;
+      --hover:     rgba(217,220,235,0.2);
+      --divider:   rgba(217,220,235,0.6);
+      --font:      "neue-haas-unica", sans-serif;
+      --shelf-w:   500px;
+      --nav-h:     52px;
     }
 
-    html, body {
-      height: 100%;
-      overflow: hidden;
-    }
+    html, body { height: 100%; overflow: hidden; }
 
     body {
       background: var(--bg);
@@ -53,15 +43,13 @@
     ───────────────────────────────────────── */
     .nav {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
       height: var(--nav-h);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 var(--margin);
+      padding: 0 40px;
       background: var(--bg);
       border-bottom: 1px solid var(--divider);
     }
@@ -74,7 +62,7 @@
       color: var(--text);
     }
 
-    .nav-center {
+    .nav-cities {
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
@@ -83,28 +71,31 @@
     }
 
     .nav-city {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 300;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--text-sub);
       cursor: pointer;
       padding-bottom: 2px;
       border-bottom: 1px solid transparent;
       transition: color 0.2s, border-color 0.2s;
+      background: none;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+      font-family: var(--font);
     }
-
-    .nav-city:hover       { color: var(--text); }
-    .nav-city.active      { color: var(--text); border-bottom-color: var(--text); }
+    .nav-city:hover  { color: var(--text); }
+    .nav-city.active { color: var(--text); border-bottom-color: var(--text); }
 
     .nav-right {
       display: flex;
       align-items: center;
       gap: 28px;
     }
-
     .nav-right a {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 300;
       letter-spacing: 0.1em;
       color: var(--text-sub);
@@ -124,63 +115,40 @@
     }
 
     /* ─────────────────────────────────────────
-       MAP PANEL (left)
+       MAP PANEL
     ───────────────────────────────────────── */
     .map-panel {
       position: relative;
-      background: var(--bg);
+      background: var(--ocean);
       overflow: hidden;
     }
 
-    .map-placeholder {
-      width: 100%;
-      height: 100%;
-      background:
-        radial-gradient(ellipse 60% 55% at 48% 50%, rgba(217,220,235,0.45) 0%, transparent 70%),
-        var(--bg);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    /* subtle grid lines evoking a map */
-    .map-placeholder::before {
-      content: '';
+    #globe-canvas {
       position: absolute;
       inset: 0;
-      background-image:
-        linear-gradient(var(--divider) 1px, transparent 1px),
-        linear-gradient(90deg, var(--divider) 1px, transparent 1px);
-      background-size: 72px 72px;
-      opacity: 0.5;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+      cursor: grab;
     }
+    #globe-canvas.dragging { cursor: grabbing; }
 
-    .map-placeholder-label {
-      position: relative;
-      font-size: 11px;
-      font-weight: 300;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--text-sub);
-    }
-
-    /* Map UI overlays */
+    /* Map overlays */
     .map-ui-topleft {
       position: absolute;
-      top: 32px;
-      left: var(--margin);
+      top: 28px;
+      left: 40px;
       z-index: 10;
+      pointer-events: none;
     }
-
     .map-project-name {
       font-size: 11px;
       font-weight: 400;
       letter-spacing: 0.28em;
       text-transform: uppercase;
       color: var(--text);
-      margin-bottom: 4px;
+      margin-bottom: 3px;
     }
-
     .map-project-sub {
       font-size: 11px;
       font-weight: 300;
@@ -188,70 +156,22 @@
       color: var(--text-sub);
     }
 
-    .map-ui-bottomleft {
-      position: absolute;
-      bottom: 32px;
-      left: var(--margin);
-      z-index: 10;
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .map-scale-label {
-      font-size: 10px;
-      font-weight: 300;
-      letter-spacing: 0.16em;
-      color: var(--text-sub);
-      text-transform: uppercase;
-    }
-
-    .map-scale-bar {
-      display: flex;
-      align-items: center;
-      gap: 0;
-    }
-
-    .map-scale-bar-inner {
-      width: 60px;
-      height: 1px;
-      background: var(--text-sub);
-      position: relative;
-    }
-
-    .map-scale-bar-inner::before,
-    .map-scale-bar-inner::after {
-      content: '';
-      position: absolute;
-      top: -3px;
-      width: 1px;
-      height: 7px;
-      background: var(--text-sub);
-    }
-
-    .map-scale-bar-inner::before { left: 0; }
-    .map-scale-bar-inner::after  { right: 0; }
-
-    /* ─────────────────────────────────────────
-       SLIDER (inside map panel, bottom)
-    ───────────────────────────────────────── */
+    /* ── Era Slider ── */
     .era-slider-wrap {
       position: absolute;
       bottom: 32px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 10;
-      width: clamp(300px, 44%, 520px);
+      width: clamp(280px, 42%, 500px);
     }
 
-    /* Top row: "ERA" label left, active era name right */
     .era-slider-label {
       display: flex;
       justify-content: space-between;
       align-items: baseline;
       margin-bottom: 10px;
     }
-
     .era-slider-label .label-word {
       font-size: 10px;
       font-weight: 400;
@@ -259,7 +179,6 @@
       color: var(--text-sub);
       text-transform: uppercase;
     }
-
     .era-slider-label .label-active {
       font-size: 10px;
       font-weight: 400;
@@ -268,65 +187,53 @@
       text-transform: uppercase;
     }
 
-    /* Two-tone track */
     .slider-track {
       position: relative;
-      height: 20px;
+      height: 9px;
       cursor: pointer;
       display: flex;
     }
-
     .slider-filled {
       height: 100%;
-      background: var(--accent);   /* #D9DCEB — the blue-grey filled portion */
+      background: var(--accent);
       transition: width 0.25s ease;
       flex-shrink: 0;
     }
-
     .slider-unfilled {
       height: 100%;
-      background: #ffffff;          /* light off-white unfilled portion */
+      background: #ffffff;
       flex: 1;
     }
-
-    /* Vertical tick thumb — sits at the boundary */
     .slider-thumb {
       position: absolute;
       top: 50%;
       transform: translate(-50%, -50%);
-      width: 6px;
-      height: 20px;                 /* taller than the track — the stark tick */
+      width: 2px;
+      height: 22px;
       background: var(--text);
-      cursor: grab;
-      transition: left 0.25s ease;
       pointer-events: none;
+      transition: left 0.25s ease;
     }
 
-    /* Date range labels below track */
     .slider-era-labels {
       display: flex;
       justify-content: space-between;
       margin-top: 9px;
     }
-
     .slider-era-labels span {
       font-size: 10px;
       font-weight: 300;
       letter-spacing: 0.1em;
       color: var(--text-sub);
       cursor: pointer;
-      transition: color 0.2s, font-weight 0.2s;
       text-transform: uppercase;
+      transition: color 0.2s;
     }
-
     .slider-era-labels span:hover { color: var(--text); }
-    .slider-era-labels span.active {
-      color: var(--text);
-      font-weight: 400;
-    }
+    .slider-era-labels span.active { color: var(--text); font-weight: 400; }
 
     /* ─────────────────────────────────────────
-       SHELF PANEL (right)
+       SHELF PANEL
     ───────────────────────────────────────── */
     .shelf {
       background: var(--surface);
@@ -337,23 +244,87 @@
       border-left: 1px solid var(--divider);
     }
 
-    .shelf-inner {
-      flex: 1;
-      overflow-y: auto;
-      overflow-x: hidden;
-      padding: 0 28px 48px;
-      scrollbar-width: thin;
-      scrollbar-color: var(--divider) transparent;
+    /* ── Search bar ── */
+    .shelf-search {
+      padding: 16px 28px;
+      border-bottom: 1px solid var(--divider);
+      flex-shrink: 0;
     }
 
-    .shelf-inner::-webkit-scrollbar       { width: 4px; }
-    .shelf-inner::-webkit-scrollbar-track { background: transparent; }
-    .shelf-inner::-webkit-scrollbar-thumb { background: var(--divider); border-radius: 2px; }
+    .search-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 0;
+      width: 14px;
+      height: 14px;
+      color: var(--text-sub);
+      pointer-events: none;
+      flex-shrink: 0;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 6px 0 6px 22px;
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 300;
+      letter-spacing: 0.04em;
+      color: var(--text);
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--divider);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .search-input::placeholder {
+      color: var(--text-sub);
+      letter-spacing: 0.08em;
+    }
+    .search-input:focus {
+      border-bottom-color: var(--text);
+    }
+
+    /* Search results dropdown */
+    .search-results {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      right: 0;
+      background: var(--surface);
+      z-index: 50;
+      display: none;
+    }
+    .search-results.open { display: block; }
+
+    .search-result-item {
+      padding: 10px 12px;
+      cursor: pointer;
+      border-bottom: 1px solid var(--divider);
+      transition: background 0.15s;
+    }
+    .search-result-item:last-child { border-bottom: none; }
+    .search-result-item:hover { background: var(--hover); }
+
+    .sr-title {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+    .sr-meta {
+      font-size: 11px;
+      font-weight: 300;
+      color: var(--text-sub);
+    }
 
     /* ── Shelf Header ── */
     .shelf-header {
-      padding: 32px 28px 0;
-      padding-bottom: 0;
+      padding: 28px 28px 0;
       flex-shrink: 0;
     }
 
@@ -363,18 +334,16 @@
       letter-spacing: 0.3em;
       text-transform: uppercase;
       color: var(--text-sub);
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
-
     .shelf-city-name {
       font-size: 36px;
       font-weight: 700;
       letter-spacing: -0.02em;
       line-height: 1;
       color: var(--text);
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
-
     .shelf-era-range {
       font-size: 13px;
       font-weight: 300;
@@ -382,27 +351,19 @@
       color: var(--text-sub);
       margin-bottom: 20px;
     }
-
     .shelf-meta {
       display: flex;
-      gap: 20px;
-      padding-bottom: 24px;
+      gap: 24px;
+      padding-bottom: 22px;
       border-bottom: 1px solid var(--divider);
     }
-
-    .shelf-meta-item {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-
+    .shelf-meta-item { display: flex; flex-direction: column; gap: 3px; }
     .shelf-meta-val {
       font-size: 18px;
       font-weight: 400;
       line-height: 1;
       color: var(--text);
     }
-
     .shelf-meta-key {
       font-size: 10px;
       font-weight: 300;
@@ -413,17 +374,9 @@
 
     /* ── Filters ── */
     .shelf-filters {
-      padding: 20px 28px 0;
+      padding: 18px 28px 0;
       flex-shrink: 0;
     }
-
-    .filter-row {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
-    }
-
     .filter-label {
       font-size: 10px;
       font-weight: 400;
@@ -432,116 +385,94 @@
       color: var(--text-sub);
       margin-bottom: 8px;
     }
-
+    .filter-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
     .filter-chip {
       font-size: 11px;
       font-weight: 300;
-      letter-spacing: 0.08em;
+      font-family: var(--font);
+      letter-spacing: 0.06em;
       color: var(--text-sub);
       padding: 5px 12px;
       border: 1px solid var(--divider);
       background: transparent;
       cursor: pointer;
       transition: all 0.18s;
-      white-space: nowrap;
     }
+    .filter-chip:hover { color: var(--text); border-color: rgba(50,50,50,0.3); }
+    .filter-chip.active { color: var(--text); background: var(--accent); border-color: var(--accent); }
+    .filter-divider { height: 1px; background: var(--divider); margin: 2px 0 14px; }
 
-    .filter-chip:hover {
-      color: var(--text);
-      border-color: rgba(50,50,50,0.3);
+    /* ── Book list ── */
+    .shelf-inner {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 0 28px 48px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--divider) transparent;
+      transition: opacity 0.28s ease;
     }
+    .shelf-inner.fading { opacity: 0; }
+    .shelf-inner::-webkit-scrollbar { width: 4px; }
+    .shelf-inner::-webkit-scrollbar-track { background: transparent; }
+    .shelf-inner::-webkit-scrollbar-thumb { background: var(--divider); }
 
-    .filter-chip.active {
-      color: var(--text);
-      background: var(--accent);
-      border-color: var(--accent);
-    }
-
-    .filter-divider {
-      height: 1px;
-      background: var(--divider);
-      margin: 4px 0 16px;
-    }
-
-    /* Section label inside scroll area */
     .shelf-section-label {
       font-size: 10px;
       font-weight: 400;
       letter-spacing: 0.22em;
       text-transform: uppercase;
       color: var(--text-sub);
-      padding-top: 28px;
-      padding-bottom: 16px;
+      padding-top: 24px;
+      padding-bottom: 14px;
     }
 
-    /* ── Book List ── */
-    .book-list {
-      list-style: none;
-    }
+    .book-list { list-style: none; }
 
     .book-item {
-      padding: 18px 0;
+      padding: 16px 28px;
+      margin: 0 -28px;
       border-bottom: 1px solid var(--divider);
       cursor: pointer;
       transition: background 0.15s;
-      margin: 0 -28px;
-      padding-left: 28px;
-      padding-right: 28px;
     }
-
-    .book-item:hover {
-      background: var(--hover);
-    }
-
-    .book-item:first-child {
-      border-top: 1px solid var(--divider);
-    }
+    .book-item:first-child { border-top: 1px solid var(--divider); }
+    .book-item:hover { background: var(--hover); }
 
     .book-title {
       font-size: 14px;
       font-weight: 400;
       color: var(--text);
-      margin-bottom: 5px;
+      margin-bottom: 4px;
       line-height: 1.3;
     }
-
     .book-meta-row {
       display: flex;
       justify-content: space-between;
       align-items: baseline;
       gap: 12px;
     }
+    .book-author-year { font-size: 12px; font-weight: 300; color: var(--text-sub); }
+    .book-neighborhood { font-size: 11px; font-weight: 300; color: var(--text-sub); white-space: nowrap; }
 
-    .book-author-year {
-      font-size: 12px;
-      font-weight: 300;
-      color: var(--text-sub);
-    }
-
-    .book-neighborhood {
-      font-size: 11px;
-      font-weight: 300;
-      letter-spacing: 0.08em;
-      color: var(--text-sub);
-      text-align: right;
-      white-space: nowrap;
-    }
-
-    /* ── Quote Block ── */
+    /* ── Quote block ── */
     .quote-block {
-      padding: 28px 0 24px;
+      padding: 26px 0 22px;
       border-bottom: 1px solid var(--divider);
     }
-
     .quote-text {
       font-size: 15px;
       font-weight: 300;
       font-style: italic;
       line-height: 1.75;
       color: var(--text);
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
-
     .quote-attr {
       font-size: 11px;
       font-weight: 300;
@@ -550,73 +481,46 @@
       text-transform: uppercase;
     }
 
-    /* ── Image Placeholder Slot ── */
+    /* ── Image placeholder ── */
     .shelf-image-slot {
       width: 100%;
-      aspect-ratio: 4 / 3;
+      aspect-ratio: 4/3;
       background: var(--accent);
-      margin: 28px 0;
+      margin: 24px 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
-      overflow: hidden;
     }
-
-    .shelf-image-slot::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(135deg, rgba(255,255,255,0.08) 25%, transparent 25%),
-        linear-gradient(225deg, rgba(255,255,255,0.08) 25%, transparent 25%),
-        linear-gradient(315deg, rgba(255,255,255,0.08) 25%, transparent 25%),
-        linear-gradient(45deg,  rgba(255,255,255,0.08) 25%, transparent 25%);
-      background-size: 20px 20px;
-    }
-
     .shelf-image-label {
       font-size: 10px;
       font-weight: 300;
       letter-spacing: 0.2em;
       text-transform: uppercase;
       color: rgba(50,50,50,0.35);
-      position: relative;
-      z-index: 1;
     }
+
+    /* shelf header fade */
+    .shelf-header-inner {
+      transition: opacity 0.28s ease;
+    }
+    .shelf-header-inner.fading { opacity: 0; }
 
     /* ─────────────────────────────────────────
        MOBILE
     ───────────────────────────────────────── */
     @media (max-width: 768px) {
       html, body { overflow: auto; height: auto; }
-
-      .nav { padding: 0 20px; }
-      .nav-center { display: none; }
-
+      .nav-cities { display: none; }
       .app {
         grid-template-columns: 1fr;
         grid-template-rows: 55vh 1fr;
         height: auto;
         min-height: 100vh;
       }
-
       .map-panel { height: 55vh; }
-
-      .shelf {
-        height: auto;
-        border-left: none;
-        border-top: 1px solid var(--divider);
-      }
-
+      .shelf { height: auto; border-left: none; border-top: 1px solid var(--divider); }
       .shelf-inner { overflow-y: visible; }
-
-      .map-ui-topleft { left: 20px; top: 20px; }
-      .map-ui-bottomleft { left: 20px; }
-
-      .era-slider-wrap {
-        width: calc(100% - 160px);
-      }
+      .era-slider-wrap { width: calc(100% - 120px); }
     }
   </style>
 </head>
@@ -625,7 +529,11 @@
   <!-- ── NAV ── -->
   <nav class="nav">
     <span class="nav-wordmark">Strata</span>
-
+    <div class="nav-cities">
+      <button class="nav-city active" data-city="Paris">Paris</button>
+      <button class="nav-city" data-city="Lisbon">Lisbon</button>
+      <button class="nav-city" data-city="Stockholm">Stockholm</button>
+    </div>
     <div class="nav-right">
       <a href="#">About</a>
       <a href="#">Method</a>
@@ -635,84 +543,81 @@
   <!-- ── APP SHELL ── -->
   <div class="app">
 
-    <!-- ════════════════════════
-         MAP PANEL
-    ════════════════════════ -->
+    <!-- ══ MAP PANEL ══ -->
     <div class="map-panel">
+      <canvas id="globe-canvas"></canvas>
 
-      <div class="map-placeholder">
-        <span class="map-placeholder-label">Map / Globe — Placeholder</span>
-      </div>
-
-      <!-- Top-left identity -->
       <div class="map-ui-topleft">
         <div class="map-project-name">Strata</div>
         <div class="map-project-sub">Literary Geography</div>
       </div>
 
-      <!-- Scale indicator -->
-      <div class="map-ui-bottomleft">
-        <span class="map-scale-label">Scale</span>
-        <div class="map-scale-bar">
-          <div class="map-scale-bar-inner"></div>
-        </div>
-        <span class="map-scale-label">2 km</span>
-      </div>
-
       <!-- Era Slider -->
       <div class="era-slider-wrap">
-
         <div class="era-slider-label">
           <span class="label-word">Era</span>
           <span class="label-active" id="era-active-label">La Belle Époque</span>
         </div>
-
         <div class="slider-track" id="slider-track">
-          <div class="slider-filled" id="slider-filled" style="width: 16%;"></div>
+          <div class="slider-filled" id="slider-filled" style="width:16%"></div>
           <div class="slider-unfilled"></div>
-          <div class="slider-thumb" id="slider-thumb" style="left: 16%;"></div>
+          <div class="slider-thumb" id="slider-thumb" style="left:16%"></div>
         </div>
-
         <div class="slider-era-labels">
-          <span class="active" onclick="setEra(0, this)">1880–1910</span>
-          <span onclick="setEra(1, this)">1920–1945</span>
-          <span onclick="setEra(2, this)">1950–1980</span>
+          <span class="active" data-idx="0">1880–1910</span>
+          <span data-idx="1">1920–1945</span>
+          <span data-idx="2">1950–1980</span>
         </div>
-
       </div>
+    </div>
 
-    </div><!-- /map-panel -->
-
-
-    <!-- ════════════════════════
-         SHELF PANEL
-    ════════════════════════ -->
+    <!-- ══ SHELF PANEL ══ -->
     <aside class="shelf">
 
-      <!-- Fixed header -->
+      <!-- Search -->
+      <div class="shelf-search">
+        <div class="search-input-wrap" style="position:relative">
+          <svg class="search-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="6.5" cy="6.5" r="4.5"/>
+            <line x1="10" y1="10" x2="14" y2="14"/>
+          </svg>
+          <input
+            class="search-input"
+            id="search-input"
+            type="text"
+            placeholder="Search title, author, neighbourhood…"
+            autocomplete="off"
+          >
+          <div class="search-results" id="search-results"></div>
+        </div>
+      </div>
+
+      <!-- Header -->
       <div class="shelf-header">
-        <div class="shelf-city-label">Current city</div>
-        <div class="shelf-city-name" id="shelf-city-name">Paris</div>
-        <div class="shelf-era-range" id="shelf-era-range">La Belle Époque — 1880 to 1910</div>
-        <div class="shelf-meta">
-          <div class="shelf-meta-item">
-            <span class="shelf-meta-val">9</span>
-            <span class="shelf-meta-key">Works</span>
-          </div>
-          <div class="shelf-meta-item">
-            <span class="shelf-meta-val">3</span>
-            <span class="shelf-meta-key">Eras</span>
-          </div>
-          <div class="shelf-meta-item">
-            <span class="shelf-meta-val">40+</span>
-            <span class="shelf-meta-key">Locations</span>
+        <div class="shelf-header-inner" id="shelf-header-inner">
+          <div class="shelf-city-label">Current city</div>
+          <div class="shelf-city-name" id="shelf-city-name">Paris</div>
+          <div class="shelf-era-range" id="shelf-era-range">La Belle Époque — 1880 to 1910</div>
+          <div class="shelf-meta">
+            <div class="shelf-meta-item">
+              <span class="shelf-meta-val" id="shelf-works">9</span>
+              <span class="shelf-meta-key">Works</span>
+            </div>
+            <div class="shelf-meta-item">
+              <span class="shelf-meta-val">3</span>
+              <span class="shelf-meta-key">Eras</span>
+            </div>
+            <div class="shelf-meta-item">
+              <span class="shelf-meta-val" id="shelf-locations">40+</span>
+              <span class="shelf-meta-key">Locations</span>
+            </div>
           </div>
         </div>
       </div>
 
       <!-- Filters -->
       <div class="shelf-filters">
-        <div class="filter-label">Filter by era</div>
+        <div class="filter-label">Era</div>
         <div class="filter-row">
           <button class="filter-chip active" onclick="toggleFilter(this)">La Belle Époque</button>
           <button class="filter-chip" onclick="toggleFilter(this)">Les Années Folles</button>
@@ -727,170 +632,459 @@
         <div class="filter-divider"></div>
       </div>
 
-      <!-- Scrollable book list -->
-      <div class="shelf-inner">
-
+      <!-- Book list -->
+      <div class="shelf-inner" id="shelf-inner">
         <div class="shelf-section-label">Works in this era</div>
-
-        <ul class="book-list">
-
-          <li class="book-item">
-            <div class="book-title">A Moveable Feast</div>
-            <div class="book-meta-row">
-              <span class="book-author-year">Ernest Hemingway — 1920s</span>
-              <span class="book-neighborhood">Montparnasse</span>
-            </div>
-          </li>
-
-          <li class="book-item">
-            <div class="book-title">Down and Out in Paris and London</div>
-            <div class="book-meta-row">
-              <span class="book-author-year">George Orwell — 1933</span>
-              <span class="book-neighborhood">Rue du Coq d'Or</span>
-            </div>
-          </li>
-
-          <li class="book-item">
-            <div class="book-title">Tropic of Cancer</div>
-            <div class="book-meta-row">
-              <span class="book-author-year">Henry Miller — 1934</span>
-              <span class="book-neighborhood">Clichy / Montmartre</span>
-            </div>
-          </li>
-
-        </ul>
-
-        <!-- Quote block -->
-        <div class="quote-block">
-          <p class="quote-text">"Paris is a moveable feast."</p>
-          <span class="quote-attr">Hemingway — A Moveable Feast, 1964</span>
-        </div>
-
-        <ul class="book-list">
-
-          <li class="book-item">
-            <div class="book-title">Nausea</div>
-            <div class="book-meta-row">
-              <span class="book-author-year">Jean-Paul Sartre — 1938</span>
-              <span class="book-neighborhood">Saint-Germain-des-Prés</span>
-            </div>
-          </li>
-
-          <li class="book-item">
-            <div class="book-title">The Autobiography of Alice B. Toklas</div>
-            <div class="book-meta-row">
-              <span class="book-author-year">Gertrude Stein — 1933</span>
-              <span class="book-neighborhood">Rue de Fleurus</span>
-            </div>
-          </li>
-
-          <li class="book-item">
-            <div class="book-title">Paris France</div>
-            <div class="book-meta-row">
-              <span class="book-author-year">Gertrude Stein — 1940</span>
-              <span class="book-neighborhood">Left Bank</span>
-            </div>
-          </li>
-
-        </ul>
-
-        <!-- Image placeholder -->
+        <ul class="book-list" id="book-list"></ul>
         <div class="shelf-image-slot">
           <span class="shelf-image-label">Image — Placeholder</span>
         </div>
+      </div>
 
-        <ul class="book-list">
+    </aside>
+  </div>
 
-          <li class="book-item">
-            <div class="book-title">Quiet Days in Clichy</div>
-            <div class="book-meta-row">
-              <span class="book-author-year">Henry Miller — 1956</span>
-              <span class="book-neighborhood">Clichy</span>
-            </div>
-          </li>
-
-          <li class="book-item">
-            <div class="book-title">The Ambassadors</div>
-            <div class="book-meta-row">
-              <span class="book-author-year">Henry James — 1903</span>
-              <span class="book-neighborhood">Faubourg Saint-Germain</span>
-            </div>
-          </li>
-
-          <li class="book-item">
-            <div class="book-title">Tender is the Night</div>
-            <div class="book-meta-row">
-              <span class="book-author-year">F. Scott Fitzgerald — 1934</span>
-              <span class="book-neighborhood">Riviera / Montparnasse</span>
-            </div>
-          </li>
-
-        </ul>
-
-        <!-- Second quote -->
-        <div class="quote-block">
-          <p class="quote-text">"France was a land, England was a people, but America, since Louis and Clark, was a promise of an unfinished Sentence..."</p>
-          <span class="quote-attr">Fitzgerald — The Crack-Up, 1936</span>
-        </div>
-
-      </div><!-- /shelf-inner -->
-
-    </aside><!-- /shelf -->
-
-  </div><!-- /app -->
-
+  <!-- Three.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
   <script>
-    /* ── City switcher ── */
-    const cityData = {
-      Paris:     { era: 'La Belle Époque — 1880 to 1910', works: 9, eras: 3, locations: '40+' },
-      Lisbon:    { era: 'Modernismo — 1900 to 1930',       works: 7, eras: 3, locations: '28+' },
-      Stockholm: { era: 'Early 1900s — 1890 to 1920',     works: 8, eras: 3, locations: '32+' }
-    };
-
-    function setCity(el, city) {
-      document.querySelectorAll('.nav-city').forEach(c => c.classList.remove('active'));
-      el.classList.add('active');
-      document.getElementById('shelf-city-name').textContent = city;
-      const d = cityData[city];
-      document.getElementById('shelf-era-range').textContent = d.era;
+  /* ══════════════════════════════════════════════════
+     DATA
+  ══════════════════════════════════════════════════ */
+  const cityData = {
+    Paris: {
+      lat: 48.8566, lng: 2.3522,
+      era: 'La Belle Époque — 1880 to 1910',
+      works: 9, locations: '40+',
+      quote: { text: '"Paris is a moveable feast."', attr: 'Hemingway — A Moveable Feast, 1964' },
+      books: [
+        { title: 'A Moveable Feast',                     author: 'Ernest Hemingway',    year: '1920s', area: 'Montparnasse'            },
+        { title: 'Down and Out in Paris and London',     author: 'George Orwell',        year: '1933',  area: 'Rue du Coq d\'Or'        },
+        { title: 'Tropic of Cancer',                     author: 'Henry Miller',         year: '1934',  area: 'Clichy / Montmartre'     },
+        { title: 'Nausea',                               author: 'Jean-Paul Sartre',     year: '1938',  area: 'Saint-Germain-des-Prés'  },
+        { title: 'The Autobiography of Alice B. Toklas', author: 'Gertrude Stein',       year: '1933',  area: 'Rue de Fleurus'          },
+        { title: 'Tender is the Night',                  author: 'F. Scott Fitzgerald',  year: '1934',  area: 'Riviera / Montparnasse'  },
+        { title: 'The Ambassadors',                      author: 'Henry James',          year: '1903',  area: 'Faubourg Saint-Germain'  },
+        { title: 'Quiet Days in Clichy',                 author: 'Henry Miller',         year: '1956',  area: 'Clichy'                  },
+        { title: 'Paris France',                         author: 'Gertrude Stein',       year: '1940',  area: 'Left Bank'               },
+      ]
+    },
+    Lisbon: {
+      lat: 38.7223, lng: -9.1393,
+      era: 'Modernismo — 1900 to 1930',
+      works: 7, locations: '28+',
+      quote: { text: '"I\'m the gap between my desire and what life has made of me."', attr: 'Pessoa — The Book of Disquiet, 1982' },
+      books: [
+        { title: 'The Book of Disquiet',             author: 'Fernando Pessoa',   year: '1982', area: 'Baixa'                },
+        { title: 'Baltasar and Blimunda',            author: 'José Saramago',     year: '1982', area: 'Alfama'               },
+        { title: 'The Year of the Death of Ricardo Reis', author: 'José Saramago', year: '1984', area: 'Chiado'             },
+        { title: 'Night Train to Lisbon',            author: 'Pascal Mercier',    year: '2004', area: 'Mouraria'             },
+        { title: 'The Maias',                        author: 'Eça de Queirós',    year: '1888', area: 'Avenida da Liberdade' },
+        { title: 'Pereira Maintains',                author: 'Antonio Tabucchi',  year: '1994', area: 'Restauradores'        },
+        { title: 'Journey to Portugal',              author: 'José Saramago',     year: '1990', area: 'Belém'                },
+      ]
+    },
+    Stockholm: {
+      lat: 59.3293, lng: 18.0686,
+      era: 'Early 1900s — 1890 to 1920',
+      works: 8, locations: '32+',
+      quote: { text: '"She had the ability to make silence feel meaningful."', attr: 'Larsson — The Girl with the Dragon Tattoo, 2005' },
+      books: [
+        { title: 'The Girl with the Dragon Tattoo', author: 'Stieg Larsson',       year: '2005', area: 'Södermalm'  },
+        { title: 'Doctor Glas',                     author: 'Hjalmar Söderberg',   year: '1905', area: 'Gamla Stan' },
+        { title: 'The Red Room',                    author: 'August Strindberg',   year: '1879', area: 'Djurgården' },
+        { title: 'Miss Julie',                      author: 'August Strindberg',   year: '1888', area: 'Östermalm'  },
+        { title: 'The Long Ships',                  author: 'Frans G. Bengtsson',  year: '1941', area: 'Kungsholmen'},
+        { title: 'Faceless Killers',                author: 'Henning Mankell',     year: '1991', area: 'Norrmalm'   },
+        { title: 'The Dwarf',                       author: 'Pär Lagerkvist',      year: '1944', area: 'Gamla Stan' },
+        { title: 'Gösta Berlings Saga',             author: 'Selma Lagerlöf',      year: '1891', area: 'Vasastan'   },
+      ]
     }
+  };
 
-    /* ── Era slider ── */
-    const eras = [
-      { label: 'La Belle Époque', pct: 16 },
-      { label: 'Les Années Folles', pct: 50 },
-      { label: 'Nouveau Roman',    pct: 84 }
-    ];
+  const allBooks = Object.entries(cityData).flatMap(([city, d]) =>
+    d.books.map(b => ({ ...b, city }))
+  );
 
-    let currentEra = 0;
+  /* ══════════════════════════════════════════════════
+     GLOBE — Three.js from scratch
+  ══════════════════════════════════════════════════ */
+  const canvas   = document.getElementById('globe-canvas');
+  const mapPanel = canvas.parentElement;
 
-    function setEra(idx, el) {
-      currentEra = idx;
-      const pct = eras[idx].pct;
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(window.devicePixelRatio);
 
-      document.getElementById('slider-filled').style.width = pct + '%';
-      document.getElementById('slider-thumb').style.left   = pct + '%';
-      document.getElementById('era-active-label').textContent = eras[idx].label;
+  const scene  = new THREE.Scene();
+  scene.background = new THREE.Color('#EDEEF5'); // ocean
 
-      document.querySelectorAll('.slider-era-labels span').forEach((s, i) => {
-        s.classList.toggle('active', i === idx);
+  const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
+  camera.position.z = 2.5;
+
+  function resize() {
+    const w = mapPanel.offsetWidth;
+    const h = mapPanel.offsetHeight;
+    renderer.setSize(w, h);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  /* Lighting */
+  scene.add(new THREE.AmbientLight(0xffffff, 1.4));
+  const dirLight = new THREE.DirectionalLight(0xffffff, 0.3);
+  dirLight.position.set(5, 3, 5);
+  scene.add(dirLight);
+
+  /* ── Globe group — everything rotates together ── */
+  const globeGroup = new THREE.Group();
+  scene.add(globeGroup);
+
+  /* Ocean sphere — #EDEEF5 */
+  const sphereGeo = new THREE.SphereGeometry(1, 64, 64);
+  const sphereMat = new THREE.MeshLambertMaterial({ color: new THREE.Color('#EDEEF5') });
+  const globeMesh = new THREE.Mesh(sphereGeo, sphereMat);
+  globeGroup.add(globeMesh);
+
+  /* Lat/lng → 3D position */
+  function latLngToVec3(lat, lng, r) {
+    const phi   = (90 - lat)  * Math.PI / 180;
+    const theta = (lng + 180) * Math.PI / 180;
+    return new THREE.Vector3(
+      -r * Math.sin(phi) * Math.cos(theta),
+       r * Math.cos(phi),
+       r * Math.sin(phi) * Math.sin(theta)
+    );
+  }
+
+  /* Land fill material — #D9DCEB */
+  const landMat   = new THREE.MeshLambertMaterial({ color: new THREE.Color('#D9DCEB'), side: THREE.FrontSide });
+  /* Border material — #323232 */
+  const borderMat = new THREE.LineBasicMaterial({ color: 0x323232, transparent: true, opacity: 0.5 });
+
+  /* Triangulate a polygon ring onto the sphere surface */
+  function ringToSpherePoints(ring, r) {
+    return ring.map(([lng, lat]) => latLngToVec3(lat, lng, r));
+  }
+
+  /* Simple ear-clip fan triangulation from centroid — good enough for convex-ish country shapes */
+  function buildLandMesh(ring, r) {
+    const pts = ringToSpherePoints(ring, r);
+    if (pts.length < 3) return null;
+
+    /* centroid on sphere */
+    const cx = pts.reduce((s, p) => s + p.x, 0) / pts.length;
+    const cy = pts.reduce((s, p) => s + p.y, 0) / pts.length;
+    const cz = pts.reduce((s, p) => s + p.z, 0) / pts.length;
+    const cLen = Math.sqrt(cx*cx + cy*cy + cz*cz);
+    const center = new THREE.Vector3(cx/cLen * r, cy/cLen * r, cz/cLen * r);
+
+    const positions = [];
+    for (let i = 0; i < pts.length - 1; i++) {
+      positions.push(center.x, center.y, center.z);
+      positions.push(pts[i].x,   pts[i].y,   pts[i].z);
+      positions.push(pts[i+1].x, pts[i+1].y, pts[i+1].z);
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+    geo.computeVertexNormals();
+    return new THREE.Mesh(geo, landMat);
+  }
+
+  function addGeoJson(geojson) {
+    geojson.features.forEach(feature => {
+      const geom  = feature.geometry;
+      const polys = geom.type === 'Polygon'
+        ? [geom.coordinates]
+        : geom.type === 'MultiPolygon'
+        ? geom.coordinates
+        : [];
+
+      polys.forEach(poly => {
+        poly.forEach((ring, ri) => {
+          /* Filled land — outer ring only (ri === 0) */
+          if (ri === 0) {
+            const mesh = buildLandMesh(ring, 1.001);
+            if (mesh) globeGroup.add(mesh);
+          }
+
+          /* Border lines on all rings */
+          const pts = ring.map(([lng, lat]) => latLngToVec3(lat, lng, 1.002));
+          const geo = new THREE.BufferGeometry().setFromPoints(pts);
+          globeGroup.add(new THREE.Line(geo, borderMat));
+        });
       });
-    }
+    });
+  }
 
-    /* Click anywhere on track to snap to nearest era */
-    document.getElementById('slider-track').addEventListener('click', function(e) {
-      const rect  = this.getBoundingClientRect();
-      const ratio = (e.clientX - rect.left) / rect.width;
-      const idx   = ratio < 0.33 ? 0 : ratio < 0.66 ? 1 : 2;
-      const labels = document.querySelectorAll('.slider-era-labels span');
-      setEra(idx, labels[idx]);
+  /* Load GeoJSON — primary then fallback */
+  fetch('https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_admin_0_countries.geojson')
+    .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+    .then(addGeoJson)
+    .catch(() => {
+      fetch('https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson')
+        .then(r => r.json())
+        .then(addGeoJson);
     });
 
-    /* ── Filter chips ── */
-    function toggleFilter(el) {
-      el.classList.toggle('active');
+  /* City pin dots — added to globeGroup so they rotate with it */
+  const pinMat     = new THREE.MeshBasicMaterial({ color: 0x323232 });
+  const pinGeo     = new THREE.SphereGeometry(0.014, 10, 10);
+  const cityMeshes = {};
+
+  Object.entries(cityData).forEach(([name, d]) => {
+    const mesh = new THREE.Mesh(pinGeo, pinMat.clone());
+    mesh.position.copy(latLngToVec3(d.lat, d.lng, 1.018));
+    mesh.userData = { city: name };
+    globeGroup.add(mesh);
+    cityMeshes[name] = mesh;
+  });
+
+  /* ── Auto-rotation ── */
+  let rotY       = 0;
+  let autoRotate = true;
+  let isDragging = false;
+  let prevMouseX = 0;
+  let prevMouseY = 0;
+  let rotX       = 0;
+  let flyTweenId = 0;
+
+  const MAX_TILT = Math.PI / 2.5; // clamp so it doesn't flip upside down
+  const DRAG_CLICK_THRESHOLD_PX = 4;
+
+  /* ── Pointer drag + tap detection (mouse + touch + pen) ── */
+  const raycaster = new THREE.Raycaster();
+  const mouse     = new THREE.Vector2();
+  let   mouseMovedSinceDown = false;
+  let   downX = 0;
+  let   downY = 0;
+  let   activePointerId = null;
+
+  function raycastCityAt(clientX, clientY) {
+    const rect = canvas.getBoundingClientRect();
+    mouse.x =  ((clientX - rect.left)  / rect.width)  * 2 - 1;
+    mouse.y = -((clientY - rect.top)   / rect.height) * 2 + 1;
+    raycaster.setFromCamera(mouse, camera);
+    const hits = raycaster.intersectObjects(Object.values(cityMeshes));
+    if (hits.length) selectCity(hits[0].object.userData.city);
+  }
+
+  canvas.addEventListener('pointerdown', e => {
+    activePointerId = e.pointerId;
+    canvas.setPointerCapture(e.pointerId);
+    isDragging = true;
+    canvas.classList.add('dragging');
+    autoRotate = false;
+    prevMouseX = e.clientX;
+    prevMouseY = e.clientY;
+    mouseMovedSinceDown = false;
+    downX = e.clientX;
+    downY = e.clientY;
+  });
+  canvas.addEventListener('pointermove', e => {
+    if (activePointerId !== e.pointerId || !isDragging) return;
+    rotY += (e.clientX - prevMouseX) * 0.005;
+    rotX += (e.clientY - prevMouseY) * 0.005;
+    rotX  = Math.max(-MAX_TILT, Math.min(MAX_TILT, rotX)); // clamp
+    prevMouseX = e.clientX;
+    prevMouseY = e.clientY;
+
+    if (Math.abs(e.clientX - downX) > DRAG_CLICK_THRESHOLD_PX || Math.abs(e.clientY - downY) > DRAG_CLICK_THRESHOLD_PX) {
+      mouseMovedSinceDown = true;
     }
+  });
+  function endPointerInteraction(e) {
+    if (activePointerId !== e.pointerId) return;
+    const shouldClickSelect = !mouseMovedSinceDown;
+    isDragging = false;
+    canvas.classList.remove('dragging');
+    activePointerId = null;
+    setTimeout(() => { autoRotate = true; }, 2000);
+    if (shouldClickSelect) raycastCityAt(e.clientX, e.clientY);
+  }
+  canvas.addEventListener('pointerup', endPointerInteraction);
+  canvas.addEventListener('pointercancel', endPointerInteraction);
+  window.addEventListener('pointerup', endPointerInteraction);
+  window.addEventListener('pointercancel', endPointerInteraction);
+  window.addEventListener('blur', () => {
+    isDragging = false;
+    canvas.classList.remove('dragging');
+    activePointerId = null;
+  });
+
+  /* ── Animate ── */
+  function animate() {
+    requestAnimationFrame(animate);
+    if (autoRotate && !isDragging) rotY += 0.0015;
+    globeGroup.rotation.y = rotY;
+    globeGroup.rotation.x = rotX;
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  /* ── Fly camera to city ── */
+  function flyTo(lat, lng) {
+    flyTweenId += 1;
+    const tweenId = flyTweenId;
+    const targetY = -(lng * Math.PI / 180);
+    const targetX = Math.max(-MAX_TILT, Math.min(MAX_TILT, lat * Math.PI / 180));
+    autoRotate = false;
+    const startY = rotY % (Math.PI * 2);
+    const startX = rotX;
+    let   diff   = targetY - startY;
+    if (diff >  Math.PI) diff -= Math.PI * 2;
+    if (diff < -Math.PI) diff += Math.PI * 2;
+    const diffX  = targetX - startX;
+    const startT = performance.now();
+    const dur    = 900;
+    function tween(now) {
+      if (tweenId !== flyTweenId) return;
+      const t = Math.min((now - startT) / dur, 1);
+      const e = t < 0.5 ? 2*t*t : -1+(4-2*t)*t;
+      rotY = startY + diff * e;
+      rotX = startX + diffX * e;
+      if (t < 1) requestAnimationFrame(tween);
+      else setTimeout(() => { autoRotate = true; }, 2500);
+    }
+    requestAnimationFrame(tween);
+  }
+
+  /* ══════════════════════════════════════════════════
+     SHELF
+  ══════════════════════════════════════════════════ */
+  let activeCity = 'Paris';
+
+  function selectCity(cityName) {
+    if (!cityData[cityName]) return;
+    activeCity = cityName;
+
+    /* fly globe */
+    const { lat, lng } = cityData[cityName];
+    flyTo(lat, lng);
+
+    /* fade shelf */
+    const inner  = document.getElementById('shelf-inner');
+    const header = document.getElementById('shelf-header-inner');
+    inner.classList.add('fading');
+    header.classList.add('fading');
+
+    setTimeout(() => {
+      renderShelf(cityName);
+      inner.classList.remove('fading');
+      header.classList.remove('fading');
+    }, 280);
+
+    /* nav pills */
+    document.querySelectorAll('.nav-city').forEach(el => {
+      el.classList.toggle('active', el.dataset.city === cityName);
+    });
+  }
+
+  function renderShelf(cityName) {
+    const d = cityData[cityName];
+    document.getElementById('shelf-city-name').textContent  = cityName;
+    document.getElementById('shelf-era-range').textContent  = d.era;
+    document.getElementById('shelf-works').textContent      = d.works;
+    document.getElementById('shelf-locations').textContent  = d.locations;
+
+    const list = document.getElementById('book-list');
+    list.innerHTML = d.books.map((b, i) => `
+      <li class="book-item">
+        <div class="book-title">${b.title}</div>
+        <div class="book-meta-row">
+          <span class="book-author-year">${b.author} — ${b.year}</span>
+          <span class="book-neighborhood">${b.area}</span>
+        </div>
+      </li>
+      ${i === 2 ? `<div class="quote-block">
+        <p class="quote-text">${d.quote.text}</p>
+        <span class="quote-attr">${d.quote.attr}</span>
+      </div>` : ''}
+    `).join('');
+  }
+
+  /* ── Nav pills ── */
+  document.querySelectorAll('.nav-city').forEach(el => {
+    el.addEventListener('click', () => selectCity(el.dataset.city));
+  });
+
+  /* ── Era slider ── */
+  const eras = [
+    { label: 'La Belle Époque', pct: 16 },
+    { label: 'Les Années Folles', pct: 50 },
+    { label: 'Nouveau Roman',    pct: 84 },
+  ];
+
+  function setEra(idx) {
+    const pct = eras[idx].pct;
+    document.getElementById('slider-filled').style.width = pct + '%';
+    document.getElementById('slider-thumb').style.left   = pct + '%';
+    document.getElementById('era-active-label').textContent = eras[idx].label;
+    document.querySelectorAll('.slider-era-labels span').forEach((s, i) => {
+      s.classList.toggle('active', i === idx);
+    });
+  }
+
+  document.querySelectorAll('.slider-era-labels span').forEach(el => {
+    el.addEventListener('click', () => setEra(+el.dataset.idx));
+  });
+
+  document.getElementById('slider-track').addEventListener('click', function(e) {
+    const r = (e.clientX - this.getBoundingClientRect().left) / this.offsetWidth;
+    setEra(r < 0.33 ? 0 : r < 0.66 ? 1 : 2);
+  });
+
+  /* ── Search ── */
+  const searchInput   = document.getElementById('search-input');
+  const searchResults = document.getElementById('search-results');
+
+  searchInput.addEventListener('input', function() {
+    const q = this.value.trim().toLowerCase();
+    if (!q) { searchResults.classList.remove('open'); return; }
+
+    const matches = allBooks.filter(b =>
+      b.title.toLowerCase().includes(q)   ||
+      b.author.toLowerCase().includes(q)  ||
+      b.area.toLowerCase().includes(q)    ||
+      b.city.toLowerCase().includes(q)
+    ).slice(0, 6);
+
+    if (!matches.length) { searchResults.classList.remove('open'); return; }
+
+    searchResults.innerHTML = matches.map(b => `
+      <div class="search-result-item" data-city="${b.city}">
+        <div class="sr-title">${b.title}</div>
+        <div class="sr-meta">${b.author} · ${b.city} · ${b.area}</div>
+      </div>
+    `).join('');
+
+    searchResults.querySelectorAll('.search-result-item').forEach(el => {
+      el.addEventListener('click', () => {
+        selectCity(el.dataset.city);
+        searchInput.value = '';
+        searchResults.classList.remove('open');
+      });
+    });
+
+    searchResults.classList.add('open');
+  });
+
+  /* Close on outside click */
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.shelf-search')) {
+      searchResults.classList.remove('open');
+    }
+  });
+
+  /* ── Filters ── */
+  function toggleFilter(el) { el.classList.toggle('active'); }
+
+  /* ── Init ── */
+  const { lat: initLat, lng: initLng } = cityData.Paris;
+  rotY = -(initLng * Math.PI / 180);
+  rotX = Math.max(-MAX_TILT, Math.min(MAX_TILT, initLat * Math.PI / 180));
+  renderShelf('Paris');
   </script>
 
 </body>
