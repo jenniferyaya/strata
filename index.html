@@ -119,19 +119,19 @@
     ───────────────────────────────────────── */
     .map-panel {
       position: relative;
-      background: var(--ocean);
+      background: #0F0F0F;
       overflow: hidden;
     }
 
-    #globe-canvas {
+    #globe-viz {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
       touch-action: none;
-      cursor: grab;
+      cursor: default;
     }
-    #globe-canvas.dragging { cursor: grabbing; }
+    #globe-viz.is-point-hover { cursor: pointer; }
 
     /* Map overlays */
     .map-ui-topleft {
@@ -277,7 +277,6 @@
       color: var(--text);
       background: transparent;
       border: none;
-      border-bottom: 1px solid var(--divider);
       outline: none;
       transition: border-color 0.2s;
     }
@@ -529,11 +528,6 @@
   <!-- ── NAV ── -->
   <nav class="nav">
     <span class="nav-wordmark">Strata</span>
-    <div class="nav-cities">
-      <button class="nav-city active" data-city="Paris">Paris</button>
-      <button class="nav-city" data-city="Lisbon">Lisbon</button>
-      <button class="nav-city" data-city="Stockholm">Stockholm</button>
-    </div>
     <div class="nav-right">
       <a href="#">About</a>
       <a href="#">Method</a>
@@ -545,7 +539,7 @@
 
     <!-- ══ MAP PANEL ══ -->
     <div class="map-panel">
-      <canvas id="globe-canvas"></canvas>
+      <div id="globe-viz"></div>
 
       <div class="map-ui-topleft">
         <div class="map-project-name">Strata</div>
@@ -644,8 +638,8 @@
     </aside>
   </div>
 
-  <!-- Three.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <!-- Globe.gl -->
+  <script src="https://unpkg.com/globe.gl"></script>
 
   <script>
   /* ══════════════════════════════════════════════════
@@ -707,273 +701,97 @@
   );
 
   /* ══════════════════════════════════════════════════
-     GLOBE — Three.js from scratch
+     GLOBE — Minimal, controlled interaction
   ══════════════════════════════════════════════════ */
-  const canvas   = document.getElementById('globe-canvas');
-  const mapPanel = canvas.parentElement;
+  const globeEl = document.getElementById('globe-viz');
+  const CITY_COLOR = '#B08968';
+  const CITY_INACTIVE_ALPHA = 0.45;
+  const BASE_POINT_RADIUS = 0.34;
+  const ACTIVE_POINT_RADIUS = 0.46;
+  const AUTO_ROTATE_SPEED = 0.16;
+  const CITY_DIM_COLOR = `rgba(176,137,104,${CITY_INACTIVE_ALPHA})`;
+  let activeCity = null;
 
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-  renderer.setPixelRatio(window.devicePixelRatio);
+  const cityPoints = Object.entries(cityData).map(([name, d]) => ({
+    name,
+    lat: d.lat,
+    lng: d.lng
+  }));
 
-  const scene  = new THREE.Scene();
-  scene.background = new THREE.Color('#EDEEF5'); // ocean
-
-  const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
-  camera.position.z = 2.5;
-
-  function resize() {
-    const w = mapPanel.offsetWidth;
-    const h = mapPanel.offsetHeight;
-    renderer.setSize(w, h);
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  /* Lighting */
-  scene.add(new THREE.AmbientLight(0xffffff, 1.4));
-  const dirLight = new THREE.DirectionalLight(0xffffff, 0.3);
-  dirLight.position.set(5, 3, 5);
-  scene.add(dirLight);
-
-  /* ── Globe group — everything rotates together ── */
-  const globeGroup = new THREE.Group();
-  scene.add(globeGroup);
-
-  /* Ocean sphere — #EDEEF5 */
-  const sphereGeo = new THREE.SphereGeometry(1, 64, 64);
-  const sphereMat = new THREE.MeshLambertMaterial({ color: new THREE.Color('#EDEEF5') });
-  const globeMesh = new THREE.Mesh(sphereGeo, sphereMat);
-  globeGroup.add(globeMesh);
-
-  /* Lat/lng → 3D position */
-  function latLngToVec3(lat, lng, r) {
-    const phi   = (90 - lat)  * Math.PI / 180;
-    const theta = (lng + 180) * Math.PI / 180;
-    return new THREE.Vector3(
-      -r * Math.sin(phi) * Math.cos(theta),
-       r * Math.cos(phi),
-       r * Math.sin(phi) * Math.sin(theta)
-    );
+  function pointColor(point) {
+    if (!activeCity) return CITY_COLOR;
+    return point.name === activeCity ? CITY_COLOR : CITY_DIM_COLOR;
   }
 
-  /* Land fill material — #D9DCEB */
-  const landMat   = new THREE.MeshLambertMaterial({ color: new THREE.Color('#D9DCEB'), side: THREE.FrontSide });
-  /* Border material — #323232 */
-  const borderMat = new THREE.LineBasicMaterial({ color: 0x323232, transparent: true, opacity: 0.5 });
-
-  /* Triangulate a polygon ring onto the sphere surface */
-  function ringToSpherePoints(ring, r) {
-    return ring.map(([lng, lat]) => latLngToVec3(lat, lng, r));
+  function pointRadius(point) {
+    return point.name === activeCity ? ACTIVE_POINT_RADIUS : BASE_POINT_RADIUS;
   }
 
-  /* Simple ear-clip fan triangulation from centroid — good enough for convex-ish country shapes */
-  function buildLandMesh(ring, r) {
-    const pts = ringToSpherePoints(ring, r);
-    if (pts.length < 3) return null;
-
-    /* centroid on sphere */
-    const cx = pts.reduce((s, p) => s + p.x, 0) / pts.length;
-    const cy = pts.reduce((s, p) => s + p.y, 0) / pts.length;
-    const cz = pts.reduce((s, p) => s + p.z, 0) / pts.length;
-    const cLen = Math.sqrt(cx*cx + cy*cy + cz*cz);
-    const center = new THREE.Vector3(cx/cLen * r, cy/cLen * r, cz/cLen * r);
-
-    const positions = [];
-    for (let i = 0; i < pts.length - 1; i++) {
-      positions.push(center.x, center.y, center.z);
-      positions.push(pts[i].x,   pts[i].y,   pts[i].z);
-      positions.push(pts[i+1].x, pts[i+1].y, pts[i+1].z);
-    }
-    const geo = new THREE.BufferGeometry();
-    geo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-    geo.computeVertexNormals();
-    return new THREE.Mesh(geo, landMat);
-  }
-
-  function addGeoJson(geojson) {
-    geojson.features.forEach(feature => {
-      const geom  = feature.geometry;
-      const polys = geom.type === 'Polygon'
-        ? [geom.coordinates]
-        : geom.type === 'MultiPolygon'
-        ? geom.coordinates
-        : [];
-
-      polys.forEach(poly => {
-        poly.forEach((ring, ri) => {
-          /* Filled land — outer ring only (ri === 0) */
-          if (ri === 0) {
-            const mesh = buildLandMesh(ring, 1.001);
-            if (mesh) globeGroup.add(mesh);
-          }
-
-          /* Border lines on all rings */
-          const pts = ring.map(([lng, lat]) => latLngToVec3(lat, lng, 1.002));
-          const geo = new THREE.BufferGeometry().setFromPoints(pts);
-          globeGroup.add(new THREE.Line(geo, borderMat));
-        });
-      });
-    });
-  }
-
-  /* Load GeoJSON — primary then fallback */
-  fetch('https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_admin_0_countries.geojson')
-    .then(r => { if (!r.ok) throw new Error(); return r.json(); })
-    .then(addGeoJson)
-    .catch(() => {
-      fetch('https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson')
-        .then(r => r.json())
-        .then(addGeoJson);
+  const globe = Globe()(globeEl)
+    .backgroundColor('#0F0F0F')
+    .globeImageUrl(null)
+    .showAtmosphere(false)
+    .pointsData(cityPoints)
+    .pointLat('lat')
+    .pointLng('lng')
+    .pointColor(pointColor)
+    .pointAltitude(0.008)
+    .pointRadius(pointRadius)
+    .pointsMerge(false)
+    .pointsTransitionDuration(0)
+    .onPointHover(point => {
+      globeEl.classList.toggle('is-point-hover', !!point);
+    })
+    .onPointClick(point => {
+      if (!point) return;
+      selectCity(point.name);
     });
 
-  /* City pin dots — added to globeGroup so they rotate with it */
-  const pinMat     = new THREE.MeshBasicMaterial({ color: 0x323232 });
-  const pinGeo     = new THREE.SphereGeometry(0.014, 10, 10);
-  const cityMeshes = {};
+  const controls = globe.controls();
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.08;
+  controls.rotateSpeed = 0.55;
+  controls.zoomSpeed = 0.65;
+  controls.minDistance = 140;
+  controls.maxDistance = 300;
+  controls.autoRotate = true;
+  controls.autoRotateSpeed = AUTO_ROTATE_SPEED;
 
-  Object.entries(cityData).forEach(([name, d]) => {
-    const mesh = new THREE.Mesh(pinGeo, pinMat.clone());
-    mesh.position.copy(latLngToVec3(d.lat, d.lng, 1.018));
-    mesh.userData = { city: name };
-    globeGroup.add(mesh);
-    cityMeshes[name] = mesh;
-  });
+  const globeMaterial = globe.globeMaterial();
+  globeMaterial.color.set('#1A1A1A');
+  globeMaterial.emissive.set('#000000');
+  globeMaterial.emissiveIntensity = 0.06;
+  globeMaterial.shininess = 0.15;
 
-  /* ── Auto-rotation ── */
-  let rotY       = 0;
-  let autoRotate = true;
-  let isDragging = false;
-  let prevMouseX = 0;
-  let prevMouseY = 0;
-  let rotX       = 0;
-  let flyTweenId = 0;
-
-  const MAX_TILT = Math.PI / 2.5; // clamp so it doesn't flip upside down
-  const DRAG_CLICK_THRESHOLD_PX = 4;
-
-  /* ── Pointer drag + tap detection (mouse + touch + pen) ── */
-  const raycaster = new THREE.Raycaster();
-  const mouse     = new THREE.Vector2();
-  let   mouseMovedSinceDown = false;
-  let   downX = 0;
-  let   downY = 0;
-  let   activePointerId = null;
-
-  function raycastCityAt(clientX, clientY) {
-    const rect = canvas.getBoundingClientRect();
-    mouse.x =  ((clientX - rect.left)  / rect.width)  * 2 - 1;
-    mouse.y = -((clientY - rect.top)   / rect.height) * 2 + 1;
-    raycaster.setFromCamera(mouse, camera);
-    const hits = raycaster.intersectObjects(Object.values(cityMeshes));
-    if (hits.length) selectCity(hits[0].object.userData.city);
+  function refreshPointStyles() {
+    globe.pointColor(pointColor).pointRadius(pointRadius).pointsData(cityPoints);
   }
 
-  canvas.addEventListener('pointerdown', e => {
-    activePointerId = e.pointerId;
-    canvas.setPointerCapture(e.pointerId);
-    isDragging = true;
-    canvas.classList.add('dragging');
-    autoRotate = false;
-    prevMouseX = e.clientX;
-    prevMouseY = e.clientY;
-    mouseMovedSinceDown = false;
-    downX = e.clientX;
-    downY = e.clientY;
-  });
-  canvas.addEventListener('pointermove', e => {
-    if (activePointerId !== e.pointerId || !isDragging) return;
-    rotY += (e.clientX - prevMouseX) * 0.005;
-    rotX += (e.clientY - prevMouseY) * 0.005;
-    rotX  = Math.max(-MAX_TILT, Math.min(MAX_TILT, rotX)); // clamp
-    prevMouseX = e.clientX;
-    prevMouseY = e.clientY;
-
-    if (Math.abs(e.clientX - downX) > DRAG_CLICK_THRESHOLD_PX || Math.abs(e.clientY - downY) > DRAG_CLICK_THRESHOLD_PX) {
-      mouseMovedSinceDown = true;
-    }
-  });
-  function endPointerInteraction(e) {
-    if (activePointerId !== e.pointerId) return;
-    const shouldClickSelect = !mouseMovedSinceDown;
-    isDragging = false;
-    canvas.classList.remove('dragging');
-    activePointerId = null;
-    setTimeout(() => { autoRotate = true; }, 2000);
-    if (shouldClickSelect) raycastCityAt(e.clientX, e.clientY);
-  }
-  canvas.addEventListener('pointerup', endPointerInteraction);
-  canvas.addEventListener('pointercancel', endPointerInteraction);
-  window.addEventListener('pointerup', endPointerInteraction);
-  window.addEventListener('pointercancel', endPointerInteraction);
-  window.addEventListener('blur', () => {
-    isDragging = false;
-    canvas.classList.remove('dragging');
-    activePointerId = null;
-  });
-
-  /* ── Animate ── */
-  function animate() {
-    requestAnimationFrame(animate);
-    if (autoRotate && !isDragging) rotY += 0.0015;
-    globeGroup.rotation.y = rotY;
-    globeGroup.rotation.x = rotX;
-    renderer.render(scene, camera);
-  }
-  animate();
-
-  /* ── Fly camera to city ── */
   function flyTo(lat, lng) {
-    flyTweenId += 1;
-    const tweenId = flyTweenId;
-    const targetY = -(lng * Math.PI / 180);
-    const targetX = Math.max(-MAX_TILT, Math.min(MAX_TILT, lat * Math.PI / 180));
-    autoRotate = false;
-    const startY = rotY % (Math.PI * 2);
-    const startX = rotX;
-    let   diff   = targetY - startY;
-    if (diff >  Math.PI) diff -= Math.PI * 2;
-    if (diff < -Math.PI) diff += Math.PI * 2;
-    const diffX  = targetX - startX;
-    const startT = performance.now();
-    const dur    = 900;
-    function tween(now) {
-      if (tweenId !== flyTweenId) return;
-      const t = Math.min((now - startT) / dur, 1);
-      const e = t < 0.5 ? 2*t*t : -1+(4-2*t)*t;
-      rotY = startY + diff * e;
-      rotX = startX + diffX * e;
-      if (t < 1) requestAnimationFrame(tween);
-      else setTimeout(() => { autoRotate = true; }, 2500);
-    }
-    requestAnimationFrame(tween);
+    controls.autoRotate = false;
+    globe.pointOfView({ lat, lng, altitude: 1.8 }, 900);
   }
 
   /* ══════════════════════════════════════════════════
      SHELF
   ══════════════════════════════════════════════════ */
-  let activeCity = 'Paris';
+  function updateSidebar(city) {
+    // Hook for external sidebar integration.
+    // Keep this light; full sidebar behavior can be implemented elsewhere.
+    if (!city || !city.name) return;
+    renderShelf(city.name);
+  }
 
   function selectCity(cityName) {
     if (!cityData[cityName]) return;
     activeCity = cityName;
+    refreshPointStyles();
 
     /* fly globe */
     const { lat, lng } = cityData[cityName];
     flyTo(lat, lng);
 
-    /* fade shelf */
-    const inner  = document.getElementById('shelf-inner');
-    const header = document.getElementById('shelf-header-inner');
-    inner.classList.add('fading');
-    header.classList.add('fading');
-
-    setTimeout(() => {
-      renderShelf(cityName);
-      inner.classList.remove('fading');
-      header.classList.remove('fading');
-    }, 280);
+    updateSidebar({ name: cityName, lat, lng });
 
     /* nav pills */
     document.querySelectorAll('.nav-city').forEach(el => {
@@ -1081,10 +899,7 @@
   function toggleFilter(el) { el.classList.toggle('active'); }
 
   /* ── Init ── */
-  const { lat: initLat, lng: initLng } = cityData.Paris;
-  rotY = -(initLng * Math.PI / 180);
-  rotX = Math.max(-MAX_TILT, Math.min(MAX_TILT, initLat * Math.PI / 180));
-  renderShelf('Paris');
+  refreshPointStyles();
   </script>
 
 </body>
