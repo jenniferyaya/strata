@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Approach — Strata</title>
+  <link rel="stylesheet" href="https://use.typekit.net/kub5gzl.css">
+
+  <style>
+    /* ─────────────────────────────────────────
+       RESET & BASE
+    ───────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #EDEDED;
+      --surface:  #FFFFFF;
+      --text:     #323232;
+      --text-sub: #7C7E87;
+      --accent:   #D9DCEB;
+      --divider:  rgba(217,220,235,0.6);
+      --font:     "neue-haas-unica", sans-serif;
+      --nav-h:    52px;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      font-weight: 300;
+      font-size: 15px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─────────────────────────────────────────
+       NAV
+    ───────────────────────────────────────── */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      height: var(--nav-h);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--divider);
+    }
+
+    .nav-wordmark {
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .nav-right a {
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 0.1em;
+      color: var(--text-sub);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-right a:hover { color: var(--text); }
+    .nav-right a.active { color: var(--text); }
+
+    /* ─────────────────────────────────────────
+       PAGE
+    ───────────────────────────────────────── */
+    .page {
+      padding-top: var(--nav-h);
+      min-height: 100vh;
+    }
+
+    /* ─────────────────────────────────────────
+       READING COLUMN
+    ───────────────────────────────────────── */
+    .reading-col {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 120px 24px 80px;
+    }
+
+    /* ─────────────────────────────────────────
+       TITLE
+    ───────────────────────────────────────── */
+    .page-title {
+      font-size: 28px;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      color: var(--text);
+      margin-bottom: 24px;
+    }
+
+    /* ─────────────────────────────────────────
+       INTRO
+    ───────────────────────────────────────── */
+    .intro {
+      max-width: 540px;
+      margin-bottom: 48px;
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.65;
+    }
+
+    /* ─────────────────────────────────────────
+       BODY TEXT
+    ───────────────────────────────────────── */
+    p {
+      font-size: 15px;
+      font-weight: 300;
+      line-height: 1.65;
+      color: var(--text);
+    }
+
+    /* ─────────────────────────────────────────
+       SECTION LABEL
+    ───────────────────────────────────────── */
+    .section-label {
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--text-sub);
+      margin-bottom: 16px;
+    }
+
+    /* ─────────────────────────────────────────
+       AXIS HEADING
+    ───────────────────────────────────────── */
+    .axis-title {
+      font-size: 20px;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+      color: var(--text);
+      margin-bottom: 32px;
+    }
+
+    /* ─────────────────────────────────────────
+       AXIS BLOCKS
+    ───────────────────────────────────────── */
+    .axis-list {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .axis-item-name {
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      color: var(--text);
+      margin-bottom: 5px;
+    }
+
+    .axis-item-desc {
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.6;
+      color: var(--text-sub);
+      max-width: 520px;
+    }
+
+    /* ─────────────────────────────────────────
+       SECTION BREAKS
+    ───────────────────────────────────────── */
+    .section-break {
+      margin-top: 72px;
+    }
+
+    /* ─────────────────────────────────────────
+       MAP READING SECTION
+    ───────────────────────────────────────── */
+    .map-reading-heading {
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    /* ─────────────────────────────────────────
+       SHELF SECTION
+    ───────────────────────────────────────── */
+    .shelf-section {
+      max-width: 520px;
+      margin-top: 48px;
+    }
+
+    .shelf-section p + p {
+      margin-top: 16px;
+    }
+
+    /* ─────────────────────────────────────────
+       QUOTE BLOCK
+    ───────────────────────────────────────── */
+    .quote-block {
+      margin: 48px 0;
+    }
+
+    .quote-block p {
+      font-size: 16px;
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.7;
+      color: var(--text);
+    }
+
+    .quote-attr {
+      display: block;
+      margin-top: 12px;
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-sub);
+      font-style: normal;
+    }
+
+    /* ─────────────────────────────────────────
+       FINAL SECTION
+    ───────────────────────────────────────── */
+    .final-section {
+      max-width: 490px;
+      margin-top: 48px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- ── NAV ── -->
+  <nav class="nav">
+    <a class="nav-wordmark" href="index.html">Strata</a>
+    <div class="nav-right">
+      <a href="approach.html" class="active">Approach</a>
+      <a href="index.html">Map</a>
+    </div>
+  </nav>
+
+  <div class="page">
+    <div class="reading-col">
+
+      <!-- 1. Title -->
+      <h1 class="page-title">Approach</h1>
+
+      <!-- 2. Intro -->
+      <p class="intro">
+        Strata is a system for reading cities through the literature they produced — 
+        or that was written inside them. It works from a simple premise: that place 
+        is not background. Cities shape the conditions of thought. Streets, quarters, 
+        seasons, and the social textures of a moment all enter the written work, 
+        and the written work in turn becomes a lens through which the city is seen.
+      </p>
+
+      <!-- 3. Core Model -->
+      <div>
+        <p class="section-label">Three axes</p>
+        <p class="axis-title">City × Time × Perspective</p>
+
+        <div class="axis-list">
+          <div>
+            <p class="axis-item-name">City</p>
+            <p class="axis-item-desc">
+              Each city is treated as a literary site — a place with a documented 
+              relationship to writing. The selection is not exhaustive. It is 
+              intentional. Cities are chosen because something significant happened 
+              in them, not merely because writers passed through.
+            </p>
+          </div>
+
+          <div>
+            <p class="axis-item-name">Time</p>
+            <p class="axis-item-desc">
+              Literature is mapped to the period in which it was written or set, 
+              not the year of publication. This distinction matters. A novel written 
+              in 1960 about events in 1890 belongs to 1890 in this system. The era 
+              slider surfaces this layer, allowing the city to shift beneath you as 
+              time moves.
+            </p>
+          </div>
+
+          <div>
+            <p class="axis-item-name">Perspective</p>
+            <p class="axis-item-desc">
+              Who is speaking from inside the city? The expatriate writer carries 
+              different sight lines than the native one. The political exile reads 
+              the streets differently than the returning traveller. Perspective is 
+              not a filter — it is part of the archive.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4 + 5. Section break → How to read the map -->
+      <div class="section-break">
+        <p class="map-reading-heading">How to read the map</p>
+        <p>
+          The map is not a timeline and it is not a guide. It is closer to an index — 
+          a record of where writing was rooted. Selecting a city opens its shelf: 
+          a set of works tied to that place and period. Moving the era slider 
+          changes which works are visible. The pins on the map follow. What 
+          disappears is not erased; it is waiting at another position on the axis.
+        </p>
+      </div>
+
+      <!-- 6. Shelf System Section -->
+      <div class="shelf-section">
+        <p>
+          The shelf is ordered by neighbourhood, not by date or author. 
+          This is deliberate. The spatial logic of a city — its districts, 
+          their character, their distance from one another — is part of 
+          the literary meaning. Montparnasse in 1923 is not interchangeable 
+          with Saint-Germain-des-Prés in 1948, even within the same city.
+        </p>
+        <p>
+          Each entry carries a title, an author, a year, and a quarter. 
+          Where the work is set and where it was written are often the 
+          same location. Where they differ, the listed area reflects the 
+          primary setting of the text.
+        </p>
+      </div>
+
+      <!-- 7. Quote Block -->
+      <div class="quote-block">
+        <p>
+          "A writer only begins a book. A reader finishes it."
+          <span class="quote-attr">Samuel Johnson</span>
+        </p>
+      </div>
+
+      <!-- 8. Why this exists -->
+      <div class="final-section">
+        <p>
+          Strata exists because literary geography is underbuilt as a field of 
+          public access. The scholarship is there. The maps are not. This is an 
+          attempt to make the spatial dimension of literature visible — not as 
+          annotation, and not as tourism, but as a way of understanding what 
+          cities do to the people who write inside them.
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

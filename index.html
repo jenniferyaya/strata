@@ -16,7 +16,7 @@
       --bg:        #EDEDED;
       --surface:   #FFFFFF;
       --text:      #323232;
-      --text-sub:  #7C7E87;
+      --text-sub:  #4A4D54;
       --accent:    #D9DCEB;
       --ocean:     #EDEEF5;
       --hover:     rgba(217,220,235,0.2);
@@ -53,54 +53,14 @@
       background: var(--bg);
       border-bottom: 1px solid var(--divider);
     }
-
     .nav-wordmark {
-      font-weight: 400;
-      font-size: 13px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--text);
+      font-weight: 400; font-size: 13px; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--text);
     }
-
-    .nav-cities {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 32px;
-    }
-
-    .nav-city {
-      font-size: 11px;
-      font-weight: 300;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--text-sub);
-      cursor: pointer;
-      padding-bottom: 2px;
-      border-bottom: 1px solid transparent;
-      transition: color 0.2s, border-color 0.2s;
-      background: none;
-      border-top: none;
-      border-left: none;
-      border-right: none;
-      font-family: var(--font);
-    }
-    .nav-city:hover  { color: var(--text); }
-    .nav-city.active { color: var(--text); border-bottom-color: var(--text); }
-
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 28px;
-    }
+    .nav-right { display: flex; align-items: center; gap: 28px; }
     .nav-right a {
-      font-size: 11px;
-      font-weight: 300;
-      letter-spacing: 0.1em;
-      color: var(--text-sub);
-      text-decoration: none;
-      transition: color 0.2s;
+      font-size: 12px; font-weight: 300; letter-spacing: 0.1em;
+      color: var(--text-sub); text-decoration: none; transition: color 0.2s;
     }
     .nav-right a:hover { color: var(--text); }
 
@@ -119,301 +79,282 @@
     ───────────────────────────────────────── */
     .map-panel {
       position: relative;
-      background: #0F0F0F;
+      background: var(--ocean);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Continent buttons in nav ── */
+    .nav-continents {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .cont-btn {
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-sub);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 5px 10px;
+      transition: color 0.2s, background 0.2s;
+      white-space: nowrap;
+    }
+    .cont-btn:hover { color: var(--text); }
+    .cont-btn.active {
+      color: var(--text);
+      font-weight: 400;
+      background: #ffffff;
+    }
+
+    /* ── Map viewport ── */
+    .map-viewport {
+      flex: 1;
+      position: relative;
       overflow: hidden;
     }
 
-    #globe-viz {
+    #flat-map {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
-      touch-action: none;
-      cursor: default;
     }
-    #globe-viz.is-point-hover { cursor: pointer; }
 
-    /* Map overlays */
+    .country-path {
+      fill: #ffffff;
+      stroke: var(--accent);
+      stroke-width: 0.6;
+      cursor: pointer;
+      transition: fill 0.15s;
+    }
+
+    .country-path.active-country { fill: var(--accent); stroke: #bfc4db; }
+    .country-path.country-inert { cursor: default; }
+
+    /* ── Map loading skeleton ── */
+    .map-loading {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      z-index: 5;
+      background: var(--ocean);
+      transition: opacity 0.4s ease;
+      pointer-events: none;
+    }
+    .map-loading.hidden { opacity: 0; }
+    .map-loading-bar-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 160px;
+    }
+    .map-loading-bar {
+      height: 3px;
+      background: var(--accent);
+      border-radius: 2px;
+      transform-origin: left;
+      animation: skeletonPulse 1.4s ease-in-out infinite;
+    }
+    .map-loading-bar:nth-child(2) { animation-delay: 0.15s; width: 80%; }
+    .map-loading-bar:nth-child(3) { animation-delay: 0.3s;  width: 55%; }
+    @keyframes skeletonPulse {
+      0%, 100% { opacity: 0.3; }
+      50%       { opacity: 1;   }
+    }
+    .map-loading-label {
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-sub);
+    }
+
+    /* Coming-soon overlay */
+    .map-coming-soon {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .map-coming-soon.visible { opacity: 1; }
+    .map-coming-soon-label {
+      font-size: 10px; font-weight: 400; letter-spacing: 0.28em;
+      text-transform: uppercase; color: var(--text-sub);
+    }
+    .map-coming-soon-sub {
+      font-size: 12px; font-weight: 300; color: var(--text-sub);
+    }
+
+    /* Top-left wordmark on map */
     .map-ui-topleft {
       position: absolute;
-      top: 28px;
-      left: 40px;
+      top: 20px; left: 28px;
       z-index: 10;
       pointer-events: none;
     }
     .map-project-name {
-      font-size: 11px;
-      font-weight: 400;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      color: var(--text);
-      margin-bottom: 3px;
+      font-size: 11px; font-weight: 400; letter-spacing: 0.28em;
+      text-transform: uppercase; color: var(--text); margin-bottom: 2px;
     }
     .map-project-sub {
-      font-size: 11px;
-      font-weight: 300;
-      letter-spacing: 0.1em;
-      color: var(--text-sub);
+      font-size: 11px; font-weight: 300; letter-spacing: 0.1em; color: var(--text-sub);
     }
 
-    /* ── Era Slider ── */
-    .era-slider-wrap {
+
+    /* ── Zoom controls ── */
+    .zoom-controls {
       position: absolute;
-      bottom: 32px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 10;
-      width: clamp(280px, 42%, 500px);
-    }
-
-    .era-slider-label {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 10px;
-    }
-    .era-slider-label .label-word {
-      font-size: 10px;
-      font-weight: 400;
-      letter-spacing: 0.22em;
-      color: var(--text-sub);
-      text-transform: uppercase;
-    }
-    .era-slider-label .label-active {
-      font-size: 10px;
-      font-weight: 400;
-      letter-spacing: 0.14em;
-      color: var(--text);
-      text-transform: uppercase;
-    }
-
-    .slider-track {
-      position: relative;
-      height: 9px;
-      cursor: pointer;
-      display: flex;
-    }
-    .slider-filled {
-      height: 100%;
-      background: var(--accent);
-      transition: width 0.25s ease;
-      flex-shrink: 0;
-    }
-    .slider-unfilled {
-      height: 100%;
-      background: #ffffff;
-      flex: 1;
-    }
-    .slider-thumb {
-      position: absolute;
+      left: 20px;
       top: 50%;
-      transform: translate(-50%, -50%);
-      width: 2px;
-      height: 22px;
-      background: var(--text);
+      transform: translateY(-50%);
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+    .zoom-btn {
+      width: 28px;
+      height: 28px;
+      background: #ffffff;
+      border: 1px solid var(--divider);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      user-select: none;
+    }
+    .zoom-btn:hover  { background: var(--accent); }
+    .zoom-btn:active { background: var(--text); color: #F7F7FB; }
+
+    /* ── Book pins ── */
+    .book-pin {
+      cursor: pointer;
+      transition: opacity 0.35s ease;
+    }
+    .book-pin.hidden { opacity: 0; pointer-events: none; }
+
+    .book-pin circle {
+      fill: var(--text);
+    }
+    .book-pin:hover circle { r: 6; }
+
+    .book-pin text {
+      font-family: var(--font);
+      font-size: 9px;
+      font-weight: 400;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      fill: var(--text);
       pointer-events: none;
-      transition: left 0.25s ease;
+      dominant-baseline: middle;
     }
 
-    .slider-era-labels {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 9px;
-    }
-    .slider-era-labels span {
-      font-size: 10px;
-      font-weight: 300;
-      letter-spacing: 0.1em;
-      color: var(--text-sub);
-      cursor: pointer;
-      text-transform: uppercase;
-      transition: color 0.2s;
-    }
-    .slider-era-labels span:hover { color: var(--text); }
-    .slider-era-labels span.active { color: var(--text); font-weight: 400; }
 
     /* ─────────────────────────────────────────
        SHELF PANEL
     ───────────────────────────────────────── */
     .shelf {
       background: var(--surface);
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      overflow: hidden;
+      display: flex; flex-direction: column;
+      height: 100%; overflow: hidden;
       border-left: 1px solid var(--divider);
     }
 
-    /* ── Search bar ── */
     .shelf-search {
       padding: 16px 28px;
       border-bottom: 1px solid var(--divider);
       flex-shrink: 0;
     }
-
-    .search-input-wrap {
-      position: relative;
-      display: flex;
-      align-items: center;
-    }
-
+    .search-input-wrap { position: relative; display: flex; align-items: center; }
     .search-icon {
-      position: absolute;
-      left: 0;
-      width: 14px;
-      height: 14px;
-      color: var(--text-sub);
-      pointer-events: none;
-      flex-shrink: 0;
+      position: absolute; left: 0; width: 14px; height: 14px;
+      color: var(--text-sub); pointer-events: none; flex-shrink: 0;
     }
-
     .search-input {
-      width: 100%;
-      padding: 6px 0 6px 22px;
-      font-family: var(--font);
-      font-size: 12px;
-      font-weight: 300;
-      letter-spacing: 0.04em;
-      color: var(--text);
-      background: transparent;
-      border: none;
-      outline: none;
-      transition: border-color 0.2s;
+      width: 100%; padding: 6px 0 6px 22px;
+      font-family: var(--font); font-size: 12px; font-weight: 300;
+      letter-spacing: 0.04em; color: var(--text);
+      background: transparent; border: none; outline: none;
     }
-    .search-input::placeholder {
-      color: var(--text-sub);
-      letter-spacing: 0.08em;
-    }
-    .search-input:focus {
-      border-bottom-color: var(--text);
-    }
-
-    /* Search results dropdown */
+    .search-input::placeholder { color: var(--text-sub); letter-spacing: 0.08em; }
     .search-results {
-      position: absolute;
-      top: calc(100% + 8px);
-      left: 0;
-      right: 0;
-      background: var(--surface);
-      z-index: 50;
-      display: none;
+      position: absolute; top: calc(100% + 8px); left: 0; right: 0;
+      background: var(--surface); border: 1px solid var(--divider);
+      z-index: 50; display: none;
     }
     .search-results.open { display: block; }
-
     .search-result-item {
-      padding: 10px 12px;
-      cursor: pointer;
-      border-bottom: 1px solid var(--divider);
-      transition: background 0.15s;
+      padding: 10px 12px; cursor: pointer;
+      border-bottom: 1px solid var(--divider); transition: background 0.15s;
     }
     .search-result-item:last-child { border-bottom: none; }
     .search-result-item:hover { background: var(--hover); }
+    .sr-title { font-size: 13px; font-weight: 400; color: var(--text); margin-bottom: 2px; }
+    .sr-meta  { font-size: 11px; font-weight: 300; color: var(--text-sub); }
 
-    .sr-title {
-      font-size: 13px;
-      font-weight: 400;
-      color: var(--text);
-      margin-bottom: 2px;
-    }
-    .sr-meta {
-      font-size: 11px;
-      font-weight: 300;
-      color: var(--text-sub);
-    }
-
-    /* ── Shelf Header ── */
-    .shelf-header {
-      padding: 28px 28px 0;
-      flex-shrink: 0;
-    }
-
+    .shelf-header { padding: 28px 28px 0; flex-shrink: 0; }
     .shelf-city-label {
-      font-size: 10px;
-      font-weight: 400;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--text-sub);
-      margin-bottom: 6px;
+      font-size: 10px; font-weight: 400; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--text-sub); margin-bottom: 6px;
     }
     .shelf-city-name {
-      font-size: 36px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      line-height: 1;
-      color: var(--text);
-      margin-bottom: 8px;
+      font-size: 36px; font-weight: 700; letter-spacing: -0.02em;
+      line-height: 1; color: var(--text); margin-bottom: 8px;
     }
     .shelf-era-range {
-      font-size: 13px;
-      font-weight: 300;
-      font-style: italic;
-      color: var(--text-sub);
-      margin-bottom: 20px;
+      font-size: 13px; font-weight: 300; font-style: italic;
+      color: var(--text-sub); margin-bottom: 20px;
     }
     .shelf-meta {
-      display: flex;
-      gap: 24px;
-      padding-bottom: 22px;
+      display: flex; gap: 24px; padding-bottom: 22px;
       border-bottom: 1px solid var(--divider);
     }
     .shelf-meta-item { display: flex; flex-direction: column; gap: 3px; }
-    .shelf-meta-val {
-      font-size: 18px;
-      font-weight: 400;
-      line-height: 1;
-      color: var(--text);
-    }
-    .shelf-meta-key {
-      font-size: 10px;
-      font-weight: 300;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--text-sub);
-    }
+    .shelf-meta-val { font-size: 18px; font-weight: 400; line-height: 1; color: var(--text); }
+    .shelf-meta-key { font-size: 10px; font-weight: 300; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-sub); }
 
-    /* ── Filters ── */
-    .shelf-filters {
-      padding: 18px 28px 0;
-      flex-shrink: 0;
-    }
-    .filter-label {
-      font-size: 10px;
-      font-weight: 400;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--text-sub);
-      margin-bottom: 8px;
-    }
-    .filter-row {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 14px;
-    }
+    .shelf-filters { padding: 18px 28px 0; flex-shrink: 0; }
+    .filter-label { font-size: 10px; font-weight: 400; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-sub); margin-bottom: 8px; }
+    .filter-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
     .filter-chip {
-      font-size: 11px;
-      font-weight: 300;
-      font-family: var(--font);
-      letter-spacing: 0.06em;
-      color: var(--text-sub);
-      padding: 5px 12px;
-      border: 1px solid var(--divider);
-      background: transparent;
-      cursor: pointer;
-      transition: all 0.18s;
+      font-size: 11px; font-weight: 300; font-family: var(--font);
+      letter-spacing: 0.06em; color: var(--text-sub);
+      padding: 5px 12px; border: 1px solid var(--divider);
+      background: transparent; cursor: pointer; transition: all 0.18s;
     }
     .filter-chip:hover { color: var(--text); border-color: rgba(50,50,50,0.3); }
     .filter-chip.active { color: var(--text); background: var(--accent); border-color: var(--accent); }
     .filter-divider { height: 1px; background: var(--divider); margin: 2px 0 14px; }
 
-    /* ── Book list ── */
     .shelf-inner {
-      flex: 1;
-      overflow-y: auto;
-      overflow-x: hidden;
+      flex: 1; overflow-y: auto; overflow-x: hidden;
       padding: 0 28px 48px;
-      scrollbar-width: thin;
-      scrollbar-color: var(--divider) transparent;
+      scrollbar-width: thin; scrollbar-color: var(--divider) transparent;
       transition: opacity 0.28s ease;
     }
     .shelf-inner.fading { opacity: 0; }
@@ -422,86 +363,77 @@
     .shelf-inner::-webkit-scrollbar-thumb { background: var(--divider); }
 
     .shelf-section-label {
-      font-size: 10px;
-      font-weight: 400;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--text-sub);
-      padding-top: 24px;
-      padding-bottom: 14px;
+      font-size: 10px; font-weight: 400; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--text-sub);
+      padding-top: 24px; padding-bottom: 14px;
     }
-
     .book-list { list-style: none; }
-
     .book-item {
-      padding: 16px 28px;
-      margin: 0 -28px;
+      padding: 16px 28px; margin: 0 -28px;
       border-bottom: 1px solid var(--divider);
-      cursor: pointer;
-      transition: background 0.15s;
+      cursor: pointer; transition: background 0.15s;
     }
     .book-item:first-child { border-top: 1px solid var(--divider); }
     .book-item:hover { background: var(--hover); }
-
-    .book-title {
-      font-size: 14px;
-      font-weight: 400;
-      color: var(--text);
-      margin-bottom: 4px;
-      line-height: 1.3;
-    }
-    .book-meta-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      gap: 12px;
-    }
+    .book-title { font-size: 14px; font-weight: 400; color: var(--text); margin-bottom: 4px; line-height: 1.3; }
+    .book-meta-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
     .book-author-year { font-size: 12px; font-weight: 300; color: var(--text-sub); }
     .book-neighborhood { font-size: 11px; font-weight: 300; color: var(--text-sub); white-space: nowrap; }
 
-    /* ── Quote block ── */
-    .quote-block {
-      padding: 26px 0 22px;
-      border-bottom: 1px solid var(--divider);
+    .quote-block { padding: 26px 0 22px; border-bottom: 1px solid var(--divider); }
+    .quote-text { font-size: 15px; font-weight: 300; font-style: italic; line-height: 1.75; color: var(--text); margin-bottom: 10px; }
+    .quote-attr { font-size: 11px; font-weight: 300; letter-spacing: 0.1em; color: var(--text-sub); text-transform: uppercase; }
+
+    .shelf-image-slot {
+      width: 100%; aspect-ratio: 4/3; background: var(--accent);
+      margin: 24px 0; display: flex; align-items: center; justify-content: center;
     }
-    .quote-text {
-      font-size: 15px;
+    .shelf-image-label { font-size: 10px; font-weight: 300; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(50,50,50,0.35); }
+
+    .empty-state {
+      padding: 24px 0 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      list-style: none;
+    }
+    .empty-state-msg {
+      font-size: 13px;
       font-weight: 300;
-      font-style: italic;
-      line-height: 1.75;
-      color: var(--text);
-      margin-bottom: 10px;
+      color: var(--text-sub);
     }
-    .quote-attr {
+    .empty-state-hint {
       font-size: 11px;
       font-weight: 300;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.06em;
       color: var(--text-sub);
-      text-transform: uppercase;
-    }
-
-    /* ── Image placeholder ── */
-    .shelf-image-slot {
-      width: 100%;
-      aspect-ratio: 4/3;
-      background: var(--accent);
-      margin: 24px 0;
       display: flex;
       align-items: center;
-      justify-content: center;
+      gap: 8px;
     }
-    .shelf-image-label {
-      font-size: 10px;
+    .era-suggest-btn {
+      font-family: var(--font);
+      font-size: 11px;
       font-weight: 300;
-      letter-spacing: 0.2em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: rgba(50,50,50,0.35);
+      color: var(--text);
+      background: none;
+      border: 1px solid var(--divider);
+      padding: 4px 10px;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .era-suggest-btn:hover {
+      background: var(--accent);
+      border-color: var(--accent);
     }
 
-    /* shelf header fade */
-    .shelf-header-inner {
-      transition: opacity 0.28s ease;
-    }
+    .coming-soon-block { padding: 36px 0 24px; }
+    .coming-soon-title { font-size: 11px; font-weight: 400; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text-sub); margin-bottom: 12px; }
+    .coming-soon-body { font-size: 14px; font-weight: 300; line-height: 1.75; color: var(--text-sub); max-width: 320px; }
+
+    .shelf-header-inner { transition: opacity 0.28s ease; }
     .shelf-header-inner.fading { opacity: 0; }
 
     /* ─────────────────────────────────────────
@@ -509,17 +441,10 @@
     ───────────────────────────────────────── */
     @media (max-width: 768px) {
       html, body { overflow: auto; height: auto; }
-      .nav-cities { display: none; }
-      .app {
-        grid-template-columns: 1fr;
-        grid-template-rows: 55vh 1fr;
-        height: auto;
-        min-height: 100vh;
-      }
+      .app { grid-template-columns: 1fr; grid-template-rows: 55vh 1fr; height: auto; min-height: 100vh; }
       .map-panel { height: 55vh; }
       .shelf { height: auto; border-left: none; border-top: 1px solid var(--divider); }
       .shelf-inner { overflow-y: visible; }
-      .era-slider-wrap { width: calc(100% - 120px); }
     }
   </style>
 </head>
@@ -528,9 +453,17 @@
   <!-- ── NAV ── -->
   <nav class="nav">
     <span class="nav-wordmark">Strata</span>
+    <div class="nav-continents" id="continent-bar">
+      <button class="cont-btn" data-continent="world" class="cont-btn active">World</button>
+      <button class="cont-btn" data-continent="africa">Africa</button>
+      <button class="cont-btn" data-continent="asia">Asia</button>
+      <button class="cont-btn" data-continent="europe">Europe</button>
+      <button class="cont-btn" data-continent="north-america">N. America</button>
+      <button class="cont-btn" data-continent="south-america">S. America</button>
+      <button class="cont-btn" data-continent="oceania">Oceania</button>
+    </div>
     <div class="nav-right">
-      <a href="#">About</a>
-      <a href="#">Method</a>
+      <a href="#">Approach</a>
     </div>
   </nav>
 
@@ -539,31 +472,34 @@
 
     <!-- ══ MAP PANEL ══ -->
     <div class="map-panel">
-      <div id="globe-viz"></div>
 
-      <div class="map-ui-topleft">
-        <div class="map-project-name">Strata</div>
-        <div class="map-project-sub">Literary Geography</div>
+      <!-- Flat SVG map -->
+      <div class="map-viewport">
+        <svg id="flat-map" xmlns="http://www.w3.org/2000/svg"></svg>
+
+        <!-- Loading skeleton -->
+        <div class="map-loading" id="map-loading">
+          <div class="map-loading-bar-wrap">
+            <div class="map-loading-bar"></div>
+            <div class="map-loading-bar"></div>
+            <div class="map-loading-bar"></div>
+          </div>
+          <div class="map-loading-label">Loading map</div>
+        </div>
+
+        <div class="map-coming-soon" id="map-coming-soon">
+          <div class="map-coming-soon-label">Coming Soon</div>
+          <div class="map-coming-soon-sub">Literary geography for this region is in progress.</div>
+        </div>
+
+        <div class="zoom-controls">
+          <button class="zoom-btn" id="zoom-in"  aria-label="Zoom in">+</button>
+          <button class="zoom-btn" id="zoom-out" aria-label="Zoom out">−</button>
+          <button class="zoom-btn" id="zoom-reset" aria-label="Reset view" style="font-size:14px;">↺</button>
+        </div>
       </div>
 
-      <!-- Era Slider -->
-      <div class="era-slider-wrap">
-        <div class="era-slider-label">
-          <span class="label-word">Era</span>
-          <span class="label-active" id="era-active-label">La Belle Époque</span>
-        </div>
-        <div class="slider-track" id="slider-track">
-          <div class="slider-filled" id="slider-filled" style="width:16%"></div>
-          <div class="slider-unfilled"></div>
-          <div class="slider-thumb" id="slider-thumb" style="left:16%"></div>
-        </div>
-        <div class="slider-era-labels">
-          <span class="active" data-idx="0">1880–1910</span>
-          <span data-idx="1">1920–1945</span>
-          <span data-idx="2">1950–1980</span>
-        </div>
-      </div>
-    </div>
+    </div><!-- /map-panel -->
 
     <!-- ══ SHELF PANEL ══ -->
     <aside class="shelf">
@@ -575,13 +511,8 @@
             <circle cx="6.5" cy="6.5" r="4.5"/>
             <line x1="10" y1="10" x2="14" y2="14"/>
           </svg>
-          <input
-            class="search-input"
-            id="search-input"
-            type="text"
-            placeholder="Search title, author, neighbourhood…"
-            autocomplete="off"
-          >
+          <input class="search-input" id="search-input" type="text"
+            placeholder="Search title, author, neighbourhood…" autocomplete="off">
           <div class="search-results" id="search-results"></div>
         </div>
       </div>
@@ -590,8 +521,8 @@
       <div class="shelf-header">
         <div class="shelf-header-inner" id="shelf-header-inner">
           <div class="shelf-city-label">Current city</div>
-          <div class="shelf-city-name" id="shelf-city-name">Paris</div>
-          <div class="shelf-era-range" id="shelf-era-range">La Belle Époque — 1880 to 1910</div>
+          <div class="shelf-city-name" id="shelf-city-name">New York</div>
+          <div class="shelf-era-range" id="shelf-era-range">Mid 20th century</div>
           <div class="shelf-meta">
             <div class="shelf-meta-item">
               <span class="shelf-meta-val" id="shelf-works">9</span>
@@ -611,17 +542,12 @@
 
       <!-- Filters -->
       <div class="shelf-filters">
-        <div class="filter-label">Era</div>
+        <div class="filter-label">Genre</div>
         <div class="filter-row">
-          <button class="filter-chip active" onclick="toggleFilter(this)">La Belle Époque</button>
-          <button class="filter-chip" onclick="toggleFilter(this)">Les Années Folles</button>
-          <button class="filter-chip" onclick="toggleFilter(this)">Nouveau Roman</button>
-        </div>
-        <div class="filter-label">Perspective</div>
-        <div class="filter-row">
-          <button class="filter-chip active" onclick="toggleFilter(this)">Expatriate</button>
-          <button class="filter-chip" onclick="toggleFilter(this)">Native</button>
-          <button class="filter-chip" onclick="toggleFilter(this)">Political exile</button>
+          <button class="filter-chip active" onclick="toggleFilter(this)">Literary fiction</button>
+          <button class="filter-chip" onclick="toggleFilter(this)">Crime / Noir</button>
+          <button class="filter-chip" onclick="toggleFilter(this)">Historical</button>
+          <button class="filter-chip" onclick="toggleFilter(this)">Graphic novel</button>
         </div>
         <div class="filter-divider"></div>
       </div>
@@ -638,165 +564,570 @@
     </aside>
   </div>
 
-  <!-- Globe.gl -->
-  <script src="https://unpkg.com/globe.gl"></script>
-
   <script>
   /* ══════════════════════════════════════════════════
      DATA
   ══════════════════════════════════════════════════ */
+
+  /* era index: 0 = 1880–1910 · 1 = 1920–1945 · 2 = 1950–1980 */
   const cityData = {
-    Paris: {
-      lat: 48.8566, lng: 2.3522,
-      era: 'La Belle Époque — 1880 to 1910',
-      works: 9, locations: '40+',
-      quote: { text: '"Paris is a moveable feast."', attr: 'Hemingway — A Moveable Feast, 1964' },
+    "Abidjan": {
+      lat: 5.319, lng: -4.0695,
+      era: "Contemporary",
+      works: 1, locations: "—",
+      quote: { text: "Life in Yopougon goes on, whatever they say.", attr: "Abouet — Aya de Yopougon, 2005" },
       books: [
-        { title: 'A Moveable Feast',                     author: 'Ernest Hemingway',    year: '1920s', area: 'Montparnasse'            },
-        { title: 'Down and Out in Paris and London',     author: 'George Orwell',        year: '1933',  area: 'Rue du Coq d\'Or'        },
-        { title: 'Tropic of Cancer',                     author: 'Henry Miller',         year: '1934',  area: 'Clichy / Montmartre'     },
-        { title: 'Nausea',                               author: 'Jean-Paul Sartre',     year: '1938',  area: 'Saint-Germain-des-Prés'  },
-        { title: 'The Autobiography of Alice B. Toklas', author: 'Gertrude Stein',       year: '1933',  area: 'Rue de Fleurus'          },
-        { title: 'Tender is the Night',                  author: 'F. Scott Fitzgerald',  year: '1934',  area: 'Riviera / Montparnasse'  },
-        { title: 'The Ambassadors',                      author: 'Henry James',          year: '1903',  area: 'Faubourg Saint-Germain'  },
-        { title: 'Quiet Days in Clichy',                 author: 'Henry Miller',         year: '1956',  area: 'Clichy'                  },
-        { title: 'Paris France',                         author: 'Gertrude Stein',       year: '1940',  area: 'Left Bank'               },
+        { title: "Aya de Yopougon", author: "Marguerite Abouet", year: "2005", area: "Yopougon", era: 2, genre: "Graphic novel" },
       ]
     },
-    Lisbon: {
-      lat: 38.7223, lng: -9.1393,
-      era: 'Modernismo — 1900 to 1930',
-      works: 7, locations: '28+',
-      quote: { text: '"I\'m the gap between my desire and what life has made of me."', attr: 'Pessoa — The Book of Disquiet, 1982' },
+    "Akure": {
+      lat: 7.2526, lng: 5.1939,
+      era: "Contemporary",
+      works: 1, locations: "—",
+      quote: { text: "A man who catches a fish is never sad.", attr: "Obioma — The Fishermen, 2015" },
       books: [
-        { title: 'The Book of Disquiet',             author: 'Fernando Pessoa',   year: '1982', area: 'Baixa'                },
-        { title: 'Baltasar and Blimunda',            author: 'José Saramago',     year: '1982', area: 'Alfama'               },
-        { title: 'The Year of the Death of Ricardo Reis', author: 'José Saramago', year: '1984', area: 'Chiado'             },
-        { title: 'Night Train to Lisbon',            author: 'Pascal Mercier',    year: '2004', area: 'Mouraria'             },
-        { title: 'The Maias',                        author: 'Eça de Queirós',    year: '1888', area: 'Avenida da Liberdade' },
-        { title: 'Pereira Maintains',                author: 'Antonio Tabucchi',  year: '1994', area: 'Restauradores'        },
-        { title: 'Journey to Portugal',              author: 'José Saramago',     year: '1990', area: 'Belém'                },
+        { title: "The Fishermen", author: "Chigozie Obioma", year: "2015", area: "Aba Road / Omi-Asoro", era: 2, genre: "Literary fiction" },
       ]
     },
-    Stockholm: {
-      lat: 59.3293, lng: 18.0686,
-      era: 'Early 1900s — 1890 to 1920',
-      works: 8, locations: '32+',
-      quote: { text: '"She had the ability to make silence feel meaningful."', attr: 'Larsson — The Girl with the Dragon Tattoo, 2005' },
+    "Algiers": {
+      lat: 36.7372, lng: 3.1049,
+      era: "Mid–Late 20th century",
+      works: 1, locations: "—",
+      quote: { text: "Mother died today. Or maybe yesterday, I don't know.", attr: "Camus — L'Étranger, 1942" },
       books: [
-        { title: 'The Girl with the Dragon Tattoo', author: 'Stieg Larsson',       year: '2005', area: 'Södermalm'  },
-        { title: 'Doctor Glas',                     author: 'Hjalmar Söderberg',   year: '1905', area: 'Gamla Stan' },
-        { title: 'The Red Room',                    author: 'August Strindberg',   year: '1879', area: 'Djurgården' },
-        { title: 'Miss Julie',                      author: 'August Strindberg',   year: '1888', area: 'Östermalm'  },
-        { title: 'The Long Ships',                  author: 'Frans G. Bengtsson',  year: '1941', area: 'Kungsholmen'},
-        { title: 'Faceless Killers',                author: 'Henning Mankell',     year: '1991', area: 'Norrmalm'   },
-        { title: 'The Dwarf',                       author: 'Pär Lagerkvist',      year: '1944', area: 'Gamla Stan' },
-        { title: 'Gösta Berlings Saga',             author: 'Selma Lagerlöf',      year: '1891', area: 'Vasastan'   },
+        { title: "L'Étranger", author: "Albert Camus", year: "1942", area: "Belcourt / Algiers coast", era: 1, genre: "Literary fiction" },
       ]
-    }
+    },
+    "Berkshire": {
+      lat: 51.4543, lng: -1.0012,
+      era: "Early 20th century",
+      works: 1, locations: "—",
+      quote: { text: "A day that is just a day, and yet contains everything.", attr: "Swift — Mothering Sunday, 2016" },
+      books: [
+        { title: "Mothering Sunday", author: "Graham Swift", year: "2016", area: "Country estate / Thames Valley", era: 0, genre: "Literary fiction" },
+      ]
+    },
+    "Buenos Aires": {
+      lat: -34.5731, lng: -58.4232,
+      era: "Mid–Late 20th century",
+      works: 2, locations: "—",
+      quote: { text: "Time forks perpetually toward innumerable futures.", attr: "Borges — Ficciones, 1944" },
+      books: [
+        { title: "Ficciones", author: "Jorge Luis Borges", year: "1944", area: "Palermo / San Telmo", era: 1, genre: "Literary fiction" },
+        { title: "The Absent City", author: "Ricardo Piglia", year: "1992", area: "San Nicolás / Microcentro", era: 1, genre: "Literary fiction" },
+      ]
+    },
+    "Bujumbura": {
+      lat: -3.3869, lng: 29.36,
+      era: "Mid–Late 20th century",
+      works: 1, locations: "—",
+      quote: { text: "My country is a small thing that breaks.", attr: "Faye — Petit Pays, 2016" },
+      books: [
+        { title: "Petit Pays", author: "Gaël Faye", year: "2016", area: "Quartier Asiatique", era: 1, genre: "Literary fiction" },
+      ]
+    },
+    "Edinburgh": {
+      lat: 55.9462, lng: -3.1877,
+      era: "Mid–Late 20th century",
+      works: 1, locations: "—",
+      quote: { text: "For those who like that sort of thing, that is the sort of thing they like.", attr: "Spark — Miss Jean Brodie, 1961" },
+      books: [
+        { title: "The Prime of Miss Jean Brodie", author: "Muriel Spark", year: "1961", area: "Old Town / Marchmont", era: 1, genre: "Literary fiction" },
+      ]
+    },
+    "Ibadan": {
+      lat: 7.3964, lng: 3.9167,
+      era: "Contemporary",
+      works: 1, locations: "—",
+      quote: { text: "A woman who is not in her husband's house is nobody.", attr: "Shoneyin — Baba Segi's Wives, 2010" },
+      books: [
+        { title: "The Secret Lives of Baba Segi's Wives", author: "Lola Shoneyin", year: "2010", area: "Dugbe / Bodija", era: 2, genre: "Literary fiction" },
+      ]
+    },
+    "Istanbul": {
+      lat: 41.0369, lng: 28.985,
+      era: "Multiple eras",
+      works: 2, locations: "—",
+      quote: { text: "Istanbul is the city that has made me who I am.", attr: "Tanpınar — A Mind at Peace, 1949" },
+      books: [
+        { title: "Birds Without Wings", author: "Louis de Bernières", year: "2004", area: "Taksim / Beyoğlu", era: 0, genre: "Historical" },
+        { title: "A Mind at Peace", author: "Ahmet Hamdi Tanpınar", year: "1949", area: "Beyoğlu / Bosphorus shore", era: 1, genre: "Literary fiction" },
+      ]
+    },
+    "Kigali": {
+      lat: -1.9441, lng: 30.0619,
+      era: "Contemporary",
+      works: 1, locations: "—",
+      quote: { text: "Memory is a wound that never fully heals.", attr: "Faye — Jacaranda, 2024" },
+      books: [
+        { title: "Jacaranda", author: "Gaël Faye", year: "2024", area: "Kigali city centre / Nyamirambo", era: 2, genre: "Literary fiction" },
+      ]
+    },
+    "Kingston": {
+      lat: 17.9957, lng: -76.7936,
+      era: "Mid–Late 20th century",
+      works: 1, locations: "—",
+      quote: { text: "The living do not know that the dead walk among them.", attr: "James — A Brief History of Seven Killings, 2014" },
+      books: [
+        { title: "A Brief History of Seven Killings", author: "Marlon James", year: "2014", area: "Trenchtown / West Kingston", era: 1, genre: "Crime / Noir" },
+      ]
+    },
+    "London": {
+      lat: 51.5495, lng: -0.2202,
+      era: "Contemporary",
+      works: 1, locations: "—",
+      quote: { text: "England, home and beauty — but whose home?", attr: "Smith — White Teeth, 2000" },
+      books: [
+        { title: "White Teeth", author: "Zadie Smith", year: "2000", area: "Willesden / Kilburn", era: 2, genre: "Literary fiction" },
+      ]
+    },
+    "Los Angeles": {
+      lat: 34.0545, lng: -118.247,
+      era: "Early 20th century",
+      works: 1, locations: "—",
+      quote: { text: "I was twenty years old, I was broke, I was hungry.", attr: "Fante — Ask the Dust, 1939" },
+      books: [
+        { title: "Ask the Dust", author: "John Fante", year: "1939", area: "Bunker Hill / Angel's Flight", era: 0, genre: "Literary fiction" },
+      ]
+    },
+    "Madrid": {
+      lat: 40.4245, lng: -3.7038,
+      era: "Contemporary",
+      works: 1, locations: "—",
+      quote: { text: "No one here is normal except you, and you're not even from Spain.", attr: "Wolff — The Polyglot Lovers, 2016" },
+      books: [
+        { title: "The Polyglot Lovers", author: "Lina Wolff", year: "2016", area: "Malasaña", era: 2, genre: "Literary fiction" },
+      ]
+    },
+    "Marseille": {
+      lat: 43.3209, lng: 5.3765,
+      era: "Multiple eras",
+      works: 3, locations: "—",
+      quote: { text: "The Mediterranean is not a postcard. It's a wound.", attr: "Izzo — Total Khéops, 1995" },
+      books: [
+        { title: "Il est des hommes qui se perdront toujours", author: "Rebecca Lighieri", year: "2020", area: "Northern districts (13e–14e)", era: 2, genre: "Literary fiction" },
+        { title: "Total Khéops", author: "Jean-Claude Izzo", year: "1995", area: "Vieux-Port / Le Panier", era: 1, genre: "Crime / Noir" },
+        { title: "Le Comte de Monte-Cristo", author: "Alexandre Dumas", year: "1844", area: "Château d'If / Vieux-Port", era: 0, genre: "Historical" },
+      ]
+    },
+    "Matsuyama": {
+      lat: 33.8416, lng: 132.7657,
+      era: "Early 20th century",
+      works: 1, locations: "—",
+      quote: { text: "I am a stranger here, and this town knows it.", attr: "Sōseki — Botchan, 1906" },
+      books: [
+        { title: "Botchan", author: "Natsume Sōseki", year: "1906", area: "Old city centre", era: 0, genre: "Literary fiction" },
+      ]
+    },
+    "Montréal": {
+      lat: 45.4913, lng: -73.5636,
+      era: "Early 20th century",
+      works: 1, locations: "—",
+      quote: { text: "In Montréal the snow forgives everything.", attr: "O'Neill — The Lonely Hearts Hotel, 2017" },
+      books: [
+        { title: "The Lonely Hearts Hotel", author: "Heather O'Neill", year: "2017", area: "Griffintown / Plateau", era: 0, genre: "Literary fiction" },
+      ]
+    },
+    "Nablus": {
+      lat: 32.2211, lng: 35.2544,
+      era: "Contemporary",
+      works: 1, locations: "—",
+      quote: { text: "I am made of all the places that made me.", attr: "Abulhawa — Against the Loveless World, 2020" },
+      books: [
+        { title: "Against the Loveless World", author: "Susan Abulhawa", year: "2020", area: "Old City", era: 2, genre: "Literary fiction" },
+      ]
+    },
+    "New York": {
+      lat: 40.7549, lng: -73.984,
+      era: "Mid–Late 20th century",
+      works: 4, locations: "—",
+      quote: { text: "I'm quite illiterate, but I read a lot.", attr: "Salinger — The Catcher in the Rye, 1951" },
+      books: [
+        { title: "The Catcher in the Rye", author: "J.D. Salinger", year: "1951", area: "Midtown Manhattan", era: 1, genre: "Literary fiction" },
+        { title: "American Psycho", author: "Bret Easton Ellis", year: "1991", area: "Upper East Side / Wall Street", era: 1, genre: "Literary fiction" },
+        { title: "Another Country", author: "James Baldwin", year: "1962", area: "Greenwich Village / Harlem", era: 1, genre: "Literary fiction" },
+        { title: "The Bell Jar", author: "Sylvia Plath", year: "1963", area: "Midtown Manhattan / Upper East Side", era: 1, genre: "Literary fiction" },
+      ]
+    },
+    "Paris": {
+      lat: 48.8646, lng: 2.2769,
+      era: "Contemporary",
+      works: 1, locations: "—",
+      quote: { text: "Paris is a moveable feast.", attr: "Hemingway — A Moveable Feast, 1964" },
+      books: [
+        { title: "Robert des noms propres", author: "Amélie Nothomb", year: "2002", area: "16e arrondissement", era: 2, genre: "Literary fiction" },
+      ]
+    },
+    "Pyongyang": {
+      lat: 39.0194, lng: 125.7381,
+      era: "Mid–Late 20th century",
+      works: 1, locations: "—",
+      quote: { text: "The state does not make mistakes. It only makes examples.", attr: "Bandi — The Accusation, 2014" },
+      books: [
+        { title: "The Accusation", author: "Bandi", year: "2014", area: "State housing districts", era: 1, genre: "Literary fiction" },
+      ]
+    },
+    "Rio de Janeiro": {
+      lat: -22.9068, lng: -43.1729,
+      era: "Mid–Late 20th century",
+      works: 1, locations: "—",
+      quote: { text: "She was inept. Inept for life.", attr: "Lispector — The Hour of the Star, 1977" },
+      books: [
+        { title: "The Hour of the Star", author: "Clarice Lispector", year: "1977", area: "Centro / Periferia", era: 1, genre: "Literary fiction" },
+      ]
+    },
+    "San Francisco": {
+      lat: 37.7599, lng: -122.4148,
+      era: "Contemporary",
+      works: 1, locations: "—",
+      quote: { text: "The city holds everything you need and none of what you want.", attr: "Stirling — Crumbs, 2020" },
+      books: [
+        { title: "Crumbs", author: "Danie Stirling", year: "2020", area: "Mission District", era: 2, genre: "Graphic novel" },
+      ]
+    },
+    "Tennessee": {
+      lat: 35.9251, lng: -86.8689,
+      era: "Contemporary",
+      works: 1, locations: "—",
+      quote: { text: "Sometimes a family is just the people who show up.", attr: "Wilson — Nothing to See Here, 2019" },
+      books: [
+        { title: "Nothing to See Here", author: "Kevin Wilson", year: "2019", area: "Rural estate / Franklin", era: 2, genre: "Literary fiction" },
+      ]
+    },
+    "Thebes": {
+      lat: 25.7189, lng: 32.6573,
+      era: "Early 20th century",
+      works: 1, locations: "—",
+      quote: { text: "I have lived in many bodies and remembered them all.", attr: "Waltari — The Egyptian, 1945" },
+      books: [
+        { title: "The Egyptian", author: "Mika Waltari", year: "1945", area: "Ancient Thebes / Karnak", era: 0, genre: "Historical" },
+      ]
+    },
+    "Tokyo": {
+      lat: 35.7099, lng: 139.7621,
+      era: "Early 20th century",
+      works: 1, locations: "—",
+      quote: { text: "Loneliness is the price we must pay for being born in this modern world.", attr: "Sōseki — Kokoro, 1914" },
+      books: [
+        { title: "Kokoro", author: "Natsume Sōseki", year: "1914", area: "Hongō / Yanaka", era: 0, genre: "Literary fiction" },
+      ]
+    },
+    "Toronto": {
+      lat: 43.6659, lng: -79.3965,
+      era: "Mid–Late 20th century",
+      works: 1, locations: "—",
+      quote: { text: "The eye sees what it brings the power to see.", attr: "Davies — Fifth Business, 1970" },
+      books: [
+        { title: "Fifth Business", author: "Robertson Davies", year: "1970", area: "Bloor Street West / Annex", era: 1, genre: "Literary fiction" },
+      ]
+    },
+  };
+
+  const cityContinent = {
+    "Abidjan": "africa",
+    "Akure": "africa",
+    "Algiers": "africa",
+    "Berkshire": "europe",
+    "Buenos Aires": "south-america",
+    "Bujumbura": "africa",
+    "Edinburgh": "europe",
+    "Ibadan": "africa",
+    "Istanbul": "asia",
+    "Kigali": "africa",
+    "Kingston": "north-america",
+    "London": "europe",
+    "Los Angeles": "north-america",
+    "Madrid": "europe",
+    "Marseille": "europe",
+    "Matsuyama": "asia",
+    "Montréal": "north-america",
+    "Nablus": "asia",
+    "New York": "north-america",
+    "Paris": "europe",
+    "Pyongyang": "asia",
+    "Rio de Janeiro": "south-america",
+    "San Francisco": "north-america",
+    "Tennessee": "north-america",
+    "Thebes": "africa",
+    "Tokyo": "asia",
+    "Toronto": "north-america",
   };
 
   const allBooks = Object.entries(cityData).flatMap(([city, d]) =>
     d.books.map(b => ({ ...b, city }))
   );
 
+
   /* ══════════════════════════════════════════════════
-     GLOBE — Minimal, controlled interaction
+     FLAT MAP — SVG + GeoJSON
   ══════════════════════════════════════════════════ */
-  const globeEl = document.getElementById('globe-viz');
-  const CITY_COLOR = '#B08968';
-  const CITY_INACTIVE_ALPHA = 0.45;
-  const BASE_POINT_RADIUS = 0.34;
-  const ACTIVE_POINT_RADIUS = 0.46;
-  const AUTO_ROTATE_SPEED = 0.16;
-  const CITY_DIM_COLOR = `rgba(176,137,104,${CITY_INACTIVE_ALPHA})`;
-  let activeCity = null;
+  /* ══════════════════════════════════════════════════
+     CONTINENT CONFIG
+  ══════════════════════════════════════════════════ */
+  const continentConfig = {
+    'world':         { bbox: [-170, -58, 180, 75],  available: true  },
+    'europe':        { bbox: [-25,  34,  45,  72],  available: true  },
+    'north-america': { bbox: [-170,  7,  -50, 84],  available: true  },
+    'south-america': { bbox: [-82,  -56,  -34, 13], available: true  },
+    'africa':        { bbox: [-20,  -36,   52, 45], available: true  },
+    'asia':          { bbox: [25,    -10, 150, 78],  available: true  },
+    'oceania':       { bbox: [110,  -48,  180, 10], available: false },
+  };
 
-  const cityPoints = Object.entries(cityData).map(([name, d]) => ({
-    name,
-    lat: d.lat,
-    lng: d.lng
-  }));
+  const svg = document.getElementById('flat-map');
+  let activeContinent = 'world';
+  const activeEraIdx = null; // slider removed — show all eras
+  let activeCity      = 'New York';
+  let geoFeatures     = [];
 
-  function pointColor(point) {
-    if (!activeCity) return CITY_COLOR;
-    return point.name === activeCity ? CITY_COLOR : CITY_DIM_COLOR;
+  /* SVG layers — wrapped in a zoomGroup so we can scale without re-projecting */
+  const zoomGroup = document.createElementNS('http://www.w3.org/2000/svg','g');
+  const landLayer = document.createElementNS('http://www.w3.org/2000/svg','g');
+  const pinLayer  = document.createElementNS('http://www.w3.org/2000/svg','g');
+  zoomGroup.appendChild(landLayer);
+  zoomGroup.appendChild(pinLayer);
+  svg.appendChild(zoomGroup);
+
+  /* ── Country → continent membership ── */
+  const continentCountries = {
+    'europe': [
+      'Albania','Andorra','Austria','Belarus','Belgium','Bosnia and Herzegovina',
+      'Bulgaria','Croatia','Cyprus','Czech Republic','Denmark','Estonia','Finland',
+      'France','Germany','Greece','Hungary','Iceland','Ireland','Italy','Kosovo',
+      'Latvia','Liechtenstein','Lithuania','Luxembourg','Malta','Moldova','Monaco',
+      'Montenegro','Netherlands','North Macedonia','Norway','Poland','Portugal',
+      'Romania','Russia','San Marino','Serbia','Slovakia','Slovenia','Spain',
+      'Sweden','Switzerland','Ukraine','United Kingdom','Vatican','Berkshire',
+    ],
+    'africa': [
+      'Algeria','Angola','Benin','Botswana','Burkina Faso','Burundi','Cameroon',
+      'Cape Verde','Central African Republic','Chad','Comoros',
+      'Democratic Republic of the Congo','Democratic Republic of Congo',
+      'Dem. Rep. Congo','Congo, Dem. Rep.',
+      'Republic of Congo','Congo','Congo, Rep.',
+      'Djibouti','Egypt','Equatorial Guinea','Eritrea','Eswatini','Swaziland',
+      'Ethiopia','Gabon','Gambia','The Gambia','Ghana','Guinea','Guinea-Bissau',
+      "Cote d'Ivoire","Côte d'Ivoire",'Ivory Coast',
+      'Kenya','Lesotho','Liberia','Libya','Madagascar','Malawi',
+      'Mali','Mauritania','Mauritius','Morocco','Mozambique','Namibia',
+      'Niger','Nigeria','Rwanda',
+      'São Tomé and Príncipe','Sao Tome and Principe',
+      'Senegal','Seychelles','Sierra Leone','Somalia','Somaliland',
+      'South Africa','South Sudan','Sudan','Tanzania',
+      'Togo','Tunisia','Uganda','W. Sahara','Western Sahara',
+      'Zambia','Zimbabwe',
+    ],
+    'asia': [
+      'Afghanistan','Armenia','Azerbaijan','Bahrain','Bangladesh','Bhutan','Brunei',
+      'Cambodia','China','Cyprus','Georgia','India','Indonesia','Iran','Iraq',
+      'Israel','Japan','Jordan','Kazakhstan','Kuwait','Kyrgyzstan','Laos','Lebanon',
+      'Malaysia','Maldives','Mongolia','Myanmar','Nepal','North Korea','Oman',
+      'Pakistan','Palestinian Territory','Philippines','Qatar','Saudi Arabia',
+      'Singapore','South Korea','Sri Lanka','Syria','Taiwan','Tajikistan',
+      'Thailand','Timor-Leste','Turkey','Turkmenistan','United Arab Emirates',
+      'Uzbekistan','Vietnam','Yemen',
+    ],
+    'north-america': [
+      'Antigua and Barbuda','Bahamas','Barbados','Belize','Canada','Costa Rica',
+      'Cuba','Dominica','Dominican Republic','El Salvador','Grenada','Guatemala',
+      'Haiti','Honduras','Jamaica','Mexico','Nicaragua','Panama',
+      'Saint Kitts and Nevis','Saint Lucia','Saint Vincent and the Grenadines',
+      'Trinidad and Tobago','United States of America',
+    ],
+    'south-america': [
+      'Argentina','Bolivia','Brazil','Chile','Colombia','Ecuador','Guyana',
+      'Paraguay','Peru','Suriname','Uruguay','Venezuela',
+    ],
+    'oceania': [
+      'Australia','Fiji','Kiribati','Marshall Islands','Micronesia','Nauru',
+      'New Zealand','Palau','Papua New Guinea','Samoa','Solomon Islands',
+      'Tonga','Tuvalu','Vanuatu',
+    ],
+  };
+
+  /* Projection — equirectangular for all views */
+  function makeProjection(bbox, W, H) {
+    const [minLng, minLat, maxLng, maxLat] = bbox;
+    const pad = 36;
+    const scX = (W - pad * 2) / (maxLng - minLng);
+    const scY = (H - pad * 2) / (maxLat  - minLat);
+    const sc  = Math.min(scX, scY);
+    const ox  = (W - (maxLng - minLng) * sc) / 2;
+    const oy  = (H - (maxLat  - minLat) * sc) / 2;
+    return (lng, lat) => [
+      ox + (lng - minLng) * sc,
+      oy + (maxLat - lat) * sc
+    ];
   }
 
-  function pointRadius(point) {
-    return point.name === activeCity ? ACTIVE_POINT_RADIUS : BASE_POINT_RADIUS;
+  function toPath(rings, proj) {
+    return rings.map(ring =>
+      ring.map(([lng, lat], i) => {
+        const [x, y] = proj(lng, lat);
+        return (i === 0 ? `M` : `L`) + x.toFixed(1) + ',' + y.toFixed(1);
+      }).join(' ') + 'Z'
+    ).join(' ');
   }
 
-  const globe = Globe()(globeEl)
-    .backgroundColor('#0F0F0F')
-    .globeImageUrl(null)
-    .showAtmosphere(false)
-    .pointsData(cityPoints)
-    .pointLat('lat')
-    .pointLng('lng')
-    .pointColor(pointColor)
-    .pointAltitude(0.008)
-    .pointRadius(pointRadius)
-    .pointsMerge(false)
-    .pointsTransitionDuration(0)
-    .onPointHover(point => {
-      globeEl.classList.toggle('is-point-hover', !!point);
-    })
-    .onPointClick(point => {
-      if (!point) return;
-      selectCity(point.name);
+  function renderMap(continent) {
+    const vp   = svg.parentElement;
+    const W    = vp.getBoundingClientRect().width  || vp.offsetWidth  || 800;
+    const H    = vp.getBoundingClientRect().height || vp.offsetHeight || 500;
+    const isWorld = continent === 'world';
+    const proj = makeProjection(continentConfig[continent].bbox, W, H);
+    const allowed = isWorld ? null : new Set(continentCountries[continent] || []);
+
+    /* clear land */
+    while (landLayer.firstChild) landLayer.removeChild(landLayer.firstChild);
+
+    geoFeatures.forEach(f => {
+      const name = f.properties.NAME || f.properties.name
+                || f.properties.ADMIN || f.properties.admin || '';
+      if (allowed && !allowed.has(name)) return;
+
+      const geom  = f.geometry;
+      const polys = geom.type === 'Polygon'       ? [geom.coordinates]
+                  : geom.type === 'MultiPolygon'  ?  geom.coordinates : [];
+
+      polys.forEach(poly => {
+        const d = toPath(poly, proj);
+        if (!d) return;
+        const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+        path.setAttribute('d', d);
+        const hasCities = name in cityMap;
+        path.setAttribute('class', 'country-path' + (hasCities ? '' : ' country-inert'));
+        path.dataset.country = name;
+        if (hasCities) {
+          path.addEventListener('click', () => {
+            if (cityMap[name]) selectCity(cityMap[name]);
+          });
+        }
+        landLayer.appendChild(path);
+      });
     });
 
-  const controls = globe.controls();
-  controls.enableDamping = true;
-  controls.dampingFactor = 0.08;
-  controls.rotateSpeed = 0.55;
-  controls.zoomSpeed = 0.65;
-  controls.minDistance = 140;
-  controls.maxDistance = 300;
-  controls.autoRotate = true;
-  controls.autoRotateSpeed = AUTO_ROTATE_SPEED;
-
-  const globeMaterial = globe.globeMaterial();
-  globeMaterial.color.set('#1A1A1A');
-  globeMaterial.emissive.set('#000000');
-  globeMaterial.emissiveIntensity = 0.06;
-  globeMaterial.shininess = 0.15;
-
-  function refreshPointStyles() {
-    globe.pointColor(pointColor).pointRadius(pointRadius).pointsData(cityPoints);
+    renderPins(continent, proj);
   }
 
-  function flyTo(lat, lng) {
-    controls.autoRotate = false;
-    globe.pointOfView({ lat, lng, altitude: 1.8 }, 900);
+  function renderPins(continent, proj) {
+    while (pinLayer.firstChild) pinLayer.removeChild(pinLayer.firstChild);
+
+    Object.entries(cityData).forEach(([cityName, d]) => {
+      if (continent !== 'world' && cityContinent[cityName] !== continent) return;
+
+      const [x, y] = proj(d.lng, d.lat);
+      const hasBooks = d.books.some(b => activeEraIdx === null || b.era === activeEraIdx);
+
+      const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+      g.setAttribute('class', 'book-pin' + (hasBooks ? '' : ' hidden'));
+      g.dataset.city = cityName;
+
+      const circle = document.createElementNS('http://www.w3.org/2000/svg','circle');
+      circle.setAttribute('cx', x);
+      circle.setAttribute('cy', y);
+      circle.setAttribute('r',  3.5);
+
+      const text = document.createElementNS('http://www.w3.org/2000/svg','text');
+      text.setAttribute('x', x + 9);
+      text.setAttribute('y', y);
+      text.textContent = cityName;
+
+      g.appendChild(circle);
+      g.appendChild(text);
+      pinLayer.appendChild(g);
+
+      g.addEventListener('click', () => selectCity(cityName));
+    });
   }
+
+  function refreshPins() {
+    /* try to refresh in-place; if projection changed, full re-render */
+    pinLayer.querySelectorAll('.book-pin').forEach(g => {
+      const d = cityData[g.dataset.city];
+      if (!d) return;
+      const show = d.books.some(b => activeEraIdx === null || b.era === activeEraIdx);
+      g.classList.toggle('hidden', !show);
+    });
+  }
+
+  /* Country → city mapping — single source of truth used by both renderMap and selectCity */
+  const cityMap = {
+    'France':'Paris','Spain':'Madrid','United Kingdom':'London',
+    'Sweden':'Stockholm','Portugal':'Lisbon',
+    'Argentina':'Buenos Aires','Brazil':'Rio de Janeiro',
+    'Nigeria':'Akure','Algeria':'Algiers','Rwanda':'Kigali',
+    'Burundi':'Bujumbura',"Cote d'Ivoire":'Abidjan',"Côte d'Ivoire":'Abidjan','Ivory Coast':'Abidjan',
+    'Egypt':'Thebes','Japan':'Tokyo','Turkey':'Istanbul',
+    'United States of America':'New York','Canada':'Toronto',
+    'Jamaica':'Kingston','North Korea':'Pyongyang',
+    'Palestinian Territory':'Nablus','West Bank':'Nablus',
+    'Scotland':'Edinburgh','Germany':'Berlin',
+    'Australia':'Sydney','Chile':'Santiago',
+  };
+  /* Reverse map: city → country name (for selectCity highlight) */
+  const cityToCountry = {};
+  Object.entries(cityMap).forEach(([country, city]) => {
+    if (!cityToCountry[city]) cityToCountry[city] = country;
+  });
+  fetch('https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_admin_0_countries.geojson')
+    .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+    .catch(() => fetch('https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson').then(r => r.json()))
+    .then(data => {
+      geoFeatures = data.features;
+      requestAnimationFrame(() => {
+        renderMap(activeContinent);
+        applyTransform();
+        const loader = document.getElementById('map-loading');
+        loader.classList.add('hidden');
+        setTimeout(() => { loader.style.display = 'none'; }, 420);
+      });
+    });
+
+  window.addEventListener('resize', () => { if (geoFeatures.length) renderMap(activeContinent); });
+
+  /* ══════════════════════════════════════════════════
+     CONTINENT SWITCHING
+  ══════════════════════════════════════════════════ */
+  document.getElementById('continent-bar').addEventListener('click', e => {
+    const btn = e.target.closest('.cont-btn');
+    if (!btn) return;
+    const cont = btn.dataset.continent;
+    document.querySelectorAll('.cont-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeContinent = cont;
+    zoomScale = 1; panX = 0; panY = 0;
+    zoomGroup.setAttribute('transform', '');
+    mapVp.style.cursor = 'default';
+    const avail = cont === 'world' || continentConfig[cont].available;
+    document.getElementById('map-coming-soon').classList.toggle('visible', !avail);
+    if (geoFeatures.length) { renderMap(cont); applyTransform(); }
+  });
 
   /* ══════════════════════════════════════════════════
      SHELF
   ══════════════════════════════════════════════════ */
-  function updateSidebar(city) {
-    // Hook for external sidebar integration.
-    // Keep this light; full sidebar behavior can be implemented elsewhere.
-    if (!city || !city.name) return;
-    renderShelf(city.name);
-  }
-
   function selectCity(cityName) {
     if (!cityData[cityName]) return;
     activeCity = cityName;
-    refreshPointStyles();
 
-    /* fly globe */
-    const { lat, lng } = cityData[cityName];
-    flyTo(lat, lng);
+    /* highlight active country */
+    document.querySelectorAll('.country-path').forEach(p => p.classList.remove('active-country'));
+    const countryName = cityToCountry[cityName];
+    if (countryName) {
+      document.querySelectorAll(`.country-path[data-country="${countryName}"]`)
+        .forEach(p => p.classList.add('active-country'));
+    }
 
-    updateSidebar({ name: cityName, lat, lng });
+    const inner  = document.getElementById('shelf-inner');
+    const header = document.getElementById('shelf-header-inner');
+    inner.classList.add('fading');
+    header.classList.add('fading');
 
-    /* nav pills */
-    document.querySelectorAll('.nav-city').forEach(el => {
-      el.classList.toggle('active', el.dataset.city === cityName);
-    });
+    setTimeout(() => {
+      renderShelf(cityName);
+      inner.classList.remove('fading');
+      header.classList.remove('fading');
+    }, 280);
   }
 
   function renderShelf(cityName) {
@@ -806,52 +1137,105 @@
     document.getElementById('shelf-works').textContent      = d.works;
     document.getElementById('shelf-locations').textContent  = d.locations;
 
-    const list = document.getElementById('book-list');
-    list.innerHTML = d.books.map((b, i) => `
-      <li class="book-item">
-        <div class="book-title">${b.title}</div>
-        <div class="book-meta-row">
-          <span class="book-author-year">${b.author} — ${b.year}</span>
-          <span class="book-neighborhood">${b.area}</span>
-        </div>
-      </li>
-      ${i === 2 ? `<div class="quote-block">
-        <p class="quote-text">${d.quote.text}</p>
-        <span class="quote-attr">${d.quote.attr}</span>
-      </div>` : ''}
-    `).join('');
+    const inner = document.getElementById('shelf-inner');
+    inner.innerHTML = `
+      <div class="shelf-section-label">Works in this era</div>
+      <ul class="book-list" id="book-list"></ul>
+      <div class="shelf-image-slot">
+        <span class="shelf-image-label">Image — Placeholder</span>
+      </div>`;
+
+    const genres = getActiveGenres();
+    const eraBooks = d.books.filter(b => (activeEraIdx === null || b.era === activeEraIdx) && (!genres || genres.has(b.genre)));
+
   }
 
-  /* ── Nav pills ── */
-  document.querySelectorAll('.nav-city').forEach(el => {
-    el.addEventListener('click', () => selectCity(el.dataset.city));
-  });
+  /* ── Zoom & Pan ── */
+  let zoomScale = 1;
+  let panX      = 0;
+  let panY      = 0;
+  const ZOOM_MIN  = 1;
+  const ZOOM_MAX  = 8;
+  const ZOOM_STEP = 1.5;
 
-  /* ── Era slider ── */
-  const eras = [
-    { label: 'La Belle Époque', pct: 16 },
-    { label: 'Les Années Folles', pct: 50 },
-    { label: 'Nouveau Roman',    pct: 84 },
-  ];
+  function applyTransform() {
+    const vp = svg.parentElement;
+    const cx = vp.getBoundingClientRect().width  / 2;
+    const cy = vp.getBoundingClientRect().height / 2;
+    /* scale around viewport centre, then offset by pan */
+    const tx = cx - zoomScale * cx + panX;
+    const ty = cy - zoomScale * cy + panY;
+    zoomGroup.setAttribute('transform', `translate(${tx},${ty}) scale(${zoomScale})`);
 
-  function setEra(idx) {
-    const pct = eras[idx].pct;
-    document.getElementById('slider-filled').style.width = pct + '%';
-    document.getElementById('slider-thumb').style.left   = pct + '%';
-    document.getElementById('era-active-label').textContent = eras[idx].label;
-    document.querySelectorAll('.slider-era-labels span').forEach((s, i) => {
-      s.classList.toggle('active', i === idx);
+    /* Keep country borders visually constant thickness */
+    const invScale = 1 / zoomScale;
+    landLayer.querySelectorAll('.country-path').forEach(p => {
+      p.style.strokeWidth = (0.6 * invScale) + 'px';
+    });
+
+    /* Keep pins and labels constant visual size by counter-scaling each pin group */
+    pinLayer.querySelectorAll('.book-pin').forEach(g => {
+      const cx_ = parseFloat(g.querySelector('circle').getAttribute('cx'));
+      const cy_ = parseFloat(g.querySelector('circle').getAttribute('cy'));
+      /* Scale around the pin's own centre point so it stays anchored */
+      g.setAttribute('transform',
+        `translate(${cx_},${cy_}) scale(${invScale}) translate(${-cx_},${-cy_})`
+      );
     });
   }
 
-  document.querySelectorAll('.slider-era-labels span').forEach(el => {
-    el.addEventListener('click', () => setEra(+el.dataset.idx));
+  function zoomBy(factor) {
+    zoomScale = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, zoomScale * factor));
+    /* clamp pan so map doesn't drift off-screen on zoom-out */
+    if (zoomScale === 1) { panX = 0; panY = 0; }
+    applyTransform();
+    updateCursor();
+  }
+
+  document.getElementById('zoom-in').addEventListener('click',  () => zoomBy(ZOOM_STEP));
+  document.getElementById('zoom-out').addEventListener('click', () => zoomBy(1 / ZOOM_STEP));
+  document.getElementById('zoom-reset').addEventListener('click', () => { zoomScale = 1; panX = 0; panY = 0; applyTransform(); updateCursor(); });
+
+  /* ── Drag to pan (only when zoomed in) ── */
+  const mapVp = svg.parentElement;
+  let isDragging  = false;
+  let dragStartX  = 0;
+  let dragStartY  = 0;
+  let panStartX   = 0;
+  let panStartY   = 0;
+
+  mapVp.addEventListener('mousedown', e => {
+    if (zoomScale <= 1) return;
+    isDragging = true;
+    dragStartX = e.clientX;
+    dragStartY = e.clientY;
+    panStartX  = panX;
+    panStartY  = panY;
+    mapVp.style.cursor = 'grabbing';
+    e.preventDefault();
   });
 
-  document.getElementById('slider-track').addEventListener('click', function(e) {
-    const r = (e.clientX - this.getBoundingClientRect().left) / this.offsetWidth;
-    setEra(r < 0.33 ? 0 : r < 0.66 ? 1 : 2);
+  window.addEventListener('mousemove', e => {
+    if (!isDragging) return;
+    panX = panStartX + (e.clientX - dragStartX);
+    panY = panStartY + (e.clientY - dragStartY);
+    applyTransform();
   });
+
+  window.addEventListener('mouseup', () => {
+    if (!isDragging) return;
+    isDragging = false;
+    mapVp.style.cursor = zoomScale > 1 ? 'grab' : 'default';
+  });
+
+  /* Update cursor when zoom changes */
+  function updateCursor() {
+    mapVp.style.cursor = zoomScale > 1 ? 'grab' : 'default';
+  }
+
+  /* Reset zoom on continent change */
+  const _origContSwitch = document.getElementById('continent-bar').onclick;
+
 
   /* ── Search ── */
   const searchInput   = document.getElementById('search-input');
@@ -860,23 +1244,16 @@
   searchInput.addEventListener('input', function() {
     const q = this.value.trim().toLowerCase();
     if (!q) { searchResults.classList.remove('open'); return; }
-
     const matches = allBooks.filter(b =>
-      b.title.toLowerCase().includes(q)   ||
-      b.author.toLowerCase().includes(q)  ||
-      b.area.toLowerCase().includes(q)    ||
-      b.city.toLowerCase().includes(q)
+      b.title.toLowerCase().includes(q)  || b.author.toLowerCase().includes(q) ||
+      b.area.toLowerCase().includes(q)   || b.city.toLowerCase().includes(q)
     ).slice(0, 6);
-
     if (!matches.length) { searchResults.classList.remove('open'); return; }
-
     searchResults.innerHTML = matches.map(b => `
       <div class="search-result-item" data-city="${b.city}">
         <div class="sr-title">${b.title}</div>
         <div class="sr-meta">${b.author} · ${b.city} · ${b.area}</div>
-      </div>
-    `).join('');
-
+      </div>`).join('');
     searchResults.querySelectorAll('.search-result-item').forEach(el => {
       el.addEventListener('click', () => {
         selectCity(el.dataset.city);
@@ -884,22 +1261,40 @@
         searchResults.classList.remove('open');
       });
     });
-
     searchResults.classList.add('open');
   });
 
-  /* Close on outside click */
   document.addEventListener('click', e => {
-    if (!e.target.closest('.shelf-search')) {
-      searchResults.classList.remove('open');
-    }
+    if (!e.target.closest('.shelf-search')) searchResults.classList.remove('open');
   });
 
   /* ── Filters ── */
-  function toggleFilter(el) { el.classList.toggle('active'); }
+  let activeGenreFilters = new Set(['Literary fiction']); // default matches active chip
+
+  function toggleFilter(el) {
+    const genre = el.textContent.trim();
+    if (activeGenreFilters.has(genre)) {
+      // Don't allow deselecting all — keep at least one
+      if (activeGenreFilters.size === 1) return;
+      activeGenreFilters.delete(genre);
+      el.classList.remove('active');
+    } else {
+      activeGenreFilters.add(genre);
+      el.classList.add('active');
+    }
+    if (activeCity) renderShelf(activeCity);
+  }
+
+  // Wire "all genres" behaviour: if all chips active, show all
+  function getActiveGenres() {
+    const allChips = document.querySelectorAll('.filter-chip');
+    const allGenres = [...allChips].map(c => c.textContent.trim());
+    const allActive = allGenres.every(g => activeGenreFilters.has(g));
+    return allActive ? null : activeGenreFilters; // null = show all
+  }
 
   /* ── Init ── */
-  refreshPointStyles();
+  renderShelf('New York');
   </script>
 
 </body>
