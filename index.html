@@ -13,14 +13,15 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:        #EDEDED;
+      --bg:        #EAECEE;
       --surface:   #FFFFFF;
       --text:      #323232;
       --text-sub:  #4A4D54;
-      --accent:    #D9DCEB;
-      --ocean:     #EDEEF5;
-      --hover:     rgba(217,220,235,0.2);
-      --divider:   rgba(217,220,235,0.6);
+      --accent:    #E4ECF1;
+      --accent-dk: #B8C9D4;
+      --ocean:     #DDE6EC;
+      --hover:     rgba(210,224,234,0.35);
+      --divider:   rgba(180,196,208,0.55);
       --font:      "neue-haas-unica", sans-serif;
       --shelf-w:   500px;
       --nav-h:     52px;
@@ -50,7 +51,7 @@
       align-items: center;
       justify-content: space-between;
       padding: 0 40px;
-      background: var(--bg);
+      background: #ffffff;
       border-bottom: 1px solid var(--divider);
     }
     .nav-wordmark {
@@ -108,11 +109,10 @@
       transition: color 0.2s, background 0.2s;
       white-space: nowrap;
     }
-    .cont-btn:hover { color: var(--text); }
     .cont-btn.active {
-      color: var(--text);
+      color: #ffffff;
       font-weight: 400;
-      background: #ffffff;
+      background: #6b6e78;
     }
 
     /* ── Map viewport ── */
@@ -130,14 +130,14 @@
     }
 
     .country-path {
-      fill: #ffffff;
-      stroke: var(--accent);
+      fill: #F5F8FA;
+      stroke: var(--accent-dk);
       stroke-width: 0.6;
       cursor: pointer;
       transition: fill 0.15s;
     }
 
-    .country-path.active-country { fill: var(--accent); stroke: #bfc4db; }
+    .country-path.active-country { fill: var(--accent); stroke: var(--accent-dk); }
     .country-path.country-inert { cursor: default; }
 
     /* ── Map loading skeleton ── */
@@ -249,7 +249,7 @@
       user-select: none;
     }
     .zoom-btn:hover  { background: var(--accent); }
-    .zoom-btn:active { background: var(--text); color: #F7F7FB; }
+    .zoom-btn:active { background: var(--accent-dk); color: var(--text); }
 
     /* ── Book pins ── */
     .book-pin {
@@ -347,7 +347,7 @@
       padding: 5px 12px; border: 1px solid var(--divider);
       background: transparent; cursor: pointer; transition: all 0.18s;
     }
-    .filter-chip:hover { color: var(--text); border-color: rgba(50,50,50,0.3); }
+    .filter-chip:hover { color: var(--text); border-color: var(--accent-dk); }
     .filter-chip.active { color: var(--text); background: var(--accent); border-color: var(--accent); }
     .filter-divider { height: 1px; background: var(--divider); margin: 2px 0 14px; }
 
@@ -388,7 +388,7 @@
       width: 100%; aspect-ratio: 4/3; background: var(--accent);
       margin: 24px 0; display: flex; align-items: center; justify-content: center;
     }
-    .shelf-image-label { font-size: 10px; font-weight: 300; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(50,50,50,0.35); }
+    .shelf-image-label { font-size: 10px; font-weight: 300; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(50,78,95,0.4); }
 
     .empty-state {
       padding: 24px 0 8px;
