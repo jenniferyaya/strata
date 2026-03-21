@@ -232,8 +232,8 @@
       gap: 1px;
     }
     .zoom-btn {
-      width: 28px;
-      height: 28px;
+      width: 40px;
+      height: 40px;
       background: #ffffff;
       border: 1px solid var(--divider);
       color: var(--text);
@@ -332,24 +332,44 @@
     }
     .shelf-meta {
       display: flex; gap: 24px; padding-bottom: 22px;
-      border-bottom: 1px solid var(--divider);
     }
     .shelf-meta-item { display: flex; flex-direction: column; gap: 3px; }
     .shelf-meta-val { font-size: 18px; font-weight: 400; line-height: 1; color: var(--text); }
     .shelf-meta-key { font-size: 10px; font-weight: 300; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-sub); }
 
-    .shelf-filters { padding: 18px 28px 0; flex-shrink: 0; }
-    .filter-label { font-size: 10px; font-weight: 400; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-sub); margin-bottom: 8px; }
-    .filter-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
-    .filter-chip {
-      font-size: 11px; font-weight: 300; font-family: var(--font);
-      letter-spacing: 0.06em; color: var(--text-sub);
-      padding: 5px 12px; border: 1px solid var(--divider);
-      background: transparent; cursor: pointer; transition: all 0.18s;
+    .shelf-filters {
+      padding: 16px 28px 0;
+      flex-shrink: 0;
     }
-    .filter-chip:hover { color: var(--text); border-color: var(--accent-dk); }
-    .filter-chip.active { color: var(--text); background: var(--accent); border-color: var(--accent); }
-    .filter-divider { height: 1px; background: var(--divider); margin: 2px 0 14px; }
+    .era-chips {
+      display: flex;
+      gap: 6px;
+      padding-bottom: 24px;
+    }
+    .era-chip {
+      font-family: var(--font);
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--text-sub);
+      background: transparent;
+      border: 1px solid var(--divider);
+      border-radius: 20px;
+      padding: 5px 14px;
+      cursor: pointer;
+      transition: color 0.15s, background 0.15s, border-color 0.15s;
+      white-space: nowrap;
+    }
+    .era-chip:hover {
+      color: var(--text);
+      border-color: var(--accent-dk);
+    }
+    .era-chip.active {
+      color: var(--text);
+      background: var(--accent);
+      border-color: var(--accent-dk);
+    }
 
     .shelf-inner {
       flex: 1; overflow-y: auto; overflow-x: hidden;
@@ -363,7 +383,7 @@
     .shelf-inner::-webkit-scrollbar-thumb { background: var(--divider); }
 
     .shelf-section-label {
-      font-size: 10px; font-weight: 400; letter-spacing: 0.22em;
+      font-size: 12px; font-weight: 400; letter-spacing: 0.22em;
       text-transform: uppercase; color: var(--text-sub);
       padding-top: 24px; padding-bottom: 14px;
     }
@@ -380,15 +400,57 @@
     .book-author-year { font-size: 12px; font-weight: 300; color: var(--text-sub); }
     .book-neighborhood { font-size: 11px; font-weight: 300; color: var(--text-sub); white-space: nowrap; }
 
-    .quote-block { padding: 26px 0 22px; border-bottom: 1px solid var(--divider); }
-    .quote-text { font-size: 15px; font-weight: 300; font-style: italic; line-height: 1.75; color: var(--text); margin-bottom: 10px; }
-    .quote-attr { font-size: 11px; font-weight: 300; letter-spacing: 0.1em; color: var(--text-sub); text-transform: uppercase; }
-
-    .shelf-image-slot {
-      width: 100%; aspect-ratio: 4/3; background: var(--accent);
-      margin: 24px 0; display: flex; align-items: center; justify-content: center;
+    /* breadcrumb — shown in city view, hidden in country view */
+    .shelf-breadcrumb {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 28px;
+      border-bottom: 1px solid var(--divider);
+      flex-shrink: 0;
     }
-    .shelf-image-label { font-size: 10px; font-weight: 300; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(50,78,95,0.4); }
+    .shelf-breadcrumb.visible { display: flex; }
+    .shelf-breadcrumb-back {
+      font-family: var(--font);
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      color: var(--text-sub);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: color 0.15s;
+    }
+    .shelf-breadcrumb-back:hover { color: var(--text); }
+    .shelf-breadcrumb-sep { color: var(--divider); font-size: 12px; }
+    .shelf-breadcrumb-city { font-size: 11px; font-weight: 400; color: var(--text); letter-spacing: 0.06em; }
+
+    /* city group header in country view */
+    .city-group-header {
+      padding: 20px 28px 10px;
+      margin: 0 -28px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-sub);
+      cursor: pointer;
+      transition: color 0.15s;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .city-group-header:hover { color: var(--text); }
+    .city-group-count {
+      font-size: 10px;
+      font-weight: 300;
+      letter-spacing: 0.06em;
+      color: var(--text-sub);
+    }
 
     .empty-state {
       padding: 24px 0 8px;
@@ -520,8 +582,7 @@
       <!-- Header -->
       <div class="shelf-header">
         <div class="shelf-header-inner" id="shelf-header-inner">
-          <div class="shelf-city-label">Current city</div>
-          <div class="shelf-city-name" id="shelf-city-name">New York</div>
+          <div class="shelf-city-name" id="shelf-city-name">United States of America</div>
           <div class="shelf-era-range" id="shelf-era-range">Mid 20th century</div>
           <div class="shelf-meta">
             <div class="shelf-meta-item">
@@ -540,25 +601,27 @@
         </div>
       </div>
 
-      <!-- Filters -->
+      <!-- Breadcrumb (city view only) -->
+      <div class="shelf-breadcrumb" id="shelf-breadcrumb">
+        <button class="shelf-breadcrumb-back" id="breadcrumb-back">← All cities</button>
+        <span class="shelf-breadcrumb-sep">/</span>
+        <span class="shelf-breadcrumb-city" id="breadcrumb-city"></span>
+      </div>
+
+      <!-- Era filter -->
       <div class="shelf-filters">
-        <div class="filter-label">Genre</div>
-        <div class="filter-row">
-          <button class="filter-chip active" onclick="toggleFilter(this)">Literary fiction</button>
-          <button class="filter-chip" onclick="toggleFilter(this)">Crime / Noir</button>
-          <button class="filter-chip" onclick="toggleFilter(this)">Historical</button>
-          <button class="filter-chip" onclick="toggleFilter(this)">Graphic novel</button>
+        <div class="era-chips">
+          <button class="era-chip active" data-era="all">All</button>
+          <button class="era-chip" data-era="0">Pre-1920</button>
+          <button class="era-chip" data-era="1">Mid 20th C.</button>
+          <button class="era-chip" data-era="2">Contemporary</button>
         </div>
-        <div class="filter-divider"></div>
       </div>
 
       <!-- Book list -->
       <div class="shelf-inner" id="shelf-inner">
         <div class="shelf-section-label">Works in this era</div>
         <ul class="book-list" id="book-list"></ul>
-        <div class="shelf-image-slot">
-          <span class="shelf-image-label">Image — Placeholder</span>
-        </div>
       </div>
 
     </aside>
@@ -876,7 +939,7 @@
 
   const svg = document.getElementById('flat-map');
   let activeContinent = 'world';
-  const activeEraIdx = null; // slider removed — show all eras
+  let activeEraFilter = null; // null = all eras
   let activeCity      = 'New York';
   let geoFeatures     = [];
 
@@ -999,7 +1062,7 @@
         path.dataset.country = name;
         if (hasCities) {
           path.addEventListener('click', () => {
-            if (cityMap[name]) selectCity(cityMap[name]);
+            selectCountry(name);
           });
         }
         landLayer.appendChild(path);
@@ -1016,7 +1079,7 @@
       if (continent !== 'world' && cityContinent[cityName] !== continent) return;
 
       const [x, y] = proj(d.lng, d.lat);
-      const hasBooks = d.books.some(b => activeEraIdx === null || b.era === activeEraIdx);
+      const hasBooks = d.books.some(b => activeEraFilter === null || b.era === activeEraFilter);
 
       const g = document.createElementNS('http://www.w3.org/2000/svg','g');
       g.setAttribute('class', 'book-pin' + (hasBooks ? '' : ' hidden'));
@@ -1045,30 +1108,54 @@
     pinLayer.querySelectorAll('.book-pin').forEach(g => {
       const d = cityData[g.dataset.city];
       if (!d) return;
-      const show = d.books.some(b => activeEraIdx === null || b.era === activeEraIdx);
+      const show = d.books.some(b => activeEraFilter === null || b.era === activeEraFilter);
       g.classList.toggle('hidden', !show);
     });
   }
 
-  /* Country → city mapping — single source of truth used by both renderMap and selectCity */
-  const cityMap = {
-    'France':'Paris','Spain':'Madrid','United Kingdom':'London',
-    'Sweden':'Stockholm','Portugal':'Lisbon',
-    'Argentina':'Buenos Aires','Brazil':'Rio de Janeiro',
-    'Nigeria':'Akure','Algeria':'Algiers','Rwanda':'Kigali',
-    'Burundi':'Bujumbura',"Cote d'Ivoire":'Abidjan',"Côte d'Ivoire":'Abidjan','Ivory Coast':'Abidjan',
-    'Egypt':'Thebes','Japan':'Tokyo','Turkey':'Istanbul',
-    'United States of America':'New York','Canada':'Toronto',
-    'Jamaica':'Kingston','North Korea':'Pyongyang',
-    'Palestinian Territory':'Nablus','West Bank':'Nablus',
-    'Scotland':'Edinburgh','Germany':'Berlin',
-    'Australia':'Sydney','Chile':'Santiago',
+  /* Country → [cities] mapping — supports multiple cities per country */
+  const countryToCities = {
+    'France':                    ['Paris','Marseille'],
+    'Spain':                     ['Madrid'],
+    'United Kingdom':            ['London','Edinburgh','Berkshire'],
+    'Sweden':                    ['Stockholm'],
+    'Portugal':                  ['Lisbon'],
+    'Argentina':                 ['Buenos Aires'],
+    'Brazil':                    ['Rio de Janeiro'],
+    'Nigeria':                   ['Akure','Ibadan'],
+    'Algeria':                   ['Algiers'],
+    'Rwanda':                    ['Kigali'],
+    'Burundi':                   ['Bujumbura'],
+    "Cote d'Ivoire":             ['Abidjan'],
+    "Côte d'Ivoire":             ['Abidjan'],
+    'Ivory Coast':               ['Abidjan'],
+    'Egypt':                     ['Thebes'],
+    'Japan':                     ['Tokyo','Matsuyama'],
+    'Turkey':                    ['Istanbul'],
+    'United States of America':  ['New York','Los Angeles','San Francisco','Tennessee','Montréal'],
+    'Canada':                    ['Toronto','Montréal'],
+    'Jamaica':                   ['Kingston'],
+    'North Korea':               ['Pyongyang'],
+    'Palestinian Territory':     ['Nablus'],
+    'West Bank':                 ['Nablus'],
   };
-  /* Reverse map: city → country name (for selectCity highlight) */
-  const cityToCountry = {};
-  Object.entries(cityMap).forEach(([country, city]) => {
-    if (!cityToCountry[city]) cityToCountry[city] = country;
+  /* Fix: remove Montréal from US, it belongs to Canada only */
+  countryToCities['United States of America'] = ['New York','Los Angeles','San Francisco','Tennessee'];
+
+  /* Flat country → first city (for hasCities check) */
+  const cityMap = {};
+  Object.entries(countryToCities).forEach(([country, cities]) => {
+    cityMap[country] = cities[0];
   });
+
+  /* City → country reverse map */
+  const cityToCountry = {};
+  Object.entries(countryToCities).forEach(([country, cities]) => {
+    cities.forEach(city => { if (!cityToCountry[city]) cityToCountry[city] = country; });
+  });
+
+  /* Active selection state */
+  let activeCountry = null; // currently selected country name
   fetch('https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_admin_0_countries.geojson')
     .then(r => { if (!r.ok) throw new Error(); return r.json(); })
     .catch(() => fetch('https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson').then(r => r.json()))
@@ -1106,16 +1193,58 @@
   /* ══════════════════════════════════════════════════
      SHELF
   ══════════════════════════════════════════════════ */
+  function selectCountry(countryName) {
+    const cities = (countryToCities[countryName] || []).filter(c => cityData[c]);
+    if (!cities.length) return;
+
+    /* If only one city, go straight to city view */
+    if (cities.length === 1) { selectCity(cities[0]); return; }
+
+    activeCountry = countryName;
+    activeCity    = null;
+
+    /* Highlight country */
+    document.querySelectorAll('.country-path').forEach(p => p.classList.remove('active-country'));
+    document.querySelectorAll(`.country-path[data-country="${countryName}"]`)
+      .forEach(p => p.classList.add('active-country'));
+
+    /* Hide breadcrumb */
+    document.getElementById('shelf-breadcrumb').classList.remove('visible');
+
+    const inner  = document.getElementById('shelf-inner');
+    const header = document.getElementById('shelf-header-inner');
+    inner.classList.add('fading');
+    header.classList.add('fading');
+
+    setTimeout(() => {
+      renderCountryShelf(countryName, cities);
+      inner.classList.remove('fading');
+      header.classList.remove('fading');
+    }, 280);
+  }
+
   function selectCity(cityName) {
     if (!cityData[cityName]) return;
-    activeCity = cityName;
+    activeCity    = cityName;
+    activeCountry = cityToCountry[cityName] || null;
 
-    /* highlight active country */
+    /* Highlight country */
     document.querySelectorAll('.country-path').forEach(p => p.classList.remove('active-country'));
-    const countryName = cityToCountry[cityName];
-    if (countryName) {
-      document.querySelectorAll(`.country-path[data-country="${countryName}"]`)
+    if (activeCountry) {
+      document.querySelectorAll(`.country-path[data-country="${activeCountry}"]`)
         .forEach(p => p.classList.add('active-country'));
+    }
+
+    /* Show breadcrumb if there are sibling cities */
+    const siblings = activeCountry
+      ? (countryToCities[activeCountry] || []).filter(c => cityData[c])
+      : [];
+    const breadcrumb = document.getElementById('shelf-breadcrumb');
+    if (siblings.length > 1 && activeCountry) {
+      document.getElementById('breadcrumb-city').textContent = cityName;
+      breadcrumb.classList.add('visible');
+    } else {
+      breadcrumb.classList.remove('visible');
     }
 
     const inner  = document.getElementById('shelf-inner');
@@ -1130,24 +1259,107 @@
     }, 280);
   }
 
-  function renderShelf(cityName) {
-    const d = cityData[cityName];
-    document.getElementById('shelf-city-name').textContent  = cityName;
-    document.getElementById('shelf-era-range').textContent  = d.era;
-    document.getElementById('shelf-works').textContent      = d.works;
-    document.getElementById('shelf-locations').textContent  = d.locations;
+  /* ── Shared book item template ── */
+  function bookItemHTML(b) {
+    return `<li class="book-item">
+      <div class="book-title">${b.title}</div>
+      <div class="book-meta-row">
+        <span class="book-author-year">${b.author} — ${b.year}</span>
+        <span class="book-neighborhood">${b.area}</span>
+      </div>
+    </li>`;
+  }
+
+  /* ── Country view — all cities aggregated ── */
+  function renderCountryShelf(countryName, cities) {
+    const allBooks = cities.flatMap(c => cityData[c] ? cityData[c].books.map(b => ({...b, city: c})) : []);
+    const total    = allBooks.length;
+
+    document.getElementById('shelf-city-name').textContent = countryName;
+    document.getElementById('shelf-era-range').textContent = `${cities.length} cities`;
+    document.getElementById('shelf-works').textContent     = total;
+    document.getElementById('shelf-locations').textContent = '—';
 
     const inner = document.getElementById('shelf-inner');
-    inner.innerHTML = `
-      <div class="shelf-section-label">Works in this era</div>
-      <ul class="book-list" id="book-list"></ul>
-      <div class="shelf-image-slot">
-        <span class="shelf-image-label">Image — Placeholder</span>
-      </div>`;
+    inner.innerHTML = `<div class="shelf-section-label" id="shelf-section-label">All works</div>
+      <ul class="book-list" id="book-list"></ul>`;
 
-    const genres = getActiveGenres();
-    const eraBooks = d.books.filter(b => (activeEraIdx === null || b.era === activeEraIdx) && (!genres || genres.has(b.genre)));
+    renderCountryBooks(countryName, cities);
+  }
 
+  function renderCountryBooks(countryName, cities) {
+    const eraNames = ['Pre-1920', 'Mid 20th C.', 'Contemporary'];
+    const list = document.getElementById('book-list');
+    if (!list) return;
+
+    const usedCities = cities || (activeCountry
+      ? (countryToCities[activeCountry] || []).filter(c => cityData[c])
+      : []);
+
+    /* Update section label */
+    const label = document.getElementById('shelf-section-label');
+    if (label) label.textContent = activeEraFilter !== null ? eraNames[activeEraFilter] : 'All works';
+
+    let html = '';
+    let hasAny = false;
+
+    usedCities.forEach(cityName => {
+      const d = cityData[cityName];
+      if (!d) return;
+      const filtered = d.books.filter(b => activeEraFilter === null || b.era === activeEraFilter);
+      if (!filtered.length) return;
+      hasAny = true;
+      html += `<li class="city-group-header" data-city="${cityName}">
+        <span>${cityName}</span>
+        <span class="city-group-count">${filtered.length} work${filtered.length !== 1 ? 's' : ''}</span>
+      </li>`;
+      html += filtered.map(b => bookItemHTML(b)).join('');
+    });
+
+    if (!hasAny) {
+      list.innerHTML = `<li class="empty-state"><span class="empty-state-msg">No works mapped for this era yet.</span></li>`;
+    } else {
+      list.innerHTML = html;
+      /* Clicking a city group header drills into that city */
+      list.querySelectorAll('.city-group-header').forEach(el => {
+        el.addEventListener('click', () => selectCity(el.dataset.city));
+      });
+    }
+  }
+
+  /* ── City view ── */
+  function renderShelf(cityName) {
+    const d = cityData[cityName];
+    document.getElementById('shelf-city-name').textContent = cityName;
+    document.getElementById('shelf-era-range').textContent = d.era;
+    document.getElementById('shelf-works').textContent     = d.works;
+    document.getElementById('shelf-locations').textContent = d.locations;
+
+    const inner = document.getElementById('shelf-inner');
+    inner.innerHTML = `<div class="shelf-section-label" id="shelf-section-label">All works</div>
+      <ul class="book-list" id="book-list"></ul>`;
+
+    renderBookList(cityName);
+  }
+
+  function renderBookList(cityName) {
+    const d = cityData[cityName];
+    if (!d) return;
+
+    const eraNames = ['Pre-1920', 'Mid 20th C.', 'Contemporary'];
+    const filtered = d.books.filter(b => activeEraFilter === null || b.era === activeEraFilter);
+
+    const label = document.getElementById('shelf-section-label');
+    if (label) label.textContent = activeEraFilter !== null ? eraNames[activeEraFilter] : 'All works';
+
+    const list = document.getElementById('book-list');
+    if (!list) return;
+
+    if (!filtered.length) {
+      list.innerHTML = `<li class="empty-state"><span class="empty-state-msg">No works mapped for this era yet.</span></li>`;
+      return;
+    }
+    list.innerHTML = filtered.map(b => bookItemHTML(b)).join('');
   }
 
   /* ── Zoom & Pan ── */
@@ -1268,30 +1480,29 @@
     if (!e.target.closest('.shelf-search')) searchResults.classList.remove('open');
   });
 
-  /* ── Filters ── */
-  let activeGenreFilters = new Set(['Literary fiction']); // default matches active chip
+  /* ── Era chips ── */
+  document.querySelectorAll('.era-chip').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.era-chip').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const val = btn.dataset.era;
+      activeEraFilter = val === 'all' ? null : parseInt(val);
+      /* update pin visibility */
+      if (geoFeatures.length) refreshPins();
+      /* re-render shelf if a city is selected */
+      if (activeCity) {
+        renderBookList(activeCity);
+      } else if (activeCountry) {
+        renderCountryBooks(activeCountry, null);
+      }
+    });
+  });
 
-  function toggleFilter(el) {
-    const genre = el.textContent.trim();
-    if (activeGenreFilters.has(genre)) {
-      // Don't allow deselecting all — keep at least one
-      if (activeGenreFilters.size === 1) return;
-      activeGenreFilters.delete(genre);
-      el.classList.remove('active');
-    } else {
-      activeGenreFilters.add(genre);
-      el.classList.add('active');
-    }
-    if (activeCity) renderShelf(activeCity);
-  }
-
-  // Wire "all genres" behaviour: if all chips active, show all
-  function getActiveGenres() {
-    const allChips = document.querySelectorAll('.filter-chip');
-    const allGenres = [...allChips].map(c => c.textContent.trim());
-    const allActive = allGenres.every(g => activeGenreFilters.has(g));
-    return allActive ? null : activeGenreFilters; // null = show all
-  }
+  /* ── Init ── */
+  /* ── Breadcrumb back button ── */
+  document.getElementById('breadcrumb-back').addEventListener('click', () => {
+    if (activeCountry) selectCountry(activeCountry);
+  });
 
   /* ── Init ── */
   renderShelf('New York');
