@@ -20,7 +20,7 @@
       --accent:    #E4ECF1;
       --accent-dk: #B8C9D4;
       --ocean:     #DDE6EC;
-      --hover:     rgba(210,224,234,0.35);
+      --hover:     rgba(210,224,234,0.30);
       --divider:   rgba(180,196,208,0.55);
       --font:      "neue-haas-unica", sans-serif;
       --shelf-w:   500px;
@@ -395,62 +395,16 @@
     }
     .book-item:first-child { border-top: 1px solid var(--divider); }
     .book-item:hover { background: var(--hover); }
-    .book-title { font-size: 14px; font-weight: 400; color: var(--text); margin-bottom: 4px; line-height: 1.3; }
-    .book-meta-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
-    .book-author-year { font-size: 12px; font-weight: 300; color: var(--text-sub); }
-    .book-neighborhood { font-size: 11px; font-weight: 300; color: var(--text-sub); white-space: nowrap; }
 
-    /* breadcrumb — shown in city view, hidden in country view */
-    .shelf-breadcrumb {
-      display: none;
-      align-items: center;
-      gap: 6px;
-      padding: 10px 28px;
-      border-bottom: 1px solid var(--divider);
-      flex-shrink: 0;
-    }
-    .shelf-breadcrumb.visible { display: flex; }
-    .shelf-breadcrumb-back {
-      font-family: var(--font);
-      font-size: 11px;
-      font-weight: 400;
-      letter-spacing: 0.06em;
-      color: var(--text-sub);
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 0;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      transition: color 0.15s;
-    }
-    .shelf-breadcrumb-back:hover { color: var(--text); }
-    .shelf-breadcrumb-sep { color: var(--divider); font-size: 12px; }
-    .shelf-breadcrumb-city { font-size: 11px; font-weight: 400; color: var(--text); letter-spacing: 0.06em; }
+    .quote-block { padding: 26px 0 22px; border-bottom: 1px solid var(--divider); }
+    .quote-text { font-size: 15px; font-weight: 300; font-style: italic; line-height: 1.75; color: var(--text); margin-bottom: 10px; }
+    .quote-attr { font-size: 11px; font-weight: 300; letter-spacing: 0.1em; color: var(--text-sub); text-transform: uppercase; }
 
-    /* city group header in country view */
-    .city-group-header {
-      padding: 20px 28px 10px;
-      margin: 0 -28px;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--text-sub);
-      cursor: pointer;
-      transition: color 0.15s;
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
+    .shelf-image-slot {
+      width: 100%; aspect-ratio: 4/3; background: var(--accent);
+      margin: 24px 0; display: flex; align-items: center; justify-content: center;
     }
-    .city-group-header:hover { color: var(--text); }
-    .city-group-count {
-      font-size: 10px;
-      font-weight: 300;
-      letter-spacing: 0.06em;
-      color: var(--text-sub);
-    }
+    .shelf-image-label { font-size: 10px; font-weight: 300; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(50,78,95,0.4); }
 
     .empty-state {
       padding: 24px 0 8px;
@@ -507,6 +461,111 @@
       .map-panel { height: 55vh; }
       .shelf { height: auto; border-left: none; border-top: 1px solid var(--divider); }
       .shelf-inner { overflow-y: visible; }
+    }
+
+    /* ── Breadcrumb (city view only) ── */
+    .shelf-breadcrumb {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 28px;
+      border-bottom: 1px solid var(--divider);
+      flex-shrink: 0;
+    }
+    .shelf-breadcrumb.visible { display: flex; }
+    .breadcrumb-back {
+      font-family: var(--font);
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      color: var(--text-sub);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: color 0.15s;
+    }
+    .breadcrumb-back:hover { color: var(--text); }
+    .breadcrumb-sep { color: var(--divider); }
+    .breadcrumb-city { font-size: 11px; font-weight: 400; color: var(--text); letter-spacing: 0.06em; }
+
+    /* ── City group header (country view) ── */
+    .city-group-header {
+      list-style: none;
+      padding: 16px 28px 8px;
+      margin: 0 -28px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-sub);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      transition: color 0.15s;
+    }
+    .city-group-header:hover { color: var(--text); }
+    .city-group-count {
+      font-size: 10px;
+      font-weight: 300;
+      letter-spacing: 0.06em;
+    }
+
+    /* ── Book item expand/collapse ── */
+    .book-item {
+      cursor: pointer;
+    }
+    .book-title { font-size: 15px; font-weight: 400; color: var(--text); margin-bottom: 4px; line-height: 1.3; }
+    .book-meta-row { display: flex; flex-direction: column; gap: 3px; }
+    .book-author-year { font-size: 12px; font-weight: 300; color: var(--text-sub); }
+    .book-neighborhood { font-size: 11px; font-weight: 300; color: var(--text-sub); }
+    .book-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .book-item-toggle {
+      font-size: 12px;
+      color: var(--text-sub);
+      flex-shrink: 0;
+      margin-top: 2px;
+      transition: transform 0.2s ease, color 0.15s;
+      line-height: 1;
+    }
+    .book-item.open .book-item-toggle {
+      transform: rotate(180deg);
+      color: var(--text);
+    }
+    .book-expand {
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.3s ease, opacity 0.25s ease;
+      opacity: 0;
+    }
+    .book-item.open .book-expand {
+      max-height: 300px;
+      opacity: 1;
+    }
+    .book-expand-inner {
+      padding-top: 14px;
+    }
+    .book-synopsis {
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.7;
+      color: var(--text);
+      margin-bottom: 14px;
+    }
+    .book-quote {
+      font-size: 13px;
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.65;
+      color: var(--text-sub);
+      padding-left: 14px;
+      border-left: 2px solid var(--accent-dk);
     }
   </style>
 </head>
@@ -601,11 +660,11 @@
         </div>
       </div>
 
-      <!-- Breadcrumb (city view only) -->
+      <!-- Breadcrumb (visible in city view when parent country has siblings) -->
       <div class="shelf-breadcrumb" id="shelf-breadcrumb">
-        <button class="shelf-breadcrumb-back" id="breadcrumb-back">← All cities</button>
-        <span class="shelf-breadcrumb-sep">/</span>
-        <span class="shelf-breadcrumb-city" id="breadcrumb-city"></span>
+        <button class="breadcrumb-back" id="breadcrumb-back">← All cities</button>
+        <span class="breadcrumb-sep">/</span>
+        <span class="breadcrumb-city" id="breadcrumb-city"></span>
       </div>
 
       <!-- Era filter -->
@@ -640,7 +699,7 @@
       works: 1, locations: "—",
       quote: { text: "Life in Yopougon goes on, whatever they say.", attr: "Abouet — Aya de Yopougon, 2005" },
       books: [
-        { title: "Aya de Yopougon", author: "Marguerite Abouet", year: "2005", area: "Yopougon", era: 2, genre: "Graphic novel" },
+        { title: "Aya de Yopougon", author: "Marguerite Abouet", year: "2005", area: "Yopougon", era: 2, genre: "Graphic novel", synopsis: "A graphic novel following spirited Aya and her friends navigating love, ambition, and family in 1970s Yopougon, a working-class commune of Abidjan. Abouet draws the neighbourhood with warmth and specificity — its streets, bars, and courtyards are as vivid as any character.", quote: "Life in Yopougon goes on, whatever they say." },
       ]
     },
     "Akure": {
@@ -649,7 +708,7 @@
       works: 1, locations: "—",
       quote: { text: "A man who catches a fish is never sad.", attr: "Obioma — The Fishermen, 2015" },
       books: [
-        { title: "The Fishermen", author: "Chigozie Obioma", year: "2015", area: "Aba Road / Omi-Asoro", era: 2, genre: "Literary fiction" },
+        { title: "The Fishermen", author: "Chigozie Obioma", year: "2015", area: "Aba Road / Omi-Asoro", era: 2, genre: "Literary fiction", synopsis: "Four brothers in Akure, Nigeria, sneak away to fish in a forbidden river and encounter a local madman whose prophecy sets them on a path of tragedy. Obioma uses the river and its surrounding neighbourhoods as an almost mythological landscape where fate takes hold.", quote: "A man who catches a fish is never sad." },
       ]
     },
     "Algiers": {
@@ -658,7 +717,7 @@
       works: 1, locations: "—",
       quote: { text: "Mother died today. Or maybe yesterday, I don't know.", attr: "Camus — L'Étranger, 1942" },
       books: [
-        { title: "L'Étranger", author: "Albert Camus", year: "1942", area: "Belcourt / Algiers coast", era: 1, genre: "Literary fiction" },
+        { title: "L'Étranger", author: "Albert Camus", year: "1942", area: "Belcourt / Algiers coast", era: 1, genre: "Literary fiction", synopsis: "Meursault, a French Algerian, kills an Arab on an Algiers beach and faces trial — less for the murder than for his unsettling indifference to it. Camus grounds the novel in the heat, light, and social tensions of colonial Algiers.", quote: "Mother died today. Or maybe yesterday, I don't know." },
       ]
     },
     "Berkshire": {
@@ -667,7 +726,7 @@
       works: 1, locations: "—",
       quote: { text: "A day that is just a day, and yet contains everything.", attr: "Swift — Mothering Sunday, 2016" },
       books: [
-        { title: "Mothering Sunday", author: "Graham Swift", year: "2016", area: "Country estate / Thames Valley", era: 0, genre: "Literary fiction" },
+        { title: "Mothering Sunday", author: "Graham Swift", year: "2016", area: "Country estate / Thames Valley", era: 0, genre: "Literary fiction", synopsis: "On a single March day in 1924, an orphaned maid is given an unexpected free afternoon and visits her secret lover at a Berkshire country estate for the last time. Swift compresses a lifetime of memory into one afternoon of English countryside and class.", quote: "A day that is just a day, and yet contains everything." },
       ]
     },
     "Buenos Aires": {
@@ -676,8 +735,8 @@
       works: 2, locations: "—",
       quote: { text: "Time forks perpetually toward innumerable futures.", attr: "Borges — Ficciones, 1944" },
       books: [
-        { title: "Ficciones", author: "Jorge Luis Borges", year: "1944", area: "Palermo / San Telmo", era: 1, genre: "Literary fiction" },
-        { title: "The Absent City", author: "Ricardo Piglia", year: "1992", area: "San Nicolás / Microcentro", era: 1, genre: "Literary fiction" },
+        { title: "Ficciones", author: "Jorge Luis Borges", year: "1944", area: "Palermo / San Telmo", era: 1, genre: "Literary fiction", synopsis: "A collection of labyrinthine stories that blur the line between fiction, essay, and philosophy — gardens of forking paths, infinite libraries, and circular ruins. Borges maps Buenos Aires not as geography but as a city of infinite possible worlds.", quote: "Time forks perpetually toward innumerable futures." },
+        { title: "The Absent City", author: "Ricardo Piglia", year: "1992", area: "San Nicolás / Microcentro", era: 1, genre: "Literary fiction", synopsis: "In a speculative Buenos Aires, a journalist follows the trail of a mysterious machine that generates endless narratives to preserve the memory of the disappeared. Piglia's city is haunted by dictatorship, its Microcentro streets thick with concealed histories.", quote: "Memory is the only form of resistance left." },
       ]
     },
     "Bujumbura": {
@@ -686,7 +745,7 @@
       works: 1, locations: "—",
       quote: { text: "My country is a small thing that breaks.", attr: "Faye — Petit Pays, 2016" },
       books: [
-        { title: "Petit Pays", author: "Gaël Faye", year: "2016", area: "Quartier Asiatique", era: 1, genre: "Literary fiction" },
+        { title: "Petit Pays", author: "Gaël Faye", year: "2016", area: "Quartier Asiatique", era: 1, genre: "Literary fiction", synopsis: "A French-Rwandan boy grows up in the expat bubble of Bujumbura's Quartier Asiatique as the world outside unravels into ethnic violence and genocide. Faye's autobiographical novel mourns the childhood paradise lost to history.", quote: "My country is a small thing that breaks." },
       ]
     },
     "Edinburgh": {
@@ -695,7 +754,7 @@
       works: 1, locations: "—",
       quote: { text: "For those who like that sort of thing, that is the sort of thing they like.", attr: "Spark — Miss Jean Brodie, 1961" },
       books: [
-        { title: "The Prime of Miss Jean Brodie", author: "Muriel Spark", year: "1961", area: "Old Town / Marchmont", era: 1, genre: "Literary fiction" },
+        { title: "The Prime of Miss Jean Brodie", author: "Muriel Spark", year: "1961", area: "Old Town / Marchmont", era: 1, genre: "Literary fiction", synopsis: "An unconventional Edinburgh teacher shapes six girls in her own image, convinced she is cultivating a cultural elite in interwar Scotland. The Old Town's wynds and Marchmont tenements form the backdrop for her charismatic, ultimately dangerous influence.", quote: "For those who like that sort of thing, that is the sort of thing they like." },
       ]
     },
     "Ibadan": {
@@ -704,7 +763,7 @@
       works: 1, locations: "—",
       quote: { text: "A woman who is not in her husband's house is nobody.", attr: "Shoneyin — Baba Segi's Wives, 2010" },
       books: [
-        { title: "The Secret Lives of Baba Segi's Wives", author: "Lola Shoneyin", year: "2010", area: "Dugbe / Bodija", era: 2, genre: "Literary fiction" },
+        { title: "The Secret Lives of Baba Segi's Wives", author: "Lola Shoneyin", year: "2010", area: "Dugbe / Bodija", era: 2, genre: "Literary fiction", synopsis: "When Baba Segi's fourth wife, a university-educated woman, joins his polygamous Ibadan household, the secrets of his other wives begin to surface. Shoneyin uses the Bodija neighbourhood to map the fault lines of patriarchy and survival.", quote: "A woman who is not in her husband's house is nobody." },
       ]
     },
     "Istanbul": {
@@ -713,8 +772,8 @@
       works: 2, locations: "—",
       quote: { text: "Istanbul is the city that has made me who I am.", attr: "Tanpınar — A Mind at Peace, 1949" },
       books: [
-        { title: "Birds Without Wings", author: "Louis de Bernières", year: "2004", area: "Taksim / Beyoğlu", era: 0, genre: "Historical" },
-        { title: "A Mind at Peace", author: "Ahmet Hamdi Tanpınar", year: "1949", area: "Beyoğlu / Bosphorus shore", era: 1, genre: "Literary fiction" },
+        { title: "Birds Without Wings", author: "Louis de Bernières", year: "2004", area: "Taksim / Beyoğlu", era: 0, genre: "Historical", synopsis: "Set in an Anatolian village and Istanbul's Beyoğlu district, the novel traces the destruction of a community through World War One and the collapse of the Ottoman Empire. De Bernières shows how history erases ordinary lives from the ground up.", quote: "There is nothing so dangerous as the desire for a pure nation." },
+        { title: "A Mind at Peace", author: "Ahmet Hamdi Tanpınar", year: "1949", area: "Beyoğlu / Bosphorus shore", era: 1, genre: "Literary fiction", synopsis: "Mümtaz, a young intellectual, moves through the Bosphorus shore and Beyoğlu neighbourhoods of Istanbul in a state of philosophical melancholy, torn between Ottoman tradition and Western modernity. Tanpınar's Istanbul is as much interior landscape as city.", quote: "Istanbul is the city that has made me who I am." },
       ]
     },
     "Kigali": {
@@ -723,7 +782,7 @@
       works: 1, locations: "—",
       quote: { text: "Memory is a wound that never fully heals.", attr: "Faye — Jacaranda, 2024" },
       books: [
-        { title: "Jacaranda", author: "Gaël Faye", year: "2024", area: "Kigali city centre / Nyamirambo", era: 2, genre: "Literary fiction" },
+        { title: "Jacaranda", author: "Gaël Faye", year: "2024", area: "Kigali city centre / Nyamirambo", era: 2, genre: "Literary fiction", synopsis: "A Franco-Rwandan man returns to post-genocide Kigali in search of his origins and encounters a city rebuilding itself on top of unspoken grief. Faye's Kigali pulses between jacaranda-lined streets and the weight of 1994.", quote: "Memory is a wound that never fully heals." },
       ]
     },
     "Kingston": {
@@ -732,7 +791,7 @@
       works: 1, locations: "—",
       quote: { text: "The living do not know that the dead walk among them.", attr: "James — A Brief History of Seven Killings, 2014" },
       books: [
-        { title: "A Brief History of Seven Killings", author: "Marlon James", year: "2014", area: "Trenchtown / West Kingston", era: 1, genre: "Crime / Noir" },
+        { title: "A Brief History of Seven Killings", author: "Marlon James", year: "2014", area: "Trenchtown / West Kingston", era: 1, genre: "Crime / Noir", synopsis: "A sprawling, many-voiced novel circling the 1976 assassination attempt on Bob Marley in Trenchtown, following the ripple effects through Jamaican politics, the CIA, and the New York drug trade over three decades. Kingston is rendered in full, terrifying texture.", quote: "The living do not know that the dead walk among them." },
       ]
     },
     "London": {
@@ -741,7 +800,7 @@
       works: 1, locations: "—",
       quote: { text: "England, home and beauty — but whose home?", attr: "Smith — White Teeth, 2000" },
       books: [
-        { title: "White Teeth", author: "Zadie Smith", year: "2000", area: "Willesden / Kilburn", era: 2, genre: "Literary fiction" },
+        { title: "White Teeth", author: "Zadie Smith", year: "2000", area: "Willesden / Kilburn", era: 2, genre: "Literary fiction", synopsis: "Two families — one Bangladeshi, one English-Jamaican — navigate race, religion, and identity across postcolonial London from WWII to the millennium. Zadie Smith's Willesden and Kilburn are her North London, mapped with affection and satirical precision.", quote: "England, home and beauty — but whose home?" },
       ]
     },
     "Los Angeles": {
@@ -750,7 +809,7 @@
       works: 1, locations: "—",
       quote: { text: "I was twenty years old, I was broke, I was hungry.", attr: "Fante — Ask the Dust, 1939" },
       books: [
-        { title: "Ask the Dust", author: "John Fante", year: "1939", area: "Bunker Hill / Angel's Flight", era: 0, genre: "Literary fiction" },
+        { title: "Ask the Dust", author: "John Fante", year: "1939", area: "Bunker Hill / Angel's Flight", era: 0, genre: "Literary fiction", synopsis: "Arturo Bandini, a young Italian-American writer, arrives in Depression-era Los Angeles with nothing but ambition and a dream of literary greatness, living in a Bunker Hill rooming house. Fante's LA is gritty, beautiful, and lit by an unforgiving sun.", quote: "I was twenty years old, I was broke, I was hungry." },
       ]
     },
     "Madrid": {
@@ -759,7 +818,7 @@
       works: 1, locations: "—",
       quote: { text: "No one here is normal except you, and you're not even from Spain.", attr: "Wolff — The Polyglot Lovers, 2016" },
       books: [
-        { title: "The Polyglot Lovers", author: "Lina Wolff", year: "2016", area: "Malasaña", era: 2, genre: "Literary fiction" },
+        { title: "The Polyglot Lovers", author: "Lina Wolff", year: "2016", area: "Malasaña", era: 2, genre: "Literary fiction", synopsis: "Three stories weave together around a single text and a cast of voices exploring desire, translation, and European alienation — including a protagonist living in Malasaña, Madrid. Wolff writes the city as a place of beautiful, failed communication.", quote: "No one here is normal except you, and you're not even from Spain." },
       ]
     },
     "Marseille": {
@@ -768,9 +827,9 @@
       works: 3, locations: "—",
       quote: { text: "The Mediterranean is not a postcard. It's a wound.", attr: "Izzo — Total Khéops, 1995" },
       books: [
-        { title: "Il est des hommes qui se perdront toujours", author: "Rebecca Lighieri", year: "2020", area: "Northern districts (13e–14e)", era: 2, genre: "Literary fiction" },
-        { title: "Total Khéops", author: "Jean-Claude Izzo", year: "1995", area: "Vieux-Port / Le Panier", era: 1, genre: "Crime / Noir" },
-        { title: "Le Comte de Monte-Cristo", author: "Alexandre Dumas", year: "1844", area: "Château d'If / Vieux-Port", era: 0, genre: "Historical" },
+        { title: "Il est des hommes qui se perdront toujours", author: "Rebecca Lighieri", year: "2020", area: "Northern districts (13e–14e)", era: 2, genre: "Literary fiction", synopsis: "A group of teenagers from the northern housing estates of Marseille descend into violence, charting a trajectory shaped as much by postcode as by choice. Lighieri's novel is a stark portrait of the city's forgotten districts.", quote: "Some places mark you before you have the words to say so." },
+        { title: "Total Khéops", author: "Jean-Claude Izzo", year: "1995", area: "Vieux-Port / Le Panier", era: 1, genre: "Crime / Noir", synopsis: "Marseille detective Fabio Montale investigates the death of a childhood friend in the Vieux-Port, uncovering a city saturated in organised crime, racism, and Mediterranean heat. Izzo's trilogy made Marseille a noir landscape to rival any in world crime fiction.", quote: "The Mediterranean is not a postcard. It\'s a wound." },
+        { title: "Le Comte de Monte-Cristo", author: "Alexandre Dumas", year: "1844", area: "Château d'If / Vieux-Port", era: 0, genre: "Historical", synopsis: "Falsely imprisoned at Château d'If in the bay of Marseille, sailor Edmond Dantès escapes and devotes his life to an elaborate revenge against those who betrayed him. The Vieux-Port is both origin point and final reckoning.", quote: "All human wisdom is contained in these two words: wait and hope." },
       ]
     },
     "Matsuyama": {
@@ -779,7 +838,7 @@
       works: 1, locations: "—",
       quote: { text: "I am a stranger here, and this town knows it.", attr: "Sōseki — Botchan, 1906" },
       books: [
-        { title: "Botchan", author: "Natsume Sōseki", year: "1906", area: "Old city centre", era: 0, genre: "Literary fiction" },
+        { title: "Botchan", author: "Natsume Sōseki", year: "1906", area: "Old city centre", era: 0, genre: "Literary fiction", synopsis: "A brash young Tokyo teacher is posted to Matsuyama on the island of Shikoku and finds himself at war with the local school's petty politics and provincial smugness. Sōseki uses the old city centre as a foil to everything Tokyo represents.", quote: "I am a stranger here, and this town knows it." },
       ]
     },
     "Montréal": {
@@ -788,7 +847,7 @@
       works: 1, locations: "—",
       quote: { text: "In Montréal the snow forgives everything.", attr: "O'Neill — The Lonely Hearts Hotel, 2017" },
       books: [
-        { title: "The Lonely Hearts Hotel", author: "Heather O'Neill", year: "2017", area: "Griffintown / Plateau", era: 0, genre: "Literary fiction" },
+        { title: "The Lonely Hearts Hotel", author: "Heather O'Neill", year: "2017", area: "Griffintown / Plateau", era: 0, genre: "Literary fiction", synopsis: "Two orphans who grow up together in Depression-era Griffintown become lovers, circus performers, and mythological figures in O'Neill's lyrical reimagining of 1930s Montréal. The Plateau and its streets are rendered in snow-lit, magical-realist prose.", quote: "In Montréal the snow forgives everything." },
       ]
     },
     "Nablus": {
@@ -797,7 +856,7 @@
       works: 1, locations: "—",
       quote: { text: "I am made of all the places that made me.", attr: "Abulhawa — Against the Loveless World, 2020" },
       books: [
-        { title: "Against the Loveless World", author: "Susan Abulhawa", year: "2020", area: "Old City", era: 2, genre: "Literary fiction" },
+        { title: "Against the Loveless World", author: "Susan Abulhawa", year: "2020", area: "Old City", era: 2, genre: "Literary fiction", synopsis: "Nahr, a Palestinian woman, recounts her life from Kuwait to Jordan to the Old City of Nablus, where she becomes a freedom fighter imprisoned in a glass cube. Abulhawa weaves displacement, love, and resistance into a portrait of Palestine.", quote: "I am made of all the places that made me." },
       ]
     },
     "New York": {
@@ -806,10 +865,10 @@
       works: 4, locations: "—",
       quote: { text: "I'm quite illiterate, but I read a lot.", attr: "Salinger — The Catcher in the Rye, 1951" },
       books: [
-        { title: "The Catcher in the Rye", author: "J.D. Salinger", year: "1951", area: "Midtown Manhattan", era: 1, genre: "Literary fiction" },
-        { title: "American Psycho", author: "Bret Easton Ellis", year: "1991", area: "Upper East Side / Wall Street", era: 1, genre: "Literary fiction" },
-        { title: "Another Country", author: "James Baldwin", year: "1962", area: "Greenwich Village / Harlem", era: 1, genre: "Literary fiction" },
-        { title: "The Bell Jar", author: "Sylvia Plath", year: "1963", area: "Midtown Manhattan / Upper East Side", era: 1, genre: "Literary fiction" },
+        { title: "The Catcher in the Rye", author: "J.D. Salinger", year: "1951", area: "Midtown Manhattan", era: 1, genre: "Literary fiction", synopsis: "Holden Caulfield, expelled from prep school, wanders through Midtown Manhattan over a few winter days, raging against the phoniness of the adult world. Salinger\'s New York — Central Park, the Museum of Natural History, the Plaza — is the city as adolescent fugue.", quote: "I\'m quite illiterate, but I read a lot." },
+        { title: "American Psycho", author: "Bret Easton Ellis", year: "1991", area: "Upper East Side / Wall Street", era: 1, genre: "Literary fiction", synopsis: "Patrick Bateman, a Manhattan investment banker, narrates his days of brand obsession, corporate lunches, and escalating violence in late 1980s New York. Ellis uses the Upper East Side and Wall Street as a map of capitalism\'s most grotesque logic.", quote: "I am simply not there." },
+        { title: "Another Country", author: "James Baldwin", year: "1962", area: "Greenwich Village / Harlem", era: 1, genre: "Literary fiction", synopsis: "In Greenwich Village and Harlem, a group of artists, lovers, and outsiders reckon with race, sexuality, and grief in 1950s New York. Baldwin\'s city is a place of dangerous longing — beautiful, brutal, and unforgettable.", quote: "Not everything that is faced can be changed, but nothing can be changed until it is faced." },
+        { title: "The Bell Jar", author: "Sylvia Plath", year: "1963", area: "Midtown Manhattan / Upper East Side", era: 1, genre: "Literary fiction", synopsis: "Esther Greenwood, a talented young woman interning at a New York magazine, experiences a devastating mental breakdown set against the gleaming surface of 1950s Manhattan. Plath\'s Midtown is a trap dressed as opportunity.", quote: "I took a deep breath and listened to the old brag of my heart: I am, I am, I am." },
       ]
     },
     "Paris": {
@@ -818,7 +877,7 @@
       works: 1, locations: "—",
       quote: { text: "Paris is a moveable feast.", attr: "Hemingway — A Moveable Feast, 1964" },
       books: [
-        { title: "Robert des noms propres", author: "Amélie Nothomb", year: "2002", area: "16e arrondissement", era: 2, genre: "Literary fiction" },
+        { title: "Robert des noms propres", author: "Amélie Nothomb", year: "2002", area: "16e arrondissement", era: 2, genre: "Literary fiction", synopsis: "A young girl named Plectrude grows up in a bourgeois Parisian household in the 16th arrondissement, obsessed with ballet to the point of self-destruction. Nothomb uses the city\'s most gilded district as the setting for a story of beauty and violence.", quote: "Paris is not a city, it is a world." },
       ]
     },
     "Pyongyang": {
@@ -827,7 +886,7 @@
       works: 1, locations: "—",
       quote: { text: "The state does not make mistakes. It only makes examples.", attr: "Bandi — The Accusation, 2014" },
       books: [
-        { title: "The Accusation", author: "Bandi", year: "2014", area: "State housing districts", era: 1, genre: "Literary fiction" },
+        { title: "The Accusation", author: "Bandi", year: "2014", area: "State housing districts", era: 1, genre: "Literary fiction", synopsis: "A collection of stories written secretly inside North Korea and smuggled out — each one depicting the suffocating surveillance of Pyongyang and the impossibility of private life under the regime. Bandi\'s city is a panopticon built of concrete and fear.", quote: "The state does not make mistakes. It only makes examples." },
       ]
     },
     "Rio de Janeiro": {
@@ -836,16 +895,16 @@
       works: 1, locations: "—",
       quote: { text: "She was inept. Inept for life.", attr: "Lispector — The Hour of the Star, 1977" },
       books: [
-        { title: "The Hour of the Star", author: "Clarice Lispector", year: "1977", area: "Centro / Periferia", era: 1, genre: "Literary fiction" },
+        { title: "The Hour of the Star", author: "Clarice Lispector", year: "1977", area: "Centro / Periferia", era: 1, genre: "Literary fiction", synopsis: "Macabéa, a naive young typist from the northeast of Brazil, survives in a Rio de Janeiro slum while her narrator-author wrestles with whether her story can be told at all. Lispector turns the city\'s periphery into a meditation on poverty, beauty, and existence.", quote: "She was inept. Inept for life." },
       ]
     },
-    "San Francisco": {
-      lat: 37.7599, lng: -122.4148,
-      era: "Contemporary",
+    "Jesenice": {
+      lat: 46.4366, lng: 13.9981,
+      era: "Mid–Late 20th century",
       works: 1, locations: "—",
-      quote: { text: "The city holds everything you need and none of what you want.", attr: "Stirling — Crumbs, 2020" },
+      quote: { text: "Premalo možganov, da bi se potegnil iz dreka in preveč za to, kar sem.", attr: "Mazzini — Crumbs, 1987" },
       books: [
-        { title: "Crumbs", author: "Danie Stirling", year: "2020", area: "Mission District", era: 2, genre: "Graphic novel" },
+        { title: "Crumbs", author: "Miha Mazzini", year: "1987", area: "Iron foundry district / town centre", era: 1, genre: "Literary fiction", synopsis: "Egon, a hard-drinking writer of cheap romance novels in a grim Slovenian factory town, schemes to fund his obsession with Cartier aftershave as Yugoslavia crumbles around him. Mazzini renders Jesenice\'s industrial bleakness with dark comic precision — a Bukowski-inflected portrait of a nation\'s last days.", quote: "Premalo možganov, da bi se potegnil iz dreka in preveč za to, kar sem." },
       ]
     },
     "Tennessee": {
@@ -854,7 +913,7 @@
       works: 1, locations: "—",
       quote: { text: "Sometimes a family is just the people who show up.", attr: "Wilson — Nothing to See Here, 2019" },
       books: [
-        { title: "Nothing to See Here", author: "Kevin Wilson", year: "2019", area: "Rural estate / Franklin", era: 2, genre: "Literary fiction" },
+        { title: "Nothing to See Here", author: "Kevin Wilson", year: "2019", area: "Rural estate / Franklin", era: 2, genre: "Literary fiction", synopsis: "A young woman becomes caretaker to two children who spontaneously combust when upset, all while sequestered on a wealthy Tennessee estate. Wilson uses the isolated compound to explore class, love, and what it means to protect someone.", quote: "Sometimes a family is just the people who show up." },
       ]
     },
     "Thebes": {
@@ -863,7 +922,7 @@
       works: 1, locations: "—",
       quote: { text: "I have lived in many bodies and remembered them all.", attr: "Waltari — The Egyptian, 1945" },
       books: [
-        { title: "The Egyptian", author: "Mika Waltari", year: "1945", area: "Ancient Thebes / Karnak", era: 0, genre: "Historical" },
+        { title: "The Egyptian", author: "Mika Waltari", year: "1945", area: "Ancient Thebes / Karnak", era: 0, genre: "Historical", synopsis: "Sinuhe, a physician in ancient Egypt, narrates his extraordinary life across the reign of Akhenaten — from the temples of Karnak to the courts of foreign kings. Waltari reconstructs Thebes as a city of spiritual revolution and human ambition.", quote: "I have lived in many bodies and remembered them all." },
       ]
     },
     "Tokyo": {
@@ -872,7 +931,7 @@
       works: 1, locations: "—",
       quote: { text: "Loneliness is the price we must pay for being born in this modern world.", attr: "Sōseki — Kokoro, 1914" },
       books: [
-        { title: "Kokoro", author: "Natsume Sōseki", year: "1914", area: "Hongō / Yanaka", era: 0, genre: "Literary fiction" },
+        { title: "Kokoro", author: "Natsume Sōseki", year: "1914", area: "Hongō / Yanaka", era: 0, genre: "Literary fiction", synopsis: "A young student befriends a mysterious older man in Tokyo\'s Hongō district, gradually uncovering a guilt the man carries about a friendship betrayed in the Meiji era. Sōseki\'s Tokyo is a city of loneliness hidden behind modern surfaces.", quote: "Loneliness is the price we must pay for being born in this modern world." },
       ]
     },
     "Toronto": {
@@ -881,7 +940,7 @@
       works: 1, locations: "—",
       quote: { text: "The eye sees what it brings the power to see.", attr: "Davies — Fifth Business, 1970" },
       books: [
-        { title: "Fifth Business", author: "Robertson Davies", year: "1970", area: "Bloor Street West / Annex", era: 1, genre: "Literary fiction" },
+        { title: "Fifth Business", author: "Robertson Davies", year: "1970", area: "Bloor Street West / Annex", era: 1, genre: "Literary fiction", synopsis: "Dunstan Ramsay, a Canadian schoolteacher from a small Ontario town, reflects on a lifetime of coincidence, guilt, and the women who shaped him — with significant passages set in Toronto\'s Annex neighbourhood. Davies weaves myth into the mundane geography of Canadian life.", quote: "The eye sees what it brings the power to see." },
       ]
     },
   };
@@ -909,7 +968,7 @@
     "Paris": "europe",
     "Pyongyang": "asia",
     "Rio de Janeiro": "south-america",
-    "San Francisco": "north-america",
+    "Jesenice": "europe",
     "Tennessee": "north-america",
     "Thebes": "africa",
     "Tokyo": "asia",
@@ -1113,49 +1172,45 @@
     });
   }
 
-  /* Country → [cities] mapping — supports multiple cities per country */
+  /* Country → [cities] — supports multi-city countries */
   const countryToCities = {
-    'France':                    ['Paris','Marseille'],
-    'Spain':                     ['Madrid'],
-    'United Kingdom':            ['London','Edinburgh','Berkshire'],
-    'Sweden':                    ['Stockholm'],
-    'Portugal':                  ['Lisbon'],
-    'Argentina':                 ['Buenos Aires'],
-    'Brazil':                    ['Rio de Janeiro'],
-    'Nigeria':                   ['Akure','Ibadan'],
-    'Algeria':                   ['Algiers'],
-    'Rwanda':                    ['Kigali'],
-    'Burundi':                   ['Bujumbura'],
-    "Cote d'Ivoire":             ['Abidjan'],
-    "Côte d'Ivoire":             ['Abidjan'],
-    'Ivory Coast':               ['Abidjan'],
-    'Egypt':                     ['Thebes'],
-    'Japan':                     ['Tokyo','Matsuyama'],
-    'Turkey':                    ['Istanbul'],
-    'United States of America':  ['New York','Los Angeles','San Francisco','Tennessee','Montréal'],
-    'Canada':                    ['Toronto','Montréal'],
-    'Jamaica':                   ['Kingston'],
-    'North Korea':               ['Pyongyang'],
-    'Palestinian Territory':     ['Nablus'],
-    'West Bank':                 ['Nablus'],
+    'France':                   ['Paris', 'Marseille'],
+    'Spain':                    ['Madrid'],
+    'United Kingdom':           ['London', 'Edinburgh', 'Berkshire'],
+    'Sweden':                   ['Stockholm'],
+    'Portugal':                 ['Lisbon'],
+    'Argentina':                ['Buenos Aires'],
+    'Brazil':                   ['Rio de Janeiro'],
+    'Nigeria':                  ['Akure', 'Ibadan'],
+    'Algeria':                  ['Algiers'],
+    'Rwanda':                   ['Kigali'],
+    'Burundi':                  ['Bujumbura'],
+    "Cote d'Ivoire":            ['Abidjan'],
+    "Côte d'Ivoire":            ['Abidjan'],
+    'Ivory Coast':              ['Abidjan'],
+    'Egypt':                    ['Thebes'],
+    'Japan':                    ['Tokyo', 'Matsuyama'],
+    'Turkey':                   ['Istanbul'],
+    'United States of America': ['New York', 'Los Angeles', 'Tennessee'],
+    'Slovenia':                   ['Jesenice'],
+    'Canada':                   ['Toronto', 'Montréal'],
+    'Jamaica':                  ['Kingston'],
+    'North Korea':              ['Pyongyang'],
+    'Palestinian Territory':    ['Nablus'],
+    'West Bank':                ['Nablus'],
   };
-  /* Fix: remove Montréal from US, it belongs to Canada only */
-  countryToCities['United States of America'] = ['New York','Los Angeles','San Francisco','Tennessee'];
 
-  /* Flat country → first city (for hasCities check) */
+  /* Flat cityMap: country → first city (for hasCities check in renderMap) */
   const cityMap = {};
-  Object.entries(countryToCities).forEach(([country, cities]) => {
-    cityMap[country] = cities[0];
-  });
+  Object.entries(countryToCities).forEach(([c, cities]) => { cityMap[c] = cities[0]; });
 
-  /* City → country reverse map */
+  /* Reverse: city → country */
   const cityToCountry = {};
   Object.entries(countryToCities).forEach(([country, cities]) => {
     cities.forEach(city => { if (!cityToCountry[city]) cityToCountry[city] = country; });
   });
 
-  /* Active selection state */
-  let activeCountry = null; // currently selected country name
+  let activeCountry = null;
   fetch('https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_admin_0_countries.geojson')
     .then(r => { if (!r.ok) throw new Error(); return r.json(); })
     .catch(() => fetch('https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson').then(r => r.json()))
@@ -1197,18 +1252,18 @@
     const cities = (countryToCities[countryName] || []).filter(c => cityData[c]);
     if (!cities.length) return;
 
-    /* If only one city, go straight to city view */
+    /* Single-city country — go straight to city view */
     if (cities.length === 1) { selectCity(cities[0]); return; }
 
     activeCountry = countryName;
     activeCity    = null;
 
-    /* Highlight country */
+    /* Highlight country shape */
     document.querySelectorAll('.country-path').forEach(p => p.classList.remove('active-country'));
     document.querySelectorAll(`.country-path[data-country="${countryName}"]`)
       .forEach(p => p.classList.add('active-country'));
 
-    /* Hide breadcrumb */
+    /* Hide breadcrumb in country view */
     document.getElementById('shelf-breadcrumb').classList.remove('visible');
 
     const inner  = document.getElementById('shelf-inner');
@@ -1228,23 +1283,23 @@
     activeCity    = cityName;
     activeCountry = cityToCountry[cityName] || null;
 
-    /* Highlight country */
+    /* Highlight country shape */
     document.querySelectorAll('.country-path').forEach(p => p.classList.remove('active-country'));
     if (activeCountry) {
       document.querySelectorAll(`.country-path[data-country="${activeCountry}"]`)
         .forEach(p => p.classList.add('active-country'));
     }
 
-    /* Show breadcrumb if there are sibling cities */
+    /* Show breadcrumb if this city has siblings in its country */
     const siblings = activeCountry
       ? (countryToCities[activeCountry] || []).filter(c => cityData[c])
       : [];
-    const breadcrumb = document.getElementById('shelf-breadcrumb');
-    if (siblings.length > 1 && activeCountry) {
+    const crumb = document.getElementById('shelf-breadcrumb');
+    if (siblings.length > 1) {
       document.getElementById('breadcrumb-city').textContent = cityName;
-      breadcrumb.classList.add('visible');
+      crumb.classList.add('visible');
     } else {
-      breadcrumb.classList.remove('visible');
+      crumb.classList.remove('visible');
     }
 
     const inner  = document.getElementById('shelf-inner');
@@ -1259,51 +1314,34 @@
     }, 280);
   }
 
-  /* ── Shared book item template ── */
-  function bookItemHTML(b) {
-    return `<li class="book-item">
-      <div class="book-title">${b.title}</div>
-      <div class="book-meta-row">
-        <span class="book-author-year">${b.author} — ${b.year}</span>
-        <span class="book-neighborhood">${b.area}</span>
-      </div>
-    </li>`;
-  }
-
-  /* ── Country view — all cities aggregated ── */
+  /* ── Country view ── */
   function renderCountryShelf(countryName, cities) {
-    const allBooks = cities.flatMap(c => cityData[c] ? cityData[c].books.map(b => ({...b, city: c})) : []);
-    const total    = allBooks.length;
-
+    const total = cities.reduce((n, c) => n + (cityData[c] ? cityData[c].books.length : 0), 0);
     document.getElementById('shelf-city-name').textContent = countryName;
-    document.getElementById('shelf-era-range').textContent = `${cities.length} cities`;
+    document.getElementById('shelf-era-range').textContent = cities.length + ' cities';
     document.getElementById('shelf-works').textContent     = total;
     document.getElementById('shelf-locations').textContent = '—';
 
     const inner = document.getElementById('shelf-inner');
-    inner.innerHTML = `<div class="shelf-section-label" id="shelf-section-label">All works</div>
+    inner.innerHTML = `
+      <div class="shelf-section-label" id="shelf-section-label">All works</div>
       <ul class="book-list" id="book-list"></ul>`;
 
-    renderCountryBooks(countryName, cities);
+    renderCountryBooks(cities);
   }
 
-  function renderCountryBooks(countryName, cities) {
+  function renderCountryBooks(cities) {
     const eraNames = ['Pre-1920', 'Mid 20th C.', 'Contemporary'];
-    const list = document.getElementById('book-list');
-    if (!list) return;
-
-    const usedCities = cities || (activeCountry
-      ? (countryToCities[activeCountry] || []).filter(c => cityData[c])
-      : []);
-
-    /* Update section label */
     const label = document.getElementById('shelf-section-label');
     if (label) label.textContent = activeEraFilter !== null ? eraNames[activeEraFilter] : 'All works';
+
+    const list = document.getElementById('book-list');
+    if (!list) return;
 
     let html = '';
     let hasAny = false;
 
-    usedCities.forEach(cityName => {
+    cities.forEach(cityName => {
       const d = cityData[cityName];
       if (!d) return;
       const filtered = d.books.filter(b => activeEraFilter === null || b.era === activeEraFilter);
@@ -1316,11 +1354,12 @@
       html += filtered.map(b => bookItemHTML(b)).join('');
     });
 
-    if (!hasAny) {
-      list.innerHTML = `<li class="empty-state"><span class="empty-state-msg">No works mapped for this era yet.</span></li>`;
-    } else {
-      list.innerHTML = html;
-      /* Clicking a city group header drills into that city */
+    list.innerHTML = hasAny
+      ? html
+      : `<li class="empty-state"><span class="empty-state-msg">No works mapped for this era yet.</span></li>`;
+
+    if (hasAny) {
+      wireBookExpand(list);
       list.querySelectorAll('.city-group-header').forEach(el => {
         el.addEventListener('click', () => selectCity(el.dataset.city));
       });
@@ -1336,7 +1375,8 @@
     document.getElementById('shelf-locations').textContent = d.locations;
 
     const inner = document.getElementById('shelf-inner');
-    inner.innerHTML = `<div class="shelf-section-label" id="shelf-section-label">All works</div>
+    inner.innerHTML = `
+      <div class="shelf-section-label" id="shelf-section-label">All works</div>
       <ul class="book-list" id="book-list"></ul>`;
 
     renderBookList(cityName);
@@ -1347,19 +1387,59 @@
     if (!d) return;
 
     const eraNames = ['Pre-1920', 'Mid 20th C.', 'Contemporary'];
-    const filtered = d.books.filter(b => activeEraFilter === null || b.era === activeEraFilter);
+    const filtered = d.books.filter(b =>
+      activeEraFilter === null || b.era === activeEraFilter
+    );
 
+    /* Update section label */
     const label = document.getElementById('shelf-section-label');
-    if (label) label.textContent = activeEraFilter !== null ? eraNames[activeEraFilter] : 'All works';
+    if (label) label.textContent = activeEraFilter !== null
+      ? eraNames[activeEraFilter]
+      : 'All works';
 
     const list = document.getElementById('book-list');
     if (!list) return;
 
     if (!filtered.length) {
-      list.innerHTML = `<li class="empty-state"><span class="empty-state-msg">No works mapped for this era yet.</span></li>`;
+      list.innerHTML = `<li class="empty-state">
+        <span class="empty-state-msg">No works mapped for this era yet.</span>
+      </li>`;
       return;
     }
+
     list.innerHTML = filtered.map(b => bookItemHTML(b)).join('');
+    wireBookExpand(list);
+  }
+
+  function bookItemHTML(b) {
+    return `<li class="book-item">
+      <div class="book-item-header">
+        <div style="flex:1;min-width:0;">
+          <div class="book-title">${b.title}</div>
+          <div class="book-meta-row">
+            <span class="book-author-year">${b.author} — ${b.year}</span>
+            <span class="book-neighborhood">${b.area}</span>
+          </div>
+        </div>
+        <span class="book-item-toggle">&#8964;</span>
+      </div>
+      <div class="book-expand">
+        <div class="book-expand-inner">
+          ${b.synopsis ? `<p class="book-synopsis">${b.synopsis}</p>` : ''}
+          ${b.quote    ? `<p class="book-quote">${b.quote}</p>`       : ''}
+        </div>
+      </div>
+    </li>`;
+  }
+
+  function wireBookExpand(container) {
+    container.querySelectorAll('.book-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const isOpen = item.classList.contains('open');
+        container.querySelectorAll('.book-item.open').forEach(o => o.classList.remove('open'));
+        if (!isOpen) item.classList.add('open');
+      });
+    });
   }
 
   /* ── Zoom & Pan ── */
@@ -1453,26 +1533,75 @@
   const searchInput   = document.getElementById('search-input');
   const searchResults = document.getElementById('search-results');
 
+  /* Build a deduplicated country list from countryToCities */
+  const searchableCountries = Object.entries(countryToCities)
+    .filter(([country, cities]) => cities.some(c => cityData[c]))
+    .reduce((acc, [country, cities]) => {
+      /* deduplicate by canonical country name (skip alias keys like Ivory Coast) */
+      const key = cities.sort().join(',');
+      if (!acc.seen.has(key)) {
+        acc.seen.add(key);
+        acc.list.push({ country, cities: cities.filter(c => cityData[c]) });
+      }
+      return acc;
+    }, { seen: new Set(), list: [] }).list;
+
   searchInput.addEventListener('input', function() {
     const q = this.value.trim().toLowerCase();
     if (!q) { searchResults.classList.remove('open'); return; }
-    const matches = allBooks.filter(b =>
+
+    /* Country matches */
+    const countryMatches = searchableCountries
+      .filter(({ country, cities }) =>
+        country.toLowerCase().includes(q) ||
+        cities.some(c => c.toLowerCase().includes(q))
+      )
+      .slice(0, 3);
+
+    /* Book matches */
+    const bookMatches = allBooks.filter(b =>
       b.title.toLowerCase().includes(q)  || b.author.toLowerCase().includes(q) ||
       b.area.toLowerCase().includes(q)   || b.city.toLowerCase().includes(q)
-    ).slice(0, 6);
-    if (!matches.length) { searchResults.classList.remove('open'); return; }
-    searchResults.innerHTML = matches.map(b => `
-      <div class="search-result-item" data-city="${b.city}">
+    ).slice(0, 5);
+
+    if (!countryMatches.length && !bookMatches.length) {
+      searchResults.classList.remove('open');
+      return;
+    }
+
+    let html = '';
+
+    countryMatches.forEach(({ country, cities }) => {
+      const totalBooks = cities.reduce((n, c) => n + (cityData[c] ? cityData[c].books.length : 0), 0);
+      const cityList   = cities.join(', ');
+      html += `<div class="search-result-item" data-type="country" data-country="${country}">
+        <div class="sr-title">${country}</div>
+        <div class="sr-meta">${cityList} · ${totalBooks} work${totalBooks !== 1 ? 's' : ''}</div>
+      </div>`;
+    });
+
+    bookMatches.forEach(b => {
+      const country = cityToCountry[b.city] || '';
+      html += `<div class="search-result-item" data-type="city" data-city="${b.city}">
         <div class="sr-title">${b.title}</div>
-        <div class="sr-meta">${b.author} · ${b.city} · ${b.area}</div>
-      </div>`).join('');
+        <div class="sr-meta">${b.author} · ${b.city}${country ? ', ' + country : ''}</div>
+      </div>`;
+    });
+
+    searchResults.innerHTML = html;
+
     searchResults.querySelectorAll('.search-result-item').forEach(el => {
       el.addEventListener('click', () => {
-        selectCity(el.dataset.city);
+        if (el.dataset.type === 'country') {
+          selectCountry(el.dataset.country);
+        } else {
+          selectCity(el.dataset.city);
+        }
         searchInput.value = '';
         searchResults.classList.remove('open');
       });
     });
+
     searchResults.classList.add('open');
   });
 
@@ -1493,18 +1622,17 @@
       if (activeCity) {
         renderBookList(activeCity);
       } else if (activeCountry) {
-        renderCountryBooks(activeCountry, null);
+        const cities = (countryToCities[activeCountry] || []).filter(c => cityData[c]);
+        renderCountryBooks(cities);
       }
     });
   });
 
   /* ── Init ── */
-  /* ── Breadcrumb back button ── */
   document.getElementById('breadcrumb-back').addEventListener('click', () => {
     if (activeCountry) selectCountry(activeCountry);
   });
 
-  /* ── Init ── */
   renderShelf('New York');
   </script>
 
