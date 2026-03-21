@@ -16,11 +16,11 @@
       --bg:       #EAECEE;
       --surface:  #FFFFFF;
       --text:     #323232;
-      --text-sub: #4A4D54;
+      --text-sub: #6B6E78;
       --accent:   #E4ECF1;
-      --divider:  rgba(180,196,208,0.40);
-      --font:     "neue-haas-unica", sans-serif;
-      --nav-h:    52px;
+      --divider:  rgba(180,196,208,0.55);
+      --font:     "neulis-neue", sans-serif;
+      --nav-h:    58px;
     }
 
     html, body {
@@ -54,7 +54,7 @@
     }
 
     .nav-wordmark {
-      font-size: 13px;
+      font-size: 15px;
       font-weight: 400;
       letter-spacing: 0.18em;
       text-transform: uppercase;
@@ -101,7 +101,7 @@
        TITLE
     ───────────────────────────────────────── */
     .page-title {
-      font-size: 28px;
+      font-size: 32px;
       font-weight: 400;
       letter-spacing: -0.01em;
       line-height: 1.2;
@@ -242,6 +242,33 @@
       margin-top: 48px;
     }
 
+
+    /* ─────────────────────────────────────────
+       RESPONSIVE
+    ───────────────────────────────────────── */
+    @media (max-width: 768px) {
+      :root { --nav-h: 52px; }
+      .nav { padding: 0 20px; }
+      .reading-col { padding: 80px 20px 60px; }
+      .page-title { font-size: 26px; margin-bottom: 18px; }
+      .intro { font-size: 14px; margin-bottom: 36px; }
+      .axis-title { font-size: 20px; margin-bottom: 24px; }
+      .axis-item-name { font-size: 15px; }
+      .axis-item-desc { font-size: 13px; }
+      .section-break { margin-top: 52px; }
+      .map-reading-heading { font-size: 20px; }
+      .shelf-section { margin-top: 36px; }
+      .quote-block { margin: 36px 0; }
+      .quote-block p { font-size: 15px; }
+      .final-section { margin-top: 36px; }
+      p { font-size: 14px; }
+    }
+
+    @media (max-width: 480px) {
+      .reading-col { padding: 72px 16px 48px; }
+      .page-title { font-size: 22px; }
+      .axis-title { font-size: 18px; }
+    }
   </style>
 </head>
 <body>

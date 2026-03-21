@@ -22,7 +22,7 @@
       --ocean:     #DDE6EC;
       --hover:     rgba(210,224,234,0.30);
       --divider:   rgba(180,196,208,0.40);
-      --font:      "neue-haas-unica", sans-serif;
+      --font:      "neulis-neue", sans-serif;
       --shelf-w:   500px;
       --nav-h:     52px;
     }
@@ -33,7 +33,7 @@
       background: var(--bg);
       color: var(--text);
       font-family: var(--font);
-      font-weight: 300;
+      font-weight: 400;
       font-size: 14px;
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
@@ -60,7 +60,7 @@
     }
     .nav-right { display: flex; align-items: center; gap: 28px; }
     .nav-right a {
-      font-size: 12px; font-weight: 300; letter-spacing: 0.1em;
+      font-size: 12px; font-weight: 400; letter-spacing: 0.1em;
       color: var(--text-sub); text-decoration: none; transition: color 0.2s;
     }
     .nav-right a:hover { color: var(--text); }
@@ -98,7 +98,7 @@
     .cont-btn {
       font-family: var(--font);
       font-size: 12px;
-      font-weight: 300;
+      font-weight: 400;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--text-sub);
@@ -201,23 +201,9 @@
       text-transform: uppercase; color: var(--text-sub);
     }
     .map-coming-soon-sub {
-      font-size: 12px; font-weight: 300; color: var(--text-sub);
+      font-size: 12px; font-weight: 400; color: var(--text-sub);
     }
 
-    /* Top-left wordmark on map */
-    .map-ui-topleft {
-      position: absolute;
-      top: 20px; left: 28px;
-      z-index: 10;
-      pointer-events: none;
-    }
-    .map-project-name {
-      font-size: 11px; font-weight: 400; letter-spacing: 0.28em;
-      text-transform: uppercase; color: var(--text); margin-bottom: 2px;
-    }
-    .map-project-sub {
-      font-size: 11px; font-weight: 300; letter-spacing: 0.1em; color: var(--text-sub);
-    }
 
 
     /* ── Zoom controls ── */
@@ -239,7 +225,7 @@
       color: var(--text);
       font-family: var(--font);
       font-size: 16px;
-      font-weight: 300;
+      font-weight: 400;
       line-height: 1;
       display: flex;
       align-items: center;
@@ -290,14 +276,14 @@
       border-bottom: 1px solid var(--divider);
       flex-shrink: 0;
     }
-    .search-input-wrap { position: relative; display: flex; align-items: center; }
+    .search-input-wrap { position: relative; display: flex; align-items: center; width: 100%; }
     .search-icon {
       position: absolute; left: 0; width: 14px; height: 14px;
       color: var(--text-sub); pointer-events: none; flex-shrink: 0;
     }
     .search-input {
       width: 100%; padding: 6px 0 6px 22px;
-      font-family: var(--font); font-size: 12px; font-weight: 300;
+      font-family: var(--font); font-size: 12px; font-weight: 400;
       letter-spacing: 0.04em; color: var(--text);
       background: transparent; border: none; outline: none;
     }
@@ -315,19 +301,15 @@
     .search-result-item:last-child { border-bottom: none; }
     .search-result-item:hover { background: var(--hover); }
     .sr-title { font-size: 13px; font-weight: 400; color: var(--text); margin-bottom: 2px; }
-    .sr-meta  { font-size: 11px; font-weight: 300; color: var(--text-sub); }
+    .sr-meta  { font-size: 11px; font-weight: 400; color: var(--text-sub); }
 
     .shelf-header { padding: 28px 28px 0; flex-shrink: 0; }
-    .shelf-city-label {
-      font-size: 10px; font-weight: 400; letter-spacing: 0.3em;
-      text-transform: uppercase; color: var(--text-sub); margin-bottom: 6px;
-    }
     .shelf-city-name {
       font-size: 36px; font-weight: 700; letter-spacing: -0.02em;
       line-height: 1; color: var(--text); margin-bottom: 8px;
     }
     .shelf-era-range {
-      font-size: 13px; font-weight: 300; font-style: italic;
+      font-size: 13px; font-weight: 400; font-style: italic;
       color: var(--text-sub); margin-bottom: 20px;
     }
     .shelf-meta {
@@ -335,7 +317,7 @@
     }
     .shelf-meta-item { display: flex; flex-direction: column; gap: 3px; }
     .shelf-meta-val { font-size: 18px; font-weight: 400; line-height: 1; color: var(--text); }
-    .shelf-meta-key { font-size: 10px; font-weight: 300; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-sub); }
+    .shelf-meta-key { font-size: 10px; font-weight: 400; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-sub); }
 
     .shelf-filters {
       padding: 16px 28px 0;
@@ -396,15 +378,7 @@
     .book-item:first-child { border-top: 1px solid var(--divider); }
     .book-item:hover { background: var(--hover); }
 
-    .quote-block { padding: 26px 0 22px; border-bottom: 1px solid var(--divider); }
-    .quote-text { font-size: 15px; font-weight: 300; font-style: italic; line-height: 1.75; color: var(--text); margin-bottom: 10px; }
-    .quote-attr { font-size: 11px; font-weight: 300; letter-spacing: 0.1em; color: var(--text-sub); text-transform: uppercase; }
 
-    .shelf-image-slot {
-      width: 100%; aspect-ratio: 4/3; background: var(--accent);
-      margin: 24px 0; display: flex; align-items: center; justify-content: center;
-    }
-    .shelf-image-label { font-size: 10px; font-weight: 300; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(50,78,95,0.4); }
 
     .empty-state {
       padding: 24px 0 8px;
@@ -415,52 +389,112 @@
     }
     .empty-state-msg {
       font-size: 13px;
-      font-weight: 300;
+      font-weight: 400;
       color: var(--text-sub);
-    }
-    .empty-state-hint {
-      font-size: 11px;
-      font-weight: 300;
-      letter-spacing: 0.06em;
-      color: var(--text-sub);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .era-suggest-btn {
-      font-family: var(--font);
-      font-size: 11px;
-      font-weight: 300;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--text);
-      background: none;
-      border: 1px solid var(--divider);
-      padding: 4px 10px;
-      cursor: pointer;
-      transition: background 0.15s, border-color 0.15s;
-    }
-    .era-suggest-btn:hover {
-      background: var(--accent);
-      border-color: var(--accent);
     }
 
-    .coming-soon-block { padding: 36px 0 24px; }
-    .coming-soon-title { font-size: 11px; font-weight: 400; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text-sub); margin-bottom: 12px; }
-    .coming-soon-body { font-size: 14px; font-weight: 300; line-height: 1.75; color: var(--text-sub); max-width: 320px; }
+
+
+
 
     .shelf-header-inner { transition: opacity 0.28s ease; }
     .shelf-header-inner.fading { opacity: 0; }
 
     /* ─────────────────────────────────────────
-       MOBILE
+       RESPONSIVE
     ───────────────────────────────────────── */
+
+    /* ── Tablet (≤1024px): narrow shelf ── */
+    @media (max-width: 1024px) {
+      :root { --shelf-w: 380px; }
+      .shelf-city-name { font-size: 28px; }
+      .shelf-header { padding: 22px 22px 0; }
+      .shelf-inner { padding: 0 22px 40px; }
+      .book-item { padding: 15px 22px; margin: 0 -22px; }
+      .shelf-search { padding: 14px 22px; }
+      .shelf-filters { padding: 12px 22px 0; }
+      .shelf-breadcrumb { padding: 8px 22px; }
+      .city-group-header { padding: 14px 22px 8px; margin: 0 -22px; }
+    }
+
+    /* ── Mobile (≤768px): stacked layout ── */
     @media (max-width: 768px) {
+      :root {
+        --nav-h: 52px;
+        --shelf-w: 100%;
+      }
+
       html, body { overflow: auto; height: auto; }
-      .app { grid-template-columns: 1fr; grid-template-rows: 55vh 1fr; height: auto; min-height: 100vh; }
-      .map-panel { height: 55vh; }
-      .shelf { height: auto; border-left: none; border-top: 1px solid var(--divider); }
+
+      /* Stack map above shelf */
+      .app {
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+        padding-top: var(--nav-h);
+      }
+
+      /* Map takes upper 50% of viewport */
+      .map-panel {
+        height: 50vh;
+        min-height: 280px;
+        flex-shrink: 0;
+      }
+
+      /* Shelf fills remaining space naturally */
+      .shelf {
+        height: auto;
+        min-height: 50vh;
+        border-left: none;
+        border-top: 1px solid var(--divider);
+        overflow: visible;
+      }
       .shelf-inner { overflow-y: visible; }
+
+      /* Nav: hide continent bar, keep wordmark + approach link */
+      .nav { padding: 0 20px; }
+      .nav-continents {
+        position: static;
+        transform: none;
+        display: none; /* hidden on mobile — continent switching via map only */
+      }
+
+      /* Shelf header tighter */
+      .shelf-header { padding: 20px 20px 0; }
+      .shelf-city-name { font-size: 26px; }
+      .shelf-era-range { margin-bottom: 14px; }
+      .shelf-meta { gap: 20px; padding-bottom: 18px; }
+
+      /* Filters */
+      .shelf-filters { padding: 12px 20px 0; }
+      .era-chips { gap: 5px; flex-wrap: wrap; }
+      .era-chip { padding: 5px 11px; font-size: 10px; }
+
+      /* Breadcrumb */
+      .shelf-breadcrumb { padding: 8px 20px; }
+
+      /* Book list */
+      .shelf-inner { padding: 0 20px 40px; }
+      .book-item { padding: 16px 20px; margin: 0 -20px; }
+      .city-group-header { padding: 14px 20px 8px; margin: 0 -20px; }
+
+      /* Search */
+      .shelf-search { padding: 14px 20px; }
+
+      /* Zoom controls — keep bottom-right but slightly smaller */
+      .zoom-btn { width: 30px; height: 30px; font-size: 15px; }
+
+      /* Expand panels — constrain height */
+      .book-item.open .book-expand { max-height: 400px; }
+    }
+
+    /* ── Small mobile (≤480px) ── */
+    @media (max-width: 480px) {
+      .map-panel { height: 45vh; min-height: 240px; }
+      .shelf-city-name { font-size: 22px; }
+      .shelf-meta-val { font-size: 16px; }
+      .era-chip { padding: 4px 10px; }
     }
 
     /* ── Breadcrumb (city view only) ── */
@@ -508,18 +542,15 @@
     .city-group-header:hover { color: var(--text); }
     .city-group-count {
       font-size: 10px;
-      font-weight: 300;
+      font-weight: 400;
       letter-spacing: 0.06em;
     }
 
     /* ── Book item expand/collapse ── */
-    .book-item {
-      cursor: pointer;
-    }
-    .book-title { font-size: 15px; font-weight: 400; color: var(--text); margin-bottom: 4px; line-height: 1.3; }
+    .book-title { font-size: 16px; font-weight: 400; color: var(--text); margin-bottom: 4px; line-height: 1.3; }
     .book-meta-row { display: flex; flex-direction: column; gap: 3px; }
-    .book-author-year { font-size: 12px; font-weight: 300; color: var(--text-sub); }
-    .book-neighborhood { font-size: 11px; font-weight: 300; color: var(--text-sub); }
+    .book-author-year { font-size: 12px; font-weight: 400; color: var(--text-sub); }
+    .book-neighborhood { font-size: 11px; font-weight: 400; color: var(--text-sub); }
     .book-item-header {
       display: flex;
       justify-content: space-between;
@@ -552,15 +583,15 @@
       padding-top: 14px;
     }
     .book-synopsis {
-      font-size: 14px;
-      font-weight: 300;
+      font-size: 13px;
+      font-weight: 400;
       line-height: 1.7;
       color: var(--text);
       margin-bottom: 14px;
     }
     .book-quote {
       font-size: 13px;
-      font-weight: 300;
+      font-weight: 400;
       font-style: italic;
       line-height: 1.65;
       color: var(--text-sub);
@@ -575,7 +606,7 @@
   <nav class="nav">
     <span class="nav-wordmark">Strata</span>
     <div class="nav-continents" id="continent-bar">
-      <button class="cont-btn" data-continent="world" class="cont-btn active">World</button>
+      <button class="cont-btn active" data-continent="world">World</button>
       <button class="cont-btn" data-continent="africa">Africa</button>
       <button class="cont-btn" data-continent="asia">Asia</button>
       <button class="cont-btn" data-continent="europe">Europe</button>
@@ -616,7 +647,7 @@
         <div class="zoom-controls">
           <button class="zoom-btn" id="zoom-in"  aria-label="Zoom in">+</button>
           <button class="zoom-btn" id="zoom-out" aria-label="Zoom out">−</button>
-          <button class="zoom-btn" id="zoom-reset" aria-label="Reset view" style="font-size:14px;">↺</button>
+          <button class="zoom-btn" id="zoom-reset" aria-label="Reset view">↺</button>
         </div>
       </div>
 
@@ -627,7 +658,7 @@
 
       <!-- Search -->
       <div class="shelf-search">
-        <div class="search-input-wrap" style="position:relative">
+        <div class="search-input-wrap">
           <svg class="search-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
             <circle cx="6.5" cy="6.5" r="4.5"/>
             <line x1="10" y1="10" x2="14" y2="14"/>
@@ -1013,21 +1044,30 @@
   /* ── Country → continent membership ── */
   const continentCountries = {
     'europe': [
-      'Albania','Andorra','Austria','Belarus','Belgium','Bosnia and Herzegovina',
-      'Bulgaria','Croatia','Cyprus','Czech Republic','Denmark','Estonia','Finland',
+      'Albania','Andorra','Austria','Belarus','Belgium',
+      'Bosnia and Herzegovina','Bosnia and Herz.',
+      'Bulgaria','Croatia','Cyprus','N. Cyprus',
+      'Czech Republic','Czech Rep.','Czechia',
+      'Denmark','Estonia','Finland',
       'France','Germany','Greece','Hungary','Iceland','Ireland','Italy','Kosovo',
-      'Latvia','Liechtenstein','Lithuania','Luxembourg','Malta','Moldova','Monaco',
-      'Montenegro','Netherlands','North Macedonia','Norway','Poland','Portugal',
+      'Latvia','Liechtenstein','Lithuania','Luxembourg','Malta',
+      'Moldova','Monaco','Montenegro','Netherlands',
+      'North Macedonia','Macedonia',
+      'Norway','Poland','Portugal',
       'Romania','Russia','San Marino','Serbia','Slovakia','Slovenia','Spain',
-      'Sweden','Switzerland','Ukraine','United Kingdom','Vatican','Berkshire',
+      'Sweden','Switzerland','Ukraine','United Kingdom','Vatican',
     ],
     'africa': [
       'Algeria','Angola','Benin','Botswana','Burkina Faso','Burundi','Cameroon',
-      'Cape Verde','Central African Republic','Chad','Comoros',
+      'Cape Verde','Cabo Verde',
+      'Central African Republic','Central African Rep.',
+      'Chad','Comoros',
       'Democratic Republic of the Congo','Democratic Republic of Congo',
       'Dem. Rep. Congo','Congo, Dem. Rep.',
-      'Republic of Congo','Congo','Congo, Rep.',
-      'Djibouti','Egypt','Equatorial Guinea','Eritrea','Eswatini','Swaziland',
+      'Republic of Congo','Republic of the Congo','Congo','Congo, Rep.',
+      'Djibouti','Egypt',
+      'Equatorial Guinea','Eq. Guinea',
+      'Eritrea','Eswatini','eSwatini','Swaziland',
       'Ethiopia','Gabon','Gambia','The Gambia','Ghana','Guinea','Guinea-Bissau',
       "Cote d'Ivoire","Côte d'Ivoire",'Ivory Coast',
       'Kenya','Lesotho','Liberia','Libya','Madagascar','Malawi',
@@ -1035,29 +1075,40 @@
       'Niger','Nigeria','Rwanda',
       'São Tomé and Príncipe','Sao Tome and Principe',
       'Senegal','Seychelles','Sierra Leone','Somalia','Somaliland',
-      'South Africa','South Sudan','Sudan','Tanzania',
+      'South Africa',
+      'South Sudan','S. Sudan',
+      'Sudan','Tanzania',
       'Togo','Tunisia','Uganda','W. Sahara','Western Sahara',
       'Zambia','Zimbabwe',
     ],
     'asia': [
       'Afghanistan','Armenia','Azerbaijan','Bahrain','Bangladesh','Bhutan','Brunei',
-      'Cambodia','China','Cyprus','Georgia','India','Indonesia','Iran','Iraq',
+      'Cambodia','China','Cyprus','N. Cyprus','Georgia','India','Indonesia','Iran','Iraq',
       'Israel','Japan','Jordan','Kazakhstan','Kuwait','Kyrgyzstan','Laos','Lebanon',
-      'Malaysia','Maldives','Mongolia','Myanmar','Nepal','North Korea','Oman',
-      'Pakistan','Palestinian Territory','Philippines','Qatar','Saudi Arabia',
-      'Singapore','South Korea','Sri Lanka','Syria','Taiwan','Tajikistan',
-      'Thailand','Timor-Leste','Turkey','Turkmenistan','United Arab Emirates',
+      'Malaysia','Maldives','Mongolia','Myanmar','Nepal',
+      'North Korea','Dem. Rep. Korea',
+      'Oman','Pakistan',
+      'Palestinian Territory','West Bank','Gaza',
+      'Philippines','Qatar','Saudi Arabia',
+      'Singapore',
+      'South Korea','Republic of Korea',
+      'Sri Lanka','Syria','Taiwan','Tajikistan',
+      'Thailand','Timor-Leste','East Timor',
+      'Turkey','Turkmenistan','United Arab Emirates',
       'Uzbekistan','Vietnam','Yemen',
     ],
     'north-america': [
       'Antigua and Barbuda','Bahamas','Barbados','Belize','Canada','Costa Rica',
-      'Cuba','Dominica','Dominican Republic','El Salvador','Grenada','Guatemala',
+      'Cuba','Dominica','Dominican Republic','Dominican Rep.',
+      'El Salvador','Grenada','Guatemala',
       'Haiti','Honduras','Jamaica','Mexico','Nicaragua','Panama',
+      'Puerto Rico',
       'Saint Kitts and Nevis','Saint Lucia','Saint Vincent and the Grenadines',
       'Trinidad and Tobago','United States of America',
     ],
     'south-america': [
-      'Argentina','Bolivia','Brazil','Chile','Colombia','Ecuador','Guyana',
+      'Argentina','Bolivia','Brazil','Chile','Colombia','Ecuador',
+      'Guyana','Fr. Guiana',
       'Paraguay','Peru','Suriname','Uruguay','Venezuela',
     ],
     'oceania': [
