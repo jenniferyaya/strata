@@ -365,7 +365,7 @@
     .shelf-inner::-webkit-scrollbar-thumb { background: var(--divider); }
 
     .shelf-section-label {
-      font-size: 12px; font-weight: 400; letter-spacing: 0.22em;
+      font-size: 14px; font-weight: 400; letter-spacing: 0.22em;
       text-transform: uppercase; color: var(--text-sub);
       padding-top: 24px; padding-bottom: 14px;
     }
@@ -1371,7 +1371,8 @@
     document.getElementById('shelf-city-name').textContent = countryName;
     document.getElementById('shelf-era-range').textContent = cities.length + ' cities';
     document.getElementById('shelf-works').textContent     = total;
-    document.getElementById('shelf-locations').textContent = '—';
+    const uniqueLocations = new Set(cities.flatMap(c => (cityData[c] ? cityData[c].books.map(b => b.area) : []))).size;
+    document.getElementById('shelf-locations').textContent = uniqueLocations || '—';
 
     const inner = document.getElementById('shelf-inner');
     inner.innerHTML = `
@@ -1423,7 +1424,8 @@
     document.getElementById('shelf-city-name').textContent = cityName;
     document.getElementById('shelf-era-range').textContent = d.era;
     document.getElementById('shelf-works').textContent     = d.works;
-    document.getElementById('shelf-locations').textContent = d.locations;
+    const uniqueLocations = new Set(d.books.map(b => b.area)).size;
+    document.getElementById('shelf-locations').textContent = uniqueLocations || '—';
 
     const inner = document.getElementById('shelf-inner');
     inner.innerHTML = `
