@@ -680,7 +680,7 @@
               <span class="shelf-meta-key">Works</span>
             </div>
             <div class="shelf-meta-item">
-              <span class="shelf-meta-val">3</span>
+              <span class="shelf-meta-val" id="shelf-eras">3</span>
               <span class="shelf-meta-key">Eras</span>
             </div>
             <div class="shelf-meta-item">
@@ -1294,6 +1294,22 @@
     const avail = cont === 'world' || continentConfig[cont].available;
     document.getElementById('map-coming-soon').classList.toggle('visible', !avail);
     if (geoFeatures.length) { renderMap(cont); applyTransform(); }
+
+    /* Update shelf to reflect continent */
+    activeCity    = null;
+    activeCountry = null;
+    document.querySelectorAll('.country-path').forEach(p => p.classList.remove('active-country'));
+    document.getElementById('shelf-breadcrumb').classList.remove('visible');
+
+    const inner  = document.getElementById('shelf-inner');
+    const header = document.getElementById('shelf-header-inner');
+    inner.classList.add('fading');
+    header.classList.add('fading');
+    setTimeout(() => {
+      renderContinentShelf(cont);
+      inner.classList.remove('fading');
+      header.classList.remove('fading');
+    }, 280);
   });
 
   /* ══════════════════════════════════════════════════
@@ -1365,6 +1381,24 @@
     }, 280);
   }
 
+
+  /* ── Continent view ── */
+  function renderContinentShelf(cont) {
+    const contLabel = { world:"World", europe:"Europe", "north-america":"North America", "south-america":"South America", africa:"Africa", asia:"Asia", oceania:"Oceania" };
+    const cities = cont === "world" ? Object.keys(cityData) : Object.keys(cityData).filter(c => cityContinent[c] === cont);
+    const totalWorks      = cities.reduce((n, c) => n + cityData[c].books.length, 0);
+    const uniqueEras      = new Set(cities.flatMap(c => cityData[c].books.map(b => b.era))).size;
+    const uniqueLocations = new Set(cities.flatMap(c => cityData[c].books.map(b => b.area))).size;
+    document.getElementById("shelf-city-name").textContent = contLabel[cont] || cont;
+    document.getElementById("shelf-era-range").textContent = cities.length + (cities.length === 1 ? " city" : " cities");
+    document.getElementById("shelf-works").textContent      = totalWorks      || "—";
+    document.getElementById("shelf-eras").textContent       = uniqueEras      || "—";
+    document.getElementById("shelf-locations").textContent  = uniqueLocations || "—";
+    const inner = document.getElementById("shelf-inner");
+    if (!cities.length) { inner.innerHTML = `<div class="shelf-section-label">All works</div><ul class="book-list"><li class="empty-state"><span class="empty-state-msg">No works mapped for this region yet.</span></li></ul>`; return; }
+    inner.innerHTML = `<div class="shelf-section-label" id="shelf-section-label">All works</div><ul class="book-list" id="book-list"></ul>`;
+    renderCountryBooks(cities);
+  }
   /* ── Country view ── */
   function renderCountryShelf(countryName, cities) {
     const total = cities.reduce((n, c) => n + (cityData[c] ? cityData[c].books.length : 0), 0);
@@ -1372,6 +1406,8 @@
     document.getElementById('shelf-era-range').textContent = cities.length + ' cities';
     document.getElementById('shelf-works').textContent     = total;
     const uniqueLocations = new Set(cities.flatMap(c => (cityData[c] ? cityData[c].books.map(b => b.area) : []))).size;
+    const uniqueErasC = new Set(cities.flatMap(c => (cityData[c] ? cityData[c].books.map(b => b.era) : []))).size;
+    document.getElementById('shelf-eras').textContent      = uniqueErasC || '—';
     document.getElementById('shelf-locations').textContent = uniqueLocations || '—';
 
     const inner = document.getElementById('shelf-inner');
@@ -1425,6 +1461,8 @@
     document.getElementById('shelf-era-range').textContent = d.era;
     document.getElementById('shelf-works').textContent     = d.works;
     const uniqueLocations = new Set(d.books.map(b => b.area)).size;
+    const uniqueErasCity  = new Set(d.books.map(b => b.era)).size;
+    document.getElementById('shelf-eras').textContent      = uniqueErasCity  || '—';
     document.getElementById('shelf-locations').textContent = uniqueLocations || '—';
 
     const inner = document.getElementById('shelf-inner');
